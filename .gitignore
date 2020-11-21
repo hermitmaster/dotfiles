@@ -1,0 +1,16 @@
+# Deny by default
+*
+!/fish/
+!/fish/**/*
+!/git/
+!/git/**/*
+!/mac_terminal/
+!/mac_terminal/**/*
+!/nvim/
+!/nvim/**/*
+!/tmux/
+!/tmux/**/*
+!/.editorconfig
+!/.gitignore
+!/functions.sh
+!/README.md
