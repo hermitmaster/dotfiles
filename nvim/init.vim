@@ -1,5 +1,6 @@
 " Core Config: {{{
 set clipboard^=unnamed,unnamedplus
+set colorcolumn=80
 set completeopt=menu,menuone,longest
 set display+=lastline
 set expandtab
@@ -18,7 +19,6 @@ set noshowmode
 set noswapfile
 set nowrap
 set number
-set path=$PWD/**
 set scrolloff=3
 set shiftwidth=2
 set sidescrolloff=5
@@ -42,43 +42,24 @@ let g:maplocalleader = ','
 " Global Variables: {{{
 
 let g:airline_filetype_overrides = {
-      \ 'coc-explorer': ['coc-explorer',''],
       \ 'fugitiveblame': ['fugitiveblame',''],
-      \ 'list': ['coc-list','']
+      \ 'nerdtree': ['NERDTree','']
       \ }
-let g:airline#extensions#hunks#coc_git = 1
 let g:airline#extensions#tabline#buffer_idx_mode = 1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#show_tab_type = 0
 
 let g:coc_data_home = $HOME . '/.local/share/coc'
 let g:coc_global_extensions = [
-      \ 'coc-css',
-      \ 'coc-db',
       \ 'coc-docker',
       \ 'coc-explorer',
-      \ 'coc-git',
-      \ 'coc-groovy',
-      \ 'coc-html',
-      \ 'coc-java',
-      \ 'coc-java-debug',
+      \ 'coc-go',
       \ 'coc-json',
-      \ 'coc-lists',
-      \ 'coc-pairs',
-      \ 'coc-prettier',
       \ 'coc-python',
-      \ 'coc-rls',
       \ 'coc-sh',
-      \ 'coc-snippets',
-      \ 'coc-sql',
-      \ 'coc-tsserver',
-      \ 'coc-vetur',
       \ 'coc-vimlsp',
-      \ 'coc-xml',
       \ 'coc-yaml',
       \ ]
-
-let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
 let g:indentLine_fileTypeExclude = [
       \ 'coc-explorer',
@@ -86,13 +67,19 @@ let g:indentLine_fileTypeExclude = [
       \ 'startify'
       \ ]
 
+let g:neoformat_enabled_json = ['jq']
+
+let g:NERDTreeGitStatusShowIgnored = 1
+let g:NERDTreeMinimalUI = 1
+let g:NERDTreeShowHidden = 1
+
 let g:netrw_nogx = 1
 
 let g:openbrowser_default_search = 'duckduckgo'
 
-let g:rustfmt_autosave = 1
-
 let g:srcery_italic = 1
+
+let g:shfmt_opt="-ci"
 
 let g:startify_fortune_use_unicode = 1
 let g:startify_change_to_vcs_root = 1
@@ -103,8 +90,6 @@ let g:terraform_fmt_on_save = 1
 
 let g:vim_markdown_conceal = 0
 let g:vim_markdown_conceal_code_blocks = 0
-
-let g:vimspector_enable_mappings = 'HUMAN'
 
 let g:which_key_localleader_map = {}
 let g:which_key_leader_map = {
@@ -119,49 +104,6 @@ let g:which_key_leader_map = {
       \ 'x': {'name': '+Text'},
       \ }
 " }}}
-" Packager: {{{
-command! PackagerClean call PackagerInit() | call packager#clean()
-command! PackagerInstall call PackagerInit() | call packager#install()
-command! PackagerStatus call PackagerInit() | call packager#status()
-command! -bang PackagerUpdate call PackagerInit() | call packager#update({ 'force_hooks': '<bang>' })
-
-function! PackagerInit() abort
-  packadd vim-packager
-  call packager#init()
-  call packager#add('cespare/vim-toml')
-  call packager#add('christoomey/vim-tmux-navigator')
-  call packager#add('dag/vim-fish')
-  call packager#add('editorconfig/editorconfig-vim')
-  call packager#add('gcmt/wildfire.vim')
-  call packager#add('gregsexton/MatchTag')
-  call packager#add('hashivim/vim-terraform')
-  call packager#add('iamcco/markdown-preview.nvim', {'type': 'opt', 'do': ':call mkdp#util#install()'})
-  call packager#add('janko/vim-test')
-  call packager#add('kristijanhusak/vim-dadbod-ui')
-  call packager#add('kristijanhusak/vim-packager', {'type': 'opt'})
-  call packager#add('leafgarland/typescript-vim')
-  call packager#add('liuchengxu/vim-which-key')
-  call packager#add('mhinz/vim-startify')
-  call packager#add('neoclide/coc.nvim')
-  call packager#add('othree/es.next.syntax.vim')
-  call packager#add('othree/html5.vim')
-  call packager#add('othree/yajs.vim')
-  call packager#add('pearofducks/ansible-vim')
-  call packager#add('plasticboy/vim-markdown')
-  call packager#add('posva/vim-vue')
-  call packager#add('puremourning/vimspector')
-  call packager#add('rust-lang/rust.vim', {'type': 'opt'})
-  call packager#add('ryanoasis/vim-devicons')
-  call packager#add('srcery-colors/srcery-vim')
-  call packager#add('tpope/vim-commentary')
-  call packager#add('tpope/vim-dadbod')
-  call packager#add('tpope/vim-dispatch')
-  call packager#add('tpope/vim-fugitive')
-  call packager#add('tyru/open-browser.vim')
-  call packager#add('vim-airline/vim-airline')
-  call packager#add('Yggdroot/indentLine')
-endfunction
-"}}}
 " Key Mapping: {{{
 nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
 vnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<CR>
@@ -200,25 +142,25 @@ nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> <leader>bd :bdelete<CR>
 nmap <silent> <leader>bD :bdelete!<CR>
 nmap <silent> <leader>be :enew<CR>
-nmap <silent> <leader>bf :call CocAction('format')<CR>
+nmap <silent> <leader>bf :Neoformat<CR>
 nmap <silent> <leader>bh :Startify<CR>
 nmap <silent> <leader>bn :bnext<CR>
 nmap <silent> <leader>bp :bprevious<CR>
-nmap <silent> <leader>b/ :CocList buffers<CR>
+nmap <silent> <leader>b/ :Buffers<CR>
 
 nmap <silent> <leader>fs :write<CR>
-nmap <silent> <leader>ft :CocCommand explorer<CR>
+nmap <silent> <leader>ft :NERDTreeToggleVCS<CR>
 nmap <silent> <leader>fS :wall<CR>
-nmap <silent> <leader>f/ :CocList files<CR>
+nmap <silent> <leader>f/ :GFiles<CR>
 
 nmap <silent> <leader>ga :Git add %<CR>
 nmap <silent> <leader>gb :Git blame<CR>
 nmap <silent> <leader>gc :Git commit<CR>
 nmap <silent> <leader>gd :Gvdiffsplit<CR>
 nmap <silent> <leader>gf :Git fetch --all --prune<CR>
-nmap <silent> <leader>gha :CocCommand git.chunkStage<CR>
-nmap <silent> <leader>ghu :CocCommand git.chunkUndo<CR>
-nmap <silent> <leader>ghv :CocCommand git.diffCached<CR>
+nmap <silent> <leader>gha <Plug>(GitGutterStageHunk)
+nmap <silent> <leader>ghu <Plug>(GitGutterUndoHunk)
+nmap <silent> <leader>ghp <Plug>(GitGutterPreviewHunk)
 nmap <silent> <leader>gl :Gclog --<CR>
 nmap <silent> <leader>gm :Git branch<CR>
 nmap <silent> <leader>gp :Gpush<CR>
@@ -250,17 +192,17 @@ omap <leader>lac <Plug>(coc-classobj-a)
 nmap <silent> <leader>q :qall<CR>
 nmap <silent> <leader>Q :qall!<CR>
 
-nmap <silent> <leader>ss :CocList words<CR>
-nmap <silent> <leader>sP :CocList -I --normal --input=<C-R><C-W> grep<CR>
-nmap <silent> <leader>sS :CocList -I --normal --input=<C-R><C-W> words<CR>
-nmap <silent> <leader>s/ :CocList grep<CR>
+nmap <silent> <leader>ss :BLines<CR>
+nmap <silent> <leader>sP :Rg <C-R><C-W><CR>
+nmap <silent> <leader>sS :BLines <C-R><C-W><CR>
+nmap <silent> <leader>s/ :Rg<CR>
 
 nmap <silent> <leader>wd :close<CR>
 nmap <silent> <leader>wh :split<CR>
 nmap <silent> <leader>wo :only<CR>
 nmap <silent> <leader>ws :vsplit +bp<CR>
 nmap <silent> <leader>wv :vsplit<CR>
-nmap <silent> <leader>w/ :CocList windows<CR>
+nmap <silent> <leader>w/ :Windows<CR>
 
 " Tab navigation
 nmap <leader>1 <Plug>AirlineSelectTab1
@@ -299,18 +241,15 @@ endfunction
 " Auto Commands: {{{
 augroup core
   au!
+  autocmd VimEnter * if !argc() | Startify | NERDTree | wincmd w | endif
   au VimEnter * call which_key#register('<Space>', 'g:which_key_leader_map')
-  au User CocNvimInit if @% == '' || @% == '.' | exe ':CocCommand explorer' | endif
-  au BufEnter * :syntax sync fromstart
   au BufEnter * call which_key#register(',', 'g:which_key_localleader_map')
-  au BufEnter,InsertLeave,WinEnter * if &nu | set rnu | endif
-  au BufLeave,InsertEnter,WinLeave  * if &nu | set nornu | endif
+  au BufEnter * :syntax sync fromstart
   au BufEnter * if (winnr('$') == 1 && &buftype ==# 'quickfix' ) | bd | q | endif
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
   au BufWinEnter diff,quickfix nnoremap <silent> <buffer> q :cclose<cr>:lclose<cr>
   au BufWinEnter * if(exists('b:_winview')) | call winrestview(b:_winview) | endif
   au BufWinLeave * let b:_winview = winsaveview()
-  au FileType list setlocal nonu
 augroup END
 " }}}
 " Colorscheme: {{{

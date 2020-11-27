@@ -30,21 +30,12 @@ function fish_prompt --description 'Write out the prompt'
 
     # prompt_char segment
     if test $last_status -eq 0
-        set_color green
+        set_color $fish_color_command
     else
-        set_color red
+        set_color $fish_color_error
     end
 
-    switch $fish_bind_mode
-        case default
-            printf '❮ '
-        case visual
-            printf 'V '
-        case replace replace_one
-            printf '▶ '
-        case '*'
-            printf '❯ '
-    end
+    printf '❯ '
 
     # reset colors
     set_color normal

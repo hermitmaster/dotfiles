@@ -1,0 +1,87 @@
+[submodule "nvim/pack/packages/start/ansible-vim"]
+	path = nvim/pack/packages/start/ansible-vim
+	url = git@github.com:pearofducks/ansible-vim.git
+[submodule "nvim/pack/packages/start/coc.nvim"]
+	path = nvim/pack/packages/start/coc.nvim
+	url = git@github.com:neoclide/coc.nvim.git
+[submodule "nvim/pack/packages/start/delimitMate"]
+	path = nvim/pack/packages/start/delimitMate
+	url = git@github.com:Raimondi/delimitMate.git
+[submodule "nvim/pack/packages/start/fzf"]
+	path = nvim/pack/packages/start/fzf
+	url = git@github.com:junegunn/fzf.git
+[submodule "nvim/pack/packages/start/fzf.vim"]
+	path = nvim/pack/packages/start/fzf.vim
+	url = git@github.com:junegunn/fzf.vim.git
+[submodule "nvim/pack/packages/start/indentLine"]
+	path = nvim/pack/packages/start/indentLine
+	url = git@github.com:Yggdroot/indentLine.git
+[submodule "nvim/pack/packages/start/neoformat"]
+	path = nvim/pack/packages/start/neoformat
+	url = git@github.com:sbdchd/neoformat.git
+[submodule "nvim/pack/packages/start/nerdtree"]
+	path = nvim/pack/packages/start/nerdtree
+	url = git@github.com:preservim/nerdtree.git
+[submodule "nvim/pack/packages/start/nerdtree-git-plugin"]
+	path = nvim/pack/packages/start/nerdtree-git-plugin
+	url = git@github.com:Xuyuanp/nerdtree-git-plugin.git
+[submodule "nvim/pack/packages/start/open-browser.vim"]
+	path = nvim/pack/packages/start/open-browser.vim
+	url = git@github.com:tyru/open-browser.vim.git
+[submodule "nvim/pack/packages/start/srcery-vim"]
+	path = nvim/pack/packages/start/srcery-vim
+	url = git@github.com:srcery-colors/srcery-vim.git
+[submodule "nvim/pack/packages/start/ultisnips"]
+	path = nvim/pack/packages/start/ultisnips
+	url = git@github.com:SirVer/ultisnips.git
+[submodule "nvim/pack/packages/start/vim-startify"]
+	path = nvim/pack/packages/start/vim-startify
+	url = git@github.com:mhinz/vim-startify.git
+[submodule "nvim/pack/packages/start/vim-terraform"]
+	path = nvim/pack/packages/start/vim-terraform
+	url = git@github.com:hashivim/vim-terraform.git
+[submodule "nvim/pack/packages/start/vim-toml"]
+	path = nvim/pack/packages/start/vim-toml
+	url = git@github.com:cespare/vim-toml.git
+[submodule "nvim/pack/packages/start/vim-which-key"]
+	path = nvim/pack/packages/start/vim-which-key
+	url = git@github.com:liuchengxu/vim-which-key.git
+[submodule "nvim/pack/packages/start/wildfire.vim"]
+	path = nvim/pack/packages/start/wildfire.vim
+	url = git@github.com:gcmt/wildfire.vim.git
+[submodule "nvim/pack/packages/start/vim-devicons"]
+	path = nvim/pack/packages/start/vim-devicons
+	url = git@github.com:ryanoasis/vim-devicons.git
+[submodule "nvim/pack/packages/start/vim-dispatch"]
+	path = nvim/pack/packages/start/vim-dispatch
+	url = git@github.com:tpope/vim-dispatch.git
+[submodule "nvim/pack/packages/start/vim-fugitive"]
+	path = nvim/pack/packages/start/vim-fugitive
+	url = git@github.com:tpope/vim-fugitive.git
+[submodule "nvim/pack/packages/start/vim-airline"]
+	path = nvim/pack/packages/start/vim-airline
+	url = git@github.com:vim-airline/vim-airline.git
+[submodule "nvim/pack/packages/start/MatchTag"]
+	path = nvim/pack/packages/start/MatchTag
+	url = git@github.com:gregsexton/MatchTag.git
+[submodule "nvim/pack/packages/start/vim-markdown"]
+	path = nvim/pack/packages/start/vim-markdown
+	url = git@github.com:plasticboy/vim-markdown.git
+[submodule "nvim/pack/packages/start/vim-fish"]
+	path = nvim/pack/packages/start/vim-fish
+	url = git@github.com:dag/vim-fish.git
+[submodule "nvim/pack/packages/start/vim-commentary"]
+	path = nvim/pack/packages/start/vim-commentary
+	url = git@github.com:tpope/vim-commentary.git
+[submodule "nvim/pack/packages/start/vim-go"]
+	path = nvim/pack/packages/start/vim-go
+	url = git@github.com:fatih/vim-go.git
+[submodule "nvim/pack/packages/start/vim-gitgutter"]
+	path = nvim/pack/packages/start/vim-gitgutter
+	url = git@github.com:airblade/vim-gitgutter.git
+[submodule "nvim/pack/packages/start/vim-tmux-navigator"]
+	path = nvim/pack/packages/start/vim-tmux-navigator
+	url = git@github.com:christoomey/vim-tmux-navigator.git
+[submodule "nvim/pack/packages/start/vim-numbertoggle"]
+	path = nvim/pack/packages/start/vim-numbertoggle
+	url = git@github.com:jeffkreeftmeijer/vim-numbertoggle.git

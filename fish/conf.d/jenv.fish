@@ -1,1 +1,0 @@
-jenv init - fish | source

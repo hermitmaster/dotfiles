@@ -1,0 +1,4 @@
+bugwarrior
+bugwarrior[jira]
+bugwarrior[keyring]
+pynvim

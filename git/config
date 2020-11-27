@@ -1,70 +1,36 @@
-[alias]
-  aa = add --all
-  au = add --update
-  av = add --verbose
-  b = branch
-  ba = branch --all
-  bd = branch --delete
-  br = branch --remote
-  bs = bisect
-  bsb = bisect bad
-  bsg = bisect good
-  bsr = bisect reset
-  bss = bisect start
-  c = commit -v
-  ca = commit -v --amend
-  cane = commit -v --amend --no-edit
-  cf = config --list
-  cl = clone --recurse-submodules
-  cm = commit -m
-  co = checkout
-  cob = checkout -b
-  com = checkout master
-  d = diff
-  ds = diff --staged
-  dsw = diff --staged --word-diff
-  dw = diff --word-diff
-  fap = fetch --all --prune
-  lg = log --graph
-  lga = log --graph --decorate --all
-  lgo = log --graph --oneline --decorate
-  lgoa = log --graph --oneline --decorate --all
-  lo = log --oneline --decorate
-  ls = log --stat --paginate
-  lum = pull upstream master
-  p = push
-  pf = push --force
-  pob = "!f() { git push origin $(git rev-parse --abbrev-ref HEAD); }; f"
-  psub = "!f() { git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD); }; f"
-  plob = "!f() { git pull origin $(git rev-parse --abbrev-ref HEAD); }; f"
-  rb = rebase
-  rba = rebase --abort
-  rbc = rebase --continue
-  rbi = rebase --interactive
-  rbs = rebase --skip
-  roh = "!f() { git reset origin/$(git rev-parse --abbrev-ref HEAD); --hard }; f"
-  rset = remote set-url
-  st = status
-  sts = status --short
 [branch]
   autosetuprebase = always
+
 [core]
   autocrlf = input
-  pager = diff-so-fancy | less -R
   excludesFile = ~/.config/git/gitignore
+
 [diff]
   renames = true
   renameLimit = 2000
-[interactive]
-  diffFilter = diff-so-fancy
+
+[fetch]
+  parallel = 0
+
+[init]
+  defaultBranch = master
+
+[delta]
+  features = line-numbers decorations
+  whitespace-error-style = 22 reverse
+
 [push]
   default = simple
+
 [rebase]
   autostash = true
+
 [submodule]
   recurse = true
+
 [user]
   email = hermitmaster@icloud.com
-  name = hermitmaster
+  name = "Dennis Rausch"
+
 [includeIf "gitdir:~/work/"]
-  path = ~/.config/git/config-work
+  path = ~/.config/git/work.config

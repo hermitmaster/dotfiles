@@ -1,19 +1,34 @@
 # This file contains fish universal variable definitions.
 # VERSION: 3.0
+SETUVAR --export EDITOR:nvim
+SETUVAR --export FORGIT_FZF_DEFAULT_OPTS:\x2d\x2dansi\x20\x2d\x2dheight\x3d\x2780\x25\x27\x20\x2d\x2dbind\x3d\x27alt\x2dk\x3apreview\x2dup\x27\x20\x2d\x2dbind\x3d\x27alt\x2dj\x3apreview\x2ddown\x27\x20\x2d\x2dbind\x3d\x27ctrl\x2dr\x3atoggle\x2dall\x27\x20\x2d\x2dbind\x3d\x27ctrl\x2ds\x3atoggle\x2dsort\x27\x20\x2d\x2dpreview\x2dwindow\x3d\x27right\x3a60\x25\x27
 SETUVAR __fish_initialized:3100
+SETUVAR _fish_abbr_gaa:git\x20add\x20\x2d\x2dall
+SETUVAR _fish_abbr_gb:git\x20branch
+SETUVAR _fish_abbr_gbs:git\x20bisect
+SETUVAR _fish_abbr_gc:git\x20commit\x20\x2dv
+SETUVAR _fish_abbr_gca:git\x20commit\x20\x2d\x2damend
+SETUVAR _fish_abbr_gcan_21_:git\x20commit\x20\x2d\x2damend\x20\x2d\x2dno\x2dedit
+SETUVAR _fish_abbr_gcl:git\x20clone
+SETUVAR _fish_abbr_gcm:git\x20commit\x20\x2dm
+SETUVAR _fish_abbr_gco:git\x20checkout
+SETUVAR _fish_abbr_gcob:git\x20checkout\x20\x2db
+SETUVAR _fish_abbr_gfap:git\x20fetch\x20\x2d\x2dall\x20\x2d\x2dprune
+SETUVAR _fish_abbr_gls:git\x20log\x20\x2d\x2dstat
+SETUVAR _fish_abbr_gp:git\x20push
+SETUVAR _fish_abbr_gp_21_:git\x20push\x20\x2df
+SETUVAR _fish_abbr_grb:git\x20rebase
+SETUVAR _fish_abbr_grset:git\x20remote\x20set\x2durl
+SETUVAR _fish_abbr_gs:git\x20status\x20\x2d\x2dshort
 SETUVAR fish_color_autosuggestion:brblack
-SETUVAR fish_color_cancel:\x2dr
 SETUVAR fish_color_command:green
 SETUVAR fish_color_comment:brblack
 SETUVAR fish_color_end:green
 SETUVAR fish_color_error:red
 SETUVAR fish_color_escape:cyan
 SETUVAR fish_color_history_current:\x2d\x2dbold
-SETUVAR fish_color_host:normal
 SETUVAR fish_color_host_remote:yellow
 SETUVAR fish_color_match:\x2d\x2dbackground\x3dbrblue
-SETUVAR fish_color_normal:normal
-SETUVAR fish_color_operator:normal
 SETUVAR fish_color_param:brblue
 SETUVAR fish_color_quote:yellow
 SETUVAR fish_color_redirection:brblue
@@ -23,8 +38,7 @@ SETUVAR fish_color_status:red
 SETUVAR fish_color_user:brgreen
 SETUVAR fish_color_valid_path:\x2d\x2dunderline
 SETUVAR fish_greeting:\x1d
-SETUVAR fish_key_bindings:fish_vi_key_bindings
-SETUVAR fish_pager_color_completion:normal
+SETUVAR fish_key_bindings:fish_default_key_bindings
 SETUVAR fish_pager_color_description:yellow
 SETUVAR fish_pager_color_prefix:white\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
