@@ -3,34 +3,10 @@
 
 [core]
   autocrlf = input
-  excludesFile = ~/.config/git/gitignore
-
-[diff]
-  renames = true
-  renameLimit = 2000
-
-[fetch]
-  parallel = 0
-
-[init]
-  defaultBranch = master
-
-[delta]
-  features = line-numbers decorations
-  whitespace-error-style = 22 reverse
-
-[push]
-  default = simple
-
-[rebase]
-  autostash = true
-
-[submodule]
-  recurse = true
 
 [user]
   email = hermitmaster@icloud.com
   name = "Dennis Rausch"
 
 [includeIf "gitdir:~/work/"]
-  path = ~/.config/git/work.config
+  path = .work.gitconfig
