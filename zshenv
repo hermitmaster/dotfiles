@@ -1,3 +1,0 @@
-export ZDOTDIR="${HOME}/.config"
-
-SHELL_SESSIONS_DISABLE=1

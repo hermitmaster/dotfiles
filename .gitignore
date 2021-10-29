@@ -1,5 +1,9 @@
-.Brewfile.lock.json
+# General
 .DS_Store
-.idea
-.zcomp*
-.zsh_*
+
+# Homebrew
+.Brewfile.lock.json
+
+# JetBrains
+.idea/
+*.iml

@@ -1,54 +1,39 @@
-# If ~/.zshenv hasn't been linked, link it
-if [[ ! -L ${HOME}/.zshenv ]]; then
-  ln -fs ${HOME}/.config/zshenv ${HOME}/.zshenv
-  source ${HOME}/.zshenv
-fi
+export BAT_THEME="Monokai Extended"
+export CLICOLOR=1
+export EDITOR=nvim
+export HOMEBREW_BUNDLE_FILE="${HOME}/.config/.Brewfile"
+export LG_CONFIG_FILE="${HOME}/.config/lazygit.yml"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export NPM_CONFIG_PREFIX="${HOME}/.local"
+export PATH="${HOME}/.local/bin:${PATH}"
 
-# Environment variables
-export HOMEBREW_BUNDLE_FILE=${ZDOTDIR}/.Brewfile
-export PAGER=most
-export PATH=${HOME}/.cargo/bin:${PATH}
+alias bb='brew bundle install --cleanup'
+alias gs='lazygit'
+alias ll='ls -Ahl'
+alias tf='terraform'
+alias tg='terragrunt'
 
-xcode-select -p &>/dev/null || xcode-select --install
-type brew &>/dev/null || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-if [[ ! ${ZDOTDIR}/.Brewfile.lock.json -nt ${HOMEBREW_BUNDLE_FILE} ]]; then
-  brew bundle install
-fi
+test -L "${HOME}/.zshrc" || ln -fs "${HOME}/.config/.zshrc" "${HOME}/.zshrc"
+test -f "${HOMEBREW_BUNDLE_FILE}.lock.json" || brew bundle install
 
-alias ls='exa --git --group-directories-first --time-style=long-iso'
-alias ll='ls -la'
-alias tree='exa --tree'
+setopt hist_ignore_all_dups share_history
+autoload -Uz compinit promptinit && compinit && promptinit
 
-HISTSIZE=1000000
-SAVEHIST=1000000
-setopt hist_save_no_dups share_history
+zstyle :prompt:pure:execution_time color 8
+zstyle :prompt:pure:git:action color 9
+zstyle :prompt:pure:git:branch color 2
+zstyle :prompt:pure:git:dirty color magenta
+zstyle :prompt:pure:host color 8
+zstyle :prompt:pure:prompt:continuation color 8
+zstyle :prompt:pure:prompt:success color 2
+zstyle :prompt:pure:user color 8
+zstyle :prompt:pure:virtualenv color 8
 
-autoload -Uz compinit && compinit
+prompt pure
+prompt_newline='%666v'
+PROMPT=" $PROMPT"
 
-eval "$(starship init zsh)"
-eval $(brew shellenv)
-source ${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-source ${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+. <(brew shellenv)
+. "${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+. "${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
-# saml login to AWS
-function saml_login() {
-  if [[ -z "${2}" ]]; then
-    echo "usage: saml_login { CLUSTER_NAME } { ENVIRONMENT }"
-  else
-    CLUSTER=${1}
-    ENV=${2}
-
-    export KUBECONFIG=${HOME}/.kube/${CLUSTER}-${ENV}.config
-
-    saml2aws login -a ${CLUSTER}-${ENV} --skip-prompt
-    eval $(saml2aws script -a ${CLUSTER}-${ENV})
-
-    if [[ ! -f "${KUBECONFIG}" ]]; then
-      aws eks \
-        --profile=${CLUSTER}-${ENV} \
-        update-kubeconfig \
-        --name ${CLUSTER} \
-        --kubeconfig=${KUBECONFIG}
-    fi
-  fi
-}
