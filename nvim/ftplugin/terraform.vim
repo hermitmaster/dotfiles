@@ -1,11 +1,8 @@
 map <localleader>a :Dispatch terraform -chdir="%:p:h" apply<CR>
-map <localleader>c :Dispatch terraform -chdir="%:p:h" console<CR>
 map <localleader>d :Dispatch terraform -chdir="%:p:h" destroy<CR>
 map <localleader>f :Dispatch! terraform -chdir="%:p:h" fmt<CR>
 map <localleader>g :Dispatch! terraform -chdir="%:p:h" get<CR>
-map <localleader>h :Dispatch terraform -chdir="%:p:h" graph<CR>
 map <localleader>i :Dispatch! terraform -chdir="%:p:h" init<CR>
-map <localleader>o :Dispatch terraform -chdir="%:p:h" output<CR>
 map <localleader>p :Dispatch terraform -chdir="%:p:h" plan<CR>
 map <localleader>r :Dispatch! terraform -chdir="%:p:h" refresh<CR>
 map <localleader>t :Dispatch terraform -chdir="%:p:h" taint<CR>
