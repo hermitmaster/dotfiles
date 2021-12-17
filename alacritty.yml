@@ -1,5 +1,7 @@
 env:
+  EDITOR: "nvim"
   SHELL_SESSIONS_DISABLE: "1"
+  TIME_STYLE: "long-iso"
 
 window:
   decorations: none
