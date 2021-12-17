@@ -62,6 +62,7 @@ Plug 'akinsho/bufferline.nvim'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'famiu/feline.nvim'
 Plug 'folke/which-key.nvim'
+Plug 'hermitmaster/vim-monokai'
 Plug 'jiangmiao/auto-pairs'
 Plug 'lukas-reineke/indent-blankline.nvim'
 Plug 'mhinz/vim-startify'
@@ -225,5 +226,5 @@ augroup core
   au BufWinLeave * let b:_winview = winsaveview()
 augroup END
 
-colorscheme monokai
+silent! colorscheme monokai
 
