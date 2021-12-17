@@ -1,10 +1,13 @@
-map <localleader>a :Terraform apply<cr>
-map <localleader>d :Terraform destroy<cr>
-map <localleader>g :silent! Terraform get<cr>
-map <localleader>i :silent! Terraform init<cr>
-map <localleader>p :Terraform terraform plan<cr>
-map <localleader>r :silent! Terraform refresh<cr>
-map <localleader>t :silent! Terraform taint<cr>
-map <localleader>u :silent! Terraform untaint<cr>
-map <localleader>v :silent! Terraform validate<cr>
-
+map <localleader>a :Dispatch terraform -chdir="%:p:h" apply<CR>
+map <localleader>c :Dispatch terraform -chdir="%:p:h" console<CR>
+map <localleader>d :Dispatch terraform -chdir="%:p:h" destroy<CR>
+map <localleader>f :Dispatch! terraform -chdir="%:p:h" fmt<CR>
+map <localleader>g :Dispatch! terraform -chdir="%:p:h" get<CR>
+map <localleader>h :Dispatch terraform -chdir="%:p:h" graph<CR>
+map <localleader>i :Dispatch! terraform -chdir="%:p:h" init<CR>
+map <localleader>o :Dispatch terraform -chdir="%:p:h" output<CR>
+map <localleader>p :Dispatch terraform -chdir="%:p:h" plan<CR>
+map <localleader>r :Dispatch! terraform -chdir="%:p:h" refresh<CR>
+map <localleader>t :Dispatch terraform -chdir="%:p:h" taint<CR>
+map <localleader>u :Dispatch terraform -chdir="%:p:h" untaint<CR>
+map <localleader>v :Dispatch terraform -chdir="%:p:h" validate<CR>
