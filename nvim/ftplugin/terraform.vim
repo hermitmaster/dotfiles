@@ -1,10 +1,9 @@
-map <localleader>a :Dispatch terraform -chdir="%:p:h" apply<CR>
-map <localleader>d :Dispatch terraform -chdir="%:p:h" destroy<CR>
-map <localleader>f :Dispatch! terraform -chdir="%:p:h" fmt<CR>
-map <localleader>g :Dispatch! terraform -chdir="%:p:h" get<CR>
-map <localleader>i :Dispatch! terraform -chdir="%:p:h" init<CR>
-map <localleader>p :Dispatch terraform -chdir="%:p:h" plan<CR>
-map <localleader>r :Dispatch! terraform -chdir="%:p:h" refresh<CR>
-map <localleader>t :Dispatch terraform -chdir="%:p:h" taint<CR>
-map <localleader>u :Dispatch terraform -chdir="%:p:h" untaint<CR>
-map <localleader>v :Dispatch terraform -chdir="%:p:h" validate<CR>
+map <localleader>a <cmd>Terraform apply<cr>
+map <localleader>d <cmd>Terraform destroy<cr>
+map <localleader>g <cmd>Terraform get<cr>
+map <localleader>i <cmd>Terraform init<cr>
+map <localleader>p <cmd>Terraform plan<cr>
+map <localleader>r <cmd>Terraform refresh<cr>
+map <localleader>t <cmd>Terraform taint<cr>
+map <localleader>u <cmd>Terraform untaint<cr>
+map <localleader>v <cmd>Terraform validate<cr>

@@ -8,8 +8,3 @@
 .idea/
 *.iml
 
-# neovim
-nvim/plugin/
-
-
-lazygit/state.yml

@@ -1,0 +1,62 @@
+{
+  "coc.preferences.formatOnSaveFiletypes": [
+    "css",
+    "Dockerfile",
+    "go",
+    "html",
+    "json",
+    "jsonc",
+    "markdown",
+    "python",
+    "sh",
+    "terraform",
+    "terragrunt",
+    "vim",
+    "yaml"
+  ],
+  "codeLens.enable": true,
+  "explorer.autoExpandMaxDepth": 1,
+  "explorer.file.showHiddenFiles": true,
+  "explorer.focus": false,
+  "explorer.icon.enableNerdfont": true,
+  "explorer.icon.source": "vim-devicons",
+  "explorer.keyMappings.global": {
+    "<cr>": ["expandable?", ["expanded?", "collapse", "expand"], "open"],
+    "<tab>": false,
+    "d": "delete",
+    "dF": false,
+    "f": false,
+    "F": false,
+    "ga": "gitStage",
+    "gu": "gitUnstage",
+    "m": "actionMenu",
+    "s": "open:vsplit.intelligent"
+  },
+  "explorer.previewAction.onHover": false,
+  "explorer.sources": [
+    {
+      "name": "file",
+      "expand": true
+    }
+  ],
+  "explorer.width": 30,
+  "git.showCommitInFloating": true,
+  "languageserver": {
+    "terraform": {
+      "command": "terraform-ls",
+      "args": ["serve"],
+      "filetypes": ["terragrunt", "terraform", "tf"],
+      "initializationOptions": {},
+      "settings": {}
+    }
+  },
+  "prettier.arrowParens": "avoid",
+  "prettier.disableLanguages": [],
+  "prettier.endOfLine": "lf",
+  "prettier.jsxBracketSameLine": false,
+  "prettier.printWidth": 80,
+  "prettier.proseWrap": "always",
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "es5",
+  "prettier.useTabs": false
+}
