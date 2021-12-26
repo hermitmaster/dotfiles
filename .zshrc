@@ -17,6 +17,7 @@ test -f "${HOMEBREW_BUNDLE_FILE}.lock.json" || bb
 setopt hist_ignore_all_dups share_history
 autoload -Uz compinit promptinit && compinit && promptinit
 
+zstyle :prompt:pure:execution_time color 8
 zstyle :prompt:pure:git:action color 9
 zstyle :prompt:pure:git:branch color 2
 zstyle :prompt:pure:git:dirty color 9
@@ -48,3 +49,4 @@ function man {
     LESS_TERMCAP_se=$(tput sgr0) \
     command man "${@}"
 }
+

@@ -1,8 +1,10 @@
 {
+  "coc.preferences.extensionUpdateCheck": "weekly",
   "coc.preferences.formatOnSaveFiletypes": [
     "css",
     "Dockerfile",
     "go",
+    "hcl",
     "html",
     "json",
     "jsonc",
@@ -10,7 +12,6 @@
     "python",
     "sh",
     "terraform",
-    "terragrunt",
     "vim",
     "yaml"
   ],
@@ -45,7 +46,7 @@
     "terraform": {
       "command": "terraform-ls",
       "args": ["serve"],
-      "filetypes": ["terragrunt", "terraform", "tf"],
+      "filetypes": ["hcl", "terraform", "tf"],
       "initializationOptions": {},
       "settings": {}
     }
