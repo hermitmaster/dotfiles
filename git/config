@@ -1,66 +1,9 @@
-[alias]
-  aa = add -A
-  au = add --update
-  av = add --verbose
-  b = branch
-  ba = branch --all
-  bd = branch --delete
-  br = branch --remote
-  c = commit -v
-  ca = commit -v --amend
-  cane = commit -v --amend --no-edit
-  cl = clone
-  cm = commit -m
-  co = checkout
-  cob = checkout -b
-  com = checkout master
-  d = diff
-  ds = diff --staged
-  fap = fetch --all --prune
-  lg = log --graph
-  lga = log --graph --decorate --all
-  lgo = log --graph --oneline --decorate
-  lgoa = log --graph --oneline --decorate --all
-  lo = log --oneline --decorate
-  ls = log --stat --paginate
-  p = push
-  pf = push --force
-  pob = "!f() { git push origin $(git rev-parse --abbrev-ref HEAD); }; f"
-  psub = "!f() { git push --set-upstream origin $(git rev-parse --abbrev-ref HEAD); }; f"
-  plob = "!f() { git pull origin $(git rev-parse --abbrev-ref HEAD); }; f"
-  rb = rebase
-  rba = rebase --abort
-  rbc = rebase --continue
-  rbi = rebase --interactive
-  rbs = rebase --skip
-  roh = "!f() { git reset origin/$(git rev-parse --abbrev-ref HEAD); --hard }; f"
-  st = status
-  sts = status --short
-
 [branch]
   autosetuprebase = always
 
-[color]
-  ui = true
-
-[color "diff-highlight"]
-  oldNormal = red
-  oldHighlight = red bold 52
-  newNormal = green
-  newHighlight = green bold 22
-
-[color "diff"]
-  meta = yellow
-  frag = magenta bold
-  func = cyan bold
-  commit = yellow bold
-  old = red
-  new = green
-  whitespace = red reverse
-
 [core]
   autocrlf = input
-  pager = diff-so-fancy | less --tabs=4 -RFX
+  pager = delta
 
 [init]
   defaultBranch = main

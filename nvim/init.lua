@@ -1,3 +1,4 @@
+local cmd = vim.cmd
 local fn = vim.fn
 local g = vim.g
 local o = vim.opt
@@ -31,7 +32,9 @@ g.is_posix = 1
 g.mapleader = ' '
 g.maplocalleader = ','
 
-vim.cmd([[
+cmd('colorscheme monokai')
+
+cmd([[
   augroup core
     au!
     au BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
@@ -68,14 +71,21 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'christoomey/vim-tmux-navigator',
-  }
-
-  use {
     'feline-nvim/feline.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
       require('feline').setup {
+        force_inactive = {
+          filetypes = {
+            '^alpha$',
+            '^fugitive$',
+            '^fugitiveblame$',
+            '^help$',
+            '^NvimTree$',
+            '^packer$',
+            '^qf$',
+          },
+        },
         theme = {
           bg = '#383830',
           fg = '#f9f8f5',
@@ -132,9 +142,10 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'hermitmaster/vim-monokai',
-    config = function()
-      vim.cmd('colorscheme monokai')
+    'goolord/alpha-nvim',
+    requires = 'kyazdani42/nvim-web-devicons',
+    config = function ()
+      require('alpha').setup(require('alpha.themes.startify').opts)
     end
   }
 
@@ -199,6 +210,11 @@ return require('packer').startup(function(use)
   }
 
   use {
+    'knubie/vim-kitty-navigator',
+    run = 'cp ./*.py ~/.config/kitty/',
+  }
+
+  use {
     'kyazdani42/nvim-tree.lua',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
@@ -254,9 +270,9 @@ return require('packer').startup(function(use)
       require('indent_blankline').setup {
         char = '│',
         filetype_exclude = {
+          'alpha',
           'help',
           'packer',
-          'startify',
         },
         show_current_context = true,
         show_first_indent_level = false,
@@ -266,24 +282,22 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'mhinz/vim-startify',
-    config = function()
-      vim.g.startify_enable_special = 0
-      vim.g.startify_fortune_use_unicode = 1
-      vim.g.startify_relative_path = 1
-      vim.g.startify_update_oldfiles = 1
-    end
-  }
-
-  use {
     'neovim/nvim-lspconfig',
     requires = 'hrsh7th/cmp-nvim-lsp',
+    run = 'npm i -g vscode-langservers-extracted',
     config = function()
+      local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+      for type, icon in pairs(signs) do
+        local hl = "DiagnosticSign" .. type
+        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+      end
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       local lspconfig = require('lspconfig')
       local servers = {
         'bashls',
+        'cssls',
         'gopls',
+        'html',
         'pyright',
         'sumneko_lua',
         'terraformls',
@@ -324,6 +338,13 @@ return require('packer').startup(function(use)
           capabilities = capabilities,
         }
       end
+    end
+  }
+
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup {}
     end
   }
 
@@ -376,17 +397,9 @@ return require('packer').startup(function(use)
     end
   }
 
-  use {
-    'tpope/vim-commentary',
-  }
+  use 'tpope/vim-dispatch'
 
-  use {
-    'tpope/vim-dispatch',
-  }
-
-  use {
-    'tpope/vim-fugitive',
-  }
+  use 'tpope/vim-fugitive'
 
   use {
     'windwp/nvim-autopairs',

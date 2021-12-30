@@ -1,0 +1,10 @@
+vim.api.nvim_set_keymap('n', '<localleader>a', '<cmd>Dispatch terragrunt apply -terragrunt-working-dir "%:p:h"<cr>', { noremap = true, silent = true } )
+vim.api.nvim_set_keymap('n', '<localleader>d', '<cmd>Dispatch terragrunt destroy -terragrunt-working-dir "%:p:h"<cr>', { noremap = true, silent = true } )
+vim.api.nvim_set_keymap('n', '<localleader>g', '<cmd>Dispatch terragrunt get -terragrunt-working-dir "%:p:h"<cr>', { noremap = true, silent = true } )
+vim.api.nvim_set_keymap('n', '<localleader>i', '<cmd>Dispatch! terragrunt init -terragrunt-working-dir "%:p:h"<cr>', { noremap = true, silent = true } )
+vim.api.nvim_set_keymap('n', '<localleader>p', '<cmd>Dispatch terragrunt plan -terragrunt-working-dir "%:p:h"<cr>', { noremap = true, silent = true } )
+vim.api.nvim_set_keymap('n', '<localleader>r', '<cmd>Dispatch terragrunt refresh -terragrunt-working-dir "%:p:h"<cr>', { noremap = true, silent = true } )
+vim.api.nvim_set_keymap('n', '<localleader>t', '<cmd>Dispatch terragrunt taint -terragrunt-working-dir "%:p:h"<cr>', { noremap = true, silent = true } )
+vim.api.nvim_set_keymap('n', '<localleader>u', '<cmd>Dispatch terragrunt untaint -terragrunt-working-dir "%:p:h"<cr>', { noremap = true, silent = true } )
+vim.api.nvim_set_keymap('n', '<localleader>v', '<cmd>Dispatch! terragrunt validate -terragrunt-working-dir "%:p:h"<cr>', { noremap = true, silent = true } )
+

@@ -1,0 +1,15 @@
+antigen use oh-my-zsh
+
+antigen theme romkatv/powerlevel10k
+. "${ZDOTDIR}/.p10k.zsh"
+
+antigen bundles <<EOBUNDLES
+  docker
+  git
+  hermitmaster/zsh-exa-plugin --branch=main
+  hermitmaster/zsh-zoxide-plugin --branch=main
+  zsh-users/zsh-autosuggestions
+  zsh-users/zsh-syntax-highlishting
+EOBUNDLES
+
+antigen apply
