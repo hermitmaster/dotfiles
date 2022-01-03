@@ -1,9 +1,0 @@
-disableStartupPopups: true
-git:
-  paging:
-    colorArg: always
-    pager: delta --dark --paging=never
-gui:
-  showRandomTip: false
-  showCommandLog: false
-
