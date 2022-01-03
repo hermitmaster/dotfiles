@@ -1,40 +1,32 @@
-local cmd = vim.cmd
-local fn = vim.fn
-local g = vim.g
-local o = vim.opt
+vim.opt.clipboard = 'unnamed,unnamedplus'
+vim.opt.completeopt = 'menuone'
+vim.opt.expandtab = true
+vim.opt.fillchars = 'eob: ,vert:│'
+vim.opt.ignorecase = true
+vim.opt.list = true
+vim.opt.listchars = 'tab:→ ,extends:↷,precedes:↶,eol:↵'
+vim.opt.matchtime = 0
+vim.opt.mouse = 'a'
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.shiftwidth = 2
+vim.opt.shortmess:append('acs')
+vim.opt.showcmd = false
+vim.opt.showmatch = true
+vim.opt.showmode = false
+vim.opt.signcolumn = 'yes'
+vim.opt.smartcase = true
+vim.opt.smartindent = true
+vim.opt.tabstop = 2
+vim.opt.termguicolors = true
+vim.opt.undofile = true
+vim.opt.updatetime = 300
+vim.opt.wrap = false
 
-o.clipboard = 'unnamed,unnamedplus'
-o.completeopt = 'menuone'
-o.expandtab = true
-o.fillchars = 'eob: ,vert:│'
-o.ignorecase = true
-o.list = true
-o.listchars = 'tab:→ ,extends:↷,precedes:↶,eol:↵'
-o.matchtime = 0
-o.mouse = 'a'
-o.number = true
-o.relativenumber = true
-o.shiftwidth = 2
-o.shortmess:append('acs')
-o.showcmd = false
-o.showmatch = true
-o.showmode = false
-o.signcolumn = 'yes'
-o.smartcase = true
-o.smartindent = true
-o.tabstop = 2
-o.termguicolors = true
-o.undofile = true
-o.updatetime = 300
-o.wrap = false
+vim.g.mapleader = ' '
+vim.g.maplocalleader = ','
 
-g.is_posix = 1
-g.mapleader = ' '
-g.maplocalleader = ','
-
-cmd('colorscheme monokai')
-
-cmd([[
+vim.cmd([[
   augroup core
     au!
     au BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
@@ -42,31 +34,25 @@ cmd([[
     au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
     au BufWinEnter * if(exists('b:_winview')) | call winrestview(b:_winview) | endif
     au BufWinLeave * let b:_winview = winsaveview()
+    au BufNewFile,BufRead .Brewfile set filetype=ruby
   augroup END
 ]])
 
-local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-  PACKER_BOOTSTRAP = fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+local install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
+  PACKER_BOOTSTRAP = vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
+  use 'tpope/vim-dispatch'
+  use 'tpope/vim-fugitive'
 
   use {
     'akinsho/bufferline.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
       require('bufferline').setup {}
-      vim.api.nvim_set_keymap('n', '<leader>1', '<cmd>BufferLineGoToBuffer 1<cr>', { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>2', '<cmd>BufferLineGoToBuffer 2<cr>', { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>3', '<cmd>BufferLineGoToBuffer 3<cr>', { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>4', '<cmd>BufferLineGoToBuffer 4<cr>', { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>5', '<cmd>BufferLineGoToBuffer 5<cr>', { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>6', '<cmd>BufferLineGoToBuffer 6<cr>', { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>7', '<cmd>BufferLineGoToBuffer 7<cr>', { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>8', '<cmd>BufferLineGoToBuffer 8<cr>', { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>9', '<cmd>BufferLineGoToBuffer 9<cr>', { noremap = true, silent = true } )
     end
   }
 
@@ -111,32 +97,62 @@ return require('packer').startup(function(use)
       local wk = require('which-key')
       wk.setup {}
       wk.register({
-        ["<leader>"] = {
+        ['<leader>'] = {
           b = {
-            name = "buffer",
-            d = { "<cmd>bdelete<cr>", "Delete Current Buffer" },
-            n = { "<cmd>bnext<cr>", "Next Buffer" },
-            p = { "<cmd>bprevious<cr>", "Previous Buffer" },
+            name = 'Buffer',
+            d = { '<cmd>bdelete<cr>', 'Delete Current Buffer' },
+            e = { '<cmd>enew<cr>','Empty Buffer' },
+            f = { "<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>", 'Fuzzy Search (Buffer)' },
+            F = { "<cmd>lua require('telescope.builtin').grep_string()<cr>", 'Search <cword> (Buffer)' },
+            n = { '<cmd>bnext<cr>', 'Next Buffer' },
+            p = { '<cmd>bprevious<cr>', 'Previous Buffer' },
+            w = { '<cmd>write<cr>', 'Write Buffer' },
+            y = { "<cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>", 'Search Symbols (Buffer)' },
           },
           f = {
-            name = "file",
-            n = { "<cmd>enew<cr>","New File" },
-            s = { "<cmd>write<cr>", "Save File" },
-            t = { "<cmd>NvimTreeToggle<cr>","File Tree" },
+            name = 'File',
+            f = { "<cmd>lua require('telescope.builtin').find_files()<cr>", 'Search Files' },
+            s = { '<cmd>write<cr>', 'Save File' },
+            t = { '<cmd>NvimTreeToggle<cr>', 'File Tree' },
           },
           g = {
-            name = "git",
-            d = { "<cmd>Gvdiffsplit<cr>", "Diff" },
-            s = { "<cmd>Git<cr>", "Status" },
+            name = 'Git',
+            d = { '<cmd>Gvdiffsplit<cr>', 'Diff' },
+            l = { "<cmd>lua require('telescope.builtin').git_commits()<cr>", 'Log' },
+            L = { "<cmd>lua require('telescope.builtin').git_bcommits()<cr>", 'Log (Buffer)' },
+            m = { "<cmd>lua require('telescope.builtin').git_branches()<cr>", 'Branches'},
+            t = { "<cmd>lua require('telescope.builtin').git_stash()<cr>", 'Stashes' },
+            s = { '<cmd>Git<cr>', 'Status' },
           },
-          q = { "<cmd>qall<cr>", "Quit" },
-          Q = { "<cmd>qall!<cr>", "Quit (Force)" },
-          s = {
-            name = "search",
+          h = {
+            name = 'Hunks',
           },
+          ['?'] = {
+            name = 'Help',
+            h = { "<cmd>lua require('telescope.builtin').help_tags()<cr>", 'Help Tags' },
+            m = { "<cmd>lua require('telescope.builtin').man_pages()<cr>", 'Man Pages' },
+          },
+          q = { '<cmd>qall<cr>', 'Quit' },
+          Q = { '<cmd>qall!<cr>', 'Quit (Force)' },
+          R = { "<cmd>lua require('telescope.builtin').resume()<cr>", 'Resume Search' },
+          w = {
+            name = 'Workspace',
+            f = { "<cmd>lua require('telescope.builtin').live_grep()<cr>", 'Fuzzy Search (Project)' },
+            F = { "<cmd>lua require('telescope.builtin').live_grep({ default_text = vim.fn.expand('<cword>')", 'Search <cword> (Project)' },
+            y = { "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<cr>", 'Search Symbols (Project)' },
+          },
+          ['1'] = { '<cmd>BufferLineGoToBuffer 1<cr>', 'Buffer 1' },
+          ['2'] = { '<cmd>BufferLineGoToBuffer 2<cr>', 'Buffer 2' },
+          ['3'] = { '<cmd>BufferLineGoToBuffer 3<cr>', 'Buffer 3' },
+          ['4'] = { '<cmd>BufferLineGoToBuffer 4<cr>', 'Buffer 4' },
+          ['5'] = { '<cmd>BufferLineGoToBuffer 5<cr>', 'Buffer 5' },
+          ['6'] = { '<cmd>BufferLineGoToBuffer 6<cr>', 'Buffer 6' },
+          ['7'] = { '<cmd>BufferLineGoToBuffer 7<cr>', 'Buffer 7' },
+          ['8'] = { '<cmd>BufferLineGoToBuffer 8<cr>', 'Buffer 8' },
+          ['9'] = { '<cmd>BufferLineGoToBuffer 9<cr>', 'Buffer 9' },
         },
-        ["<Tab>"] = { "<cmd>wincmd w<cr>", "Next Window" },
-        ["<S-Tab>"] = { "<cmd>wincmd p<cr>", "Previous Window" },
+        ['<Tab>'] = { '<cmd>wincmd w<cr>', 'Next Window' },
+        ['<S-Tab>'] = { '<cmd>wincmd p<cr>', 'Previous Window' },
       })
     end
   }
@@ -146,6 +162,13 @@ return require('packer').startup(function(use)
     requires = 'kyazdani42/nvim-web-devicons',
     config = function ()
       require('alpha').setup(require('alpha.themes.startify').opts)
+    end
+  }
+
+  use {
+    'hermitmaster/nvim-monokai',
+    config = function()
+      vim.cmd('colorscheme monokai')
     end
   }
 
@@ -160,8 +183,8 @@ return require('packer').startup(function(use)
       'saadparwaiz1/cmp_luasnip'
     },
     config = function()
-      local luasnip = require 'luasnip'
-      local cmp = require 'cmp'
+      local luasnip = require('luasnip')
+      local cmp = require('cmp')
 
       cmp.setup {
         mapping = {
@@ -171,7 +194,7 @@ return require('packer').startup(function(use)
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
           ['<C-Space>'] = cmp.mapping.complete(),
           ['<C-e>'] = cmp.mapping.close(),
-          ['<CR>'] = cmp.mapping.confirm {
+          ['<cr>'] = cmp.mapping.confirm {
             behavior = cmp.ConfirmBehavior.Replace,
             select = true,
           },
@@ -211,47 +234,40 @@ return require('packer').startup(function(use)
 
   use {
     'knubie/vim-kitty-navigator',
-    run = 'cp ./*.py ~/.config/kitty/',
+    run = 'cp -i ./*.py ~/.config/kitty/',
   }
 
   use {
     'kyazdani42/nvim-tree.lua',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
-      local tree_cb = require'nvim-tree.config'.nvim_tree_callback
+      local nt_cb = require('nvim-tree.config').nvim_tree_callback
       require('nvim-tree').setup {
         view = {
           mappings = {
             custom_only = true,
             list = {
-              { key = "<CR>",  cb = tree_cb("edit") },
-              { key = "<C-v>", cb = tree_cb("vsplit") },
-              { key = "<C-x>", cb = tree_cb("split") },
-              { key = "<",     cb = tree_cb("prev_sibling") },
-              { key = ">",     cb = tree_cb("next_sibling") },
-              { key = "P",     cb = tree_cb("parent_node") },
-              { key = "K",     cb = tree_cb("first_sibling") },
-              { key = "J",     cb = tree_cb("last_sibling") },
-              { key = "i",     cb = tree_cb("toggle_ignored") },
-              { key = "R",     cb = tree_cb("refresh") },
-              { key = "a",     cb = tree_cb("create") },
-              { key = "d",     cb = tree_cb("trash") },
-              { key = "r",     cb = tree_cb("rename") },
-              { key = "x",     cb = tree_cb("cut") },
-              { key = "c",     cb = tree_cb("copy") },
-              { key = "p",     cb = tree_cb("paste") },
-              { key = "y",     cb = tree_cb("copy_name") },
-              { key = "Y",     cb = tree_cb("copy_path") },
-              { key = "gy",    cb = tree_cb("copy_absolute_path") },
-              { key = "[c",    cb = tree_cb("prev_git_item") },
-              { key = "]c",    cb = tree_cb("next_git_item") },
-              { key = "-",     cb = tree_cb("dir_up") },
-              { key = "o",     cb = tree_cb("system_open") },
-              { key = "g?",    cb = tree_cb("toggle_help") },
+              { key = "<cr>",  cb = nt_cb("edit") },
+              { key = "<C-v>", cb = nt_cb("vsplit") },
+              { key = "<C-x>", cb = nt_cb("split") },
+              { key = "i",     cb = nt_cb("toggle_ignored") },
+              { key = "R",     cb = nt_cb("refresh") },
+              { key = "a",     cb = nt_cb("create") },
+              { key = "d",     cb = nt_cb("trash") },
+              { key = "r",     cb = nt_cb("rename") },
+              { key = "x",     cb = nt_cb("cut") },
+              { key = "c",     cb = nt_cb("copy") },
+              { key = "p",     cb = nt_cb("paste") },
+              { key = "y",     cb = nt_cb("copy_name") },
+              { key = "Y",     cb = nt_cb("copy_path") },
+              { key = "gy",    cb = nt_cb("copy_absolute_path") },
+              { key = "-",     cb = nt_cb("dir_up") },
+              { key = "K",     cb = nt_cb("toggle_help") },
             }
           }
         }
       }
+
       vim.cmd("au VimEnter * if @% == '' || @% == '.' | exe 'NvimTreeOpen' | wincmd p | endif")
     end
   }
@@ -283,59 +299,94 @@ return require('packer').startup(function(use)
 
   use {
     'neovim/nvim-lspconfig',
-    requires = 'hrsh7th/cmp-nvim-lsp',
+    requires = {
+      'folke/which-key.nvim',
+      'hrsh7th/cmp-nvim-lsp',
+    },
     run = 'npm i -g vscode-langservers-extracted',
+    after = 'which-key.nvim',
     config = function()
-      local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
-      for type, icon in pairs(signs) do
-        local hl = "DiagnosticSign" .. type
-        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
-      end
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       local lspconfig = require('lspconfig')
+      local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+      for type, icon in pairs(signs) do
+        local hl = "DiagnosticSign"..type
+        vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+      end
+
+      local on_attach = function(client, bufnr)
+        require('which-key').register({
+          g = {
+            d = { '<cmd>lua vim.lsp.buf.definition()<cr>', 'Go To Definition' },
+            D = { '<cmd>lua vim.lsp.buf.declaration()<cr>', 'Go To Declaration' },
+            i = { '<cmd>lua vim.lsp.buf.implementation()<cr>', 'Go To Implementation' },
+            r = { '<cmd>lua vim.lsp.buf.references()<cr>', 'Show References' },
+            t = { '<cmd>lua vim.lsp.buf.type_definition()<cr>', 'Type Definition' },
+          },
+          K = { '<cmd>lua vim.lsp.buf.hover()<cr>', 'Help' },
+          ['<leader>'] = {
+            a = { '<cmd>lua vim.lsp.buf.code_action()<cr>', 'Code Action' },
+            F = { '<cmd>lua vim.lsp.buf.formatting_sync()<cr>', 'Format Buffer' },
+            d = {
+              name = 'Diagnostics (LSP)',
+              e = { '<cmd>lua vim.diagnostic.open_float()<cr>', 'Diagnostics' },
+              n = { '<cmd>lua vim.diagnostic.goto_next()<cr>', 'Diagnostics Next' },
+              p = { '<cmd>lua vim.diagnostic.goto_prev()<cr>', 'Diagnostics Previous' },
+              q = { '<cmd>lua vim.diagnostic.setloclist()<cr>', 'Diagnostics LL' },
+            },
+            r = { '<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename Symbol' },
+          },
+          ['<C-k>'] = { '<cmd>lua vim.lsp.buf.signature_help()<cr>', '' },
+        },
+        { buffer = bufnr })
+
+        if client.resolved_capabilities.document_formatting then
+          vim.cmd [[
+            augroup Format
+              autocmd! * <buffer>
+              au BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+            augroup END
+          ]]
+        end
+      end
+
+      capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+
+      lspconfig.sumneko_lua.setup {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        settings = {
+          Lua = {
+            diagnostics = {
+              globals = { 'vim' }
+            }
+          }
+        }
+      }
+
+      lspconfig.terraformls.setup {
+        capabilities = capabilities,
+        on_attach = on_attach,
+        filetypes = {
+          'hcl',
+          'terraform'
+        },
+      }
+
+      -- Generic lsp config
       local servers = {
         'bashls',
         'cssls',
         'gopls',
         'html',
         'pyright',
-        'sumneko_lua',
-        'terraformls',
         'yamlls',
       }
 
-      local on_attach = function(client, bufnr)
-        local function buf_set_keymap(...)
-          vim.api.nvim_buf_set_keymap(bufnr, ...)
-        end
-
-        -- Mappings.
-        local opts = { noremap=true, silent=true }
-
-        -- See `:help vim.lsp.*` for documentation on any of the below functions
-        buf_set_keymap('n', 'gD', '<cmd>lua vim.lsp.buf.declaration()<CR>', opts)
-        buf_set_keymap('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>', opts)
-        buf_set_keymap('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>', opts)
-        buf_set_keymap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>', opts)
-        buf_set_keymap('n', '<C-k>', '<cmd>lua vim.lsp.buf.signature_help()<CR>', opts)
-        buf_set_keymap('n', '<leader>lD', '<cmd>lua vim.lsp.buf.type_definition()<CR>', opts)
-        buf_set_keymap('n', '<leader>lr', '<cmd>lua vim.lsp.buf.rename()<CR>', opts)
-        buf_set_keymap('n', '<leader>la', '<cmd>lua vim.lsp.buf.code_action()<CR>', opts)
-        buf_set_keymap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>', opts)
-        buf_set_keymap('n', '<leader>le', '<cmd>lua vim.diagnostic.open_float()<CR>', opts)
-        buf_set_keymap('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<CR>', opts)
-        buf_set_keymap('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<CR>', opts)
-        buf_set_keymap('n', '<leader>lq', '<cmd>lua vim.diagnostic.setloclist()<CR>', opts)
-        buf_set_keymap('n', '<leader>bf', '<cmd>lua vim.lsp.buf.formatting()<CR>', opts)
-
-      end
-
-      capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
-
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
-          on_attach = on_attach,
           capabilities = capabilities,
+          on_attach = on_attach,
         }
       end
     end
@@ -353,34 +404,12 @@ return require('packer').startup(function(use)
     requires = 'nvim-lua/plenary.nvim',
     config = function()
       require('telescope').setup {
-        defaults = {
-          mappings = {
-            i = {
-              ["<C-h>"] = "which_key"
-            }
-          }
-        },
         pickers = {
           find_files = {
-            find_command = { "fd", "--type", "f", "--strip-cwd-prefix" }
+            find_command = { 'rg', '--files', '--hidden', '--glob=!.git' }
           },
         }
       }
-      vim.api.nvim_set_keymap('n', '<leader>gl', "<cmd>lua require('telescope.builtin').git_commits()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>gL', "<cmd>lua require('telescope.builtin').git_bcommits()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>gm', "<cmd>lua require('telescope.builtin').git_branches()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>gt', "<cmd>lua require('telescope.builtin').git_stash()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>sb', "<cmd>lua require('telescope.builtin').buffers()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>sf', "<cmd>lua require('telescope.builtin').find_files()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>sh', "<cmd>lua require('telescope.builtin').help_tags()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>sm', "<cmd>lua require('telescope.builtin').man_pages()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>sr', "<cmd>lua require('telescope.builtin').resume()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>ss', "<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>sS', "<cmd>lua require('telescope.builtin').grep_string()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>sP', "<cmd>lua require('telescope.builtin').live_grep({ default_text = vim.fn.expand('<cword>')", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>sy', "<cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>sY', "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<cr>", { noremap = true, silent = true } )
-      vim.api.nvim_set_keymap('n', '<leader>s/', "<cmd>lua require('telescope.builtin').live_grep()<cr>", { noremap = true, silent = true } )
     end
   }
 
@@ -389,17 +418,40 @@ return require('packer').startup(function(use)
     run = ':TSUpdate',
     config = function()
       require('nvim-treesitter.configs').setup {
-        ensure_installed = 'maintained',
+        ensure_installed = {
+          'bash',
+          'comment',
+          'css',
+          'dockerfile',
+          'go',
+          'gomod',
+          'gowork',
+          'graphql',
+          'hcl',
+          'html',
+          'http',
+          'javascript',
+          'json',
+          'json5',
+          'jsonc',
+          'lua',
+          'make',
+          'markdown',
+          'python',
+          'regex',
+          'ruby',
+          'scss',
+          'toml',
+          'typescript',
+          'vue',
+          'yaml',
+        },
         highlight = {
           enable = true,
         },
       }
     end
   }
-
-  use 'tpope/vim-dispatch'
-
-  use 'tpope/vim-fugitive'
 
   use {
     'windwp/nvim-autopairs',

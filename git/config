@@ -38,10 +38,12 @@
 
 [core]
   autocrlf = input
-  pager = less -MRFX +Gg
 
 [init]
   defaultBranch = main
+
+[pager]
+  diff = "less -FMRX +Gg"
 
 [pull]
   rebase = true
