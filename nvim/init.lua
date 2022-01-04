@@ -5,31 +5,28 @@ vim.opt.fillchars = 'eob: ,vert:│'
 vim.opt.ignorecase = true
 vim.opt.list = true
 vim.opt.listchars = 'tab:→ ,extends:↷,precedes:↶,eol:↵'
-vim.opt.matchtime = 0
 vim.opt.mouse = 'a'
 vim.opt.number = true
-vim.opt.relativenumber = true
 vim.opt.shiftwidth = 2
 vim.opt.shortmess:append('acs')
 vim.opt.showcmd = false
-vim.opt.showmatch = true
 vim.opt.showmode = false
 vim.opt.signcolumn = 'yes'
 vim.opt.smartcase = true
 vim.opt.smartindent = true
 vim.opt.tabstop = 2
-vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.updatetime = 300
 vim.opt.wrap = false
 
 vim.g.mapleader = ' '
-vim.g.maplocalleader = ','
+
+vim.cmd('colorscheme monokai')
 
 vim.cmd([[
   augroup core
     au!
-    au BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu   | endif
+    au BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu | endif
     au BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
     au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
     au BufWinEnter * if(exists('b:_winview')) | call winrestview(b:_winview) | endif
@@ -39,57 +36,14 @@ vim.cmd([[
 ]])
 
 local install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  PACKER_BOOTSTRAP = vim.fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+if not io.open(install_path) then
+  PACKER_BOOTSTRAP = os.execute('git clone --depth 1 https://github.com/wbthomason/packer.nvim '..install_path..' &>/dev/null')
 end
 
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
-  use 'tpope/vim-dispatch'
+  use 'nvim-lua/plenary.nvim'
   use 'tpope/vim-fugitive'
-
-  use {
-    'akinsho/bufferline.nvim',
-    requires = 'kyazdani42/nvim-web-devicons',
-    config = function()
-      require('bufferline').setup {}
-    end
-  }
-
-  use {
-    'feline-nvim/feline.nvim',
-    requires = 'kyazdani42/nvim-web-devicons',
-    config = function()
-      require('feline').setup {
-        force_inactive = {
-          filetypes = {
-            '^alpha$',
-            '^fugitive$',
-            '^fugitiveblame$',
-            '^help$',
-            '^NvimTree$',
-            '^packer$',
-            '^qf$',
-          },
-        },
-        theme = {
-          bg = '#383830',
-          fg = '#f9f8f5',
-          black = '#383830',
-          red = '#f92672',
-          green = '#a6e22e',
-          yellow = '#e6db74',
-          oceanblue = '#49483e',
-          magenta = '#ae81ff',
-          violet = '#ae81ff',
-          cyan = '#a1efe4',
-          skyblue = '#66d9ef',
-          orange = '#75715e',
-          white = '#f9f8f5',
-        }
-      }
-    end
-  }
 
   use {
     'folke/which-key.nvim',
@@ -98,58 +52,55 @@ return require('packer').startup(function(use)
       wk.setup {}
       wk.register({
         ['<leader>'] = {
-          b = {
-            name = 'Buffer',
-            d = { '<cmd>bdelete<cr>', 'Delete Current Buffer' },
-            e = { '<cmd>enew<cr>','Empty Buffer' },
-            f = { "<cmd>lua require('telescope.builtin').current_buffer_fuzzy_find()<cr>", 'Fuzzy Search (Buffer)' },
-            F = { "<cmd>lua require('telescope.builtin').grep_string()<cr>", 'Search <cword> (Buffer)' },
-            n = { '<cmd>bnext<cr>', 'Next Buffer' },
-            p = { '<cmd>bprevious<cr>', 'Previous Buffer' },
-            w = { '<cmd>write<cr>', 'Write Buffer' },
-            y = { "<cmd>lua require('telescope.builtin').lsp_document_symbols()<cr>", 'Search Symbols (Buffer)' },
+          b = { name = 'Buffer',
+            c = { function() require('telescope.builtin').grep_string() end, 'Find <cword>' },
+            d = { '<cmd>bd<cr>', 'Delete Current Buffer' },
+            g = { function() require('telescope.builtin').current_buffer_fuzzy_find() end, 'Fuzzy Find' },
+            l = { function() require('telescope.builtin').git_bcommits() end, 'Git Log' },
+            n = { '<cmd>bn<cr>', 'Next Buffer' },
+            p = { '<cmd>bp<cr>', 'Previous Buffer' },
+            v = { '<cmd>Gvdiffsplit<cr>', 'Diff' },
+            y = { function() require('telescope.builtin').lsp_document_symbols() end, 'Find Symbols' },
           },
           f = {
             name = 'File',
-            f = { "<cmd>lua require('telescope.builtin').find_files()<cr>", 'Search Files' },
-            s = { '<cmd>write<cr>', 'Save File' },
+            f = { function() require('telescope.builtin').find_files() end, 'Find Files' },
+            n = { '<cmd>enew<cr>', 'New File' },
+            s = { '<cmd>w<cr>', 'Save File' },
             t = { '<cmd>NvimTreeToggle<cr>', 'File Tree' },
           },
-          g = {
-            name = 'Git',
-            d = { '<cmd>Gvdiffsplit<cr>', 'Diff' },
-            l = { "<cmd>lua require('telescope.builtin').git_commits()<cr>", 'Log' },
-            L = { "<cmd>lua require('telescope.builtin').git_bcommits()<cr>", 'Log (Buffer)' },
-            m = { "<cmd>lua require('telescope.builtin').git_branches()<cr>", 'Branches'},
-            t = { "<cmd>lua require('telescope.builtin').git_stash()<cr>", 'Stashes' },
-            s = { '<cmd>Git<cr>', 'Status' },
+          g = { name = 'Global',
+            c = { function() require('telescope.builtin').live_grep({ default_text = vim.fn.expand('<cword>') }) end, 'Find <cword>' },
+            f = { function() require('telescope.builtin').live_grep() end, 'Fuzzy Find' },
+            h = { function() require('telescope.builtin').git_stash() end, 'Git Stashes' },
+            l = { function() require('telescope.builtin').git_commits() end, 'Git Log' },
+            m = { function() require('telescope.builtin').git_branches() end, 'Git Branches'},
+            p = {
+              function()
+                -- This is pretty close to the pattern I need to follow for tf/tg
+                local Job = require('plenary.job')
+                local chan = vim.api.nvim_open_term(vim.api.nvim_create_buf(true, true), {})
+
+                Job:new({
+                  command = 'pre-commit',
+                  args = { 'run', '-a' },
+                  cwd = os.getenv('PWD'),
+                  on_stdout = vim.schedule_wrap(function(_, data)
+                    vim.api.nvim_chan_send(chan, data .. '\r\n')
+                  end)
+                }):start()
+              end,
+              'pre-commit run -a'},
+            s = { '<cmd>Git<cr>', 'Git Status' },
+            y = { function() require('telescope.builtin').lsp_workspace_symbols() end, 'Find Symbols (Project)' },
           },
-          h = {
-            name = 'Hunks',
-          },
-          ['?'] = {
-            name = 'Help',
-            h = { "<cmd>lua require('telescope.builtin').help_tags()<cr>", 'Help Tags' },
-            m = { "<cmd>lua require('telescope.builtin').man_pages()<cr>", 'Man Pages' },
-          },
+          h = { name = 'Hunk', },
           q = { '<cmd>qall<cr>', 'Quit' },
-          Q = { '<cmd>qall!<cr>', 'Quit (Force)' },
-          R = { "<cmd>lua require('telescope.builtin').resume()<cr>", 'Resume Search' },
-          w = {
-            name = 'Workspace',
-            f = { "<cmd>lua require('telescope.builtin').live_grep()<cr>", 'Fuzzy Search (Project)' },
-            F = { "<cmd>lua require('telescope.builtin').live_grep({ default_text = vim.fn.expand('<cword>')", 'Search <cword> (Project)' },
-            y = { "<cmd>lua require('telescope.builtin').lsp_workspace_symbols()<cr>", 'Search Symbols (Project)' },
+          r = { function() require('telescope.builtin').resume() end, 'Resume Search' },
+          w = { name = 'Window',
+            n = { '<cmd>wincmd w<cr>', 'Next Window' },
+            p = { '<cmd>wincmd p<cr>', 'Previous Window' },
           },
-          ['1'] = { '<cmd>BufferLineGoToBuffer 1<cr>', 'Buffer 1' },
-          ['2'] = { '<cmd>BufferLineGoToBuffer 2<cr>', 'Buffer 2' },
-          ['3'] = { '<cmd>BufferLineGoToBuffer 3<cr>', 'Buffer 3' },
-          ['4'] = { '<cmd>BufferLineGoToBuffer 4<cr>', 'Buffer 4' },
-          ['5'] = { '<cmd>BufferLineGoToBuffer 5<cr>', 'Buffer 5' },
-          ['6'] = { '<cmd>BufferLineGoToBuffer 6<cr>', 'Buffer 6' },
-          ['7'] = { '<cmd>BufferLineGoToBuffer 7<cr>', 'Buffer 7' },
-          ['8'] = { '<cmd>BufferLineGoToBuffer 8<cr>', 'Buffer 8' },
-          ['9'] = { '<cmd>BufferLineGoToBuffer 9<cr>', 'Buffer 9' },
         },
         ['<Tab>'] = { '<cmd>wincmd w<cr>', 'Next Window' },
         ['<S-Tab>'] = { '<cmd>wincmd p<cr>', 'Previous Window' },
@@ -162,13 +113,6 @@ return require('packer').startup(function(use)
     requires = 'kyazdani42/nvim-web-devicons',
     config = function ()
       require('alpha').setup(require('alpha.themes.startify').opts)
-    end
-  }
-
-  use {
-    'hermitmaster/nvim-monokai',
-    config = function()
-      vim.cmd('colorscheme monokai')
     end
   }
 
@@ -234,35 +178,41 @@ return require('packer').startup(function(use)
 
   use {
     'knubie/vim-kitty-navigator',
-    run = 'cp -i ./*.py ~/.config/kitty/',
+    run = 'cp ./*.py ~/.config/kitty/',
   }
 
   use {
     'kyazdani42/nvim-tree.lua',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
-      local nt_cb = require('nvim-tree.config').nvim_tree_callback
+      local tree_cb = require'nvim-tree.config'.nvim_tree_callback
       require('nvim-tree').setup {
         view = {
           mappings = {
             custom_only = true,
             list = {
-              { key = "<cr>",  cb = nt_cb("edit") },
-              { key = "<C-v>", cb = nt_cb("vsplit") },
-              { key = "<C-x>", cb = nt_cb("split") },
-              { key = "i",     cb = nt_cb("toggle_ignored") },
-              { key = "R",     cb = nt_cb("refresh") },
-              { key = "a",     cb = nt_cb("create") },
-              { key = "d",     cb = nt_cb("trash") },
-              { key = "r",     cb = nt_cb("rename") },
-              { key = "x",     cb = nt_cb("cut") },
-              { key = "c",     cb = nt_cb("copy") },
-              { key = "p",     cb = nt_cb("paste") },
-              { key = "y",     cb = nt_cb("copy_name") },
-              { key = "Y",     cb = nt_cb("copy_path") },
-              { key = "gy",    cb = nt_cb("copy_absolute_path") },
-              { key = "-",     cb = nt_cb("dir_up") },
-              { key = "K",     cb = nt_cb("toggle_help") },
+              { key = "<cr>",  cb = tree_cb("edit") },
+              { key = "<C-v>", cb = tree_cb("vsplit") },
+              { key = "<C-x>", cb = tree_cb("split") },
+              { key = "<",     cb = tree_cb("prev_sibling") },
+              { key = ">",     cb = tree_cb("next_sibling") },
+              { key = "P",     cb = tree_cb("parent_node") },
+              { key = "i",     cb = tree_cb("toggle_ignored") },
+              { key = "R",     cb = tree_cb("refresh") },
+              { key = "a",     cb = tree_cb("create") },
+              { key = "d",     cb = tree_cb("trash") },
+              { key = "r",     cb = tree_cb("rename") },
+              { key = "x",     cb = tree_cb("cut") },
+              { key = "c",     cb = tree_cb("copy") },
+              { key = "p",     cb = tree_cb("paste") },
+              { key = "y",     cb = tree_cb("copy_name") },
+              { key = "Y",     cb = tree_cb("copy_path") },
+              { key = "gy",    cb = tree_cb("copy_absolute_path") },
+              { key = "[c",    cb = tree_cb("prev_git_item") },
+              { key = "]c",    cb = tree_cb("next_git_item") },
+              { key = "-",     cb = tree_cb("dir_up") },
+              { key = "o",     cb = tree_cb("system_open") },
+              { key = "K",     cb = tree_cb("toggle_help") },
             }
           }
         }
@@ -303,7 +253,6 @@ return require('packer').startup(function(use)
       'folke/which-key.nvim',
       'hrsh7th/cmp-nvim-lsp',
     },
-    run = 'npm i -g vscode-langservers-extracted',
     after = 'which-key.nvim',
     config = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -317,34 +266,36 @@ return require('packer').startup(function(use)
       local on_attach = function(client, bufnr)
         require('which-key').register({
           g = {
-            d = { '<cmd>lua vim.lsp.buf.definition()<cr>', 'Go To Definition' },
-            D = { '<cmd>lua vim.lsp.buf.declaration()<cr>', 'Go To Declaration' },
-            i = { '<cmd>lua vim.lsp.buf.implementation()<cr>', 'Go To Implementation' },
-            r = { '<cmd>lua vim.lsp.buf.references()<cr>', 'Show References' },
-            t = { '<cmd>lua vim.lsp.buf.type_definition()<cr>', 'Type Definition' },
+            d = { function() vim.lsp.buf.definition() end, 'Go to Definition' },
+            D = { function() vim.lsp.buf.declaration() end, 'Go to Declaration' },
+            i = { function() vim.lsp.buf.implementation() end, 'Go to Implementation' },
+            r = { function() vim.lsp.buf.references() end, 'Show References' },
           },
-          K = { '<cmd>lua vim.lsp.buf.hover()<cr>', 'Help' },
+          K = { function() vim.lsp.buf.hover() end, 'Help Tags' },
           ['<leader>'] = {
-            a = { '<cmd>lua vim.lsp.buf.code_action()<cr>', 'Code Action' },
-            F = { '<cmd>lua vim.lsp.buf.formatting_sync()<cr>', 'Format Buffer' },
-            d = {
-              name = 'Diagnostics (LSP)',
-              e = { '<cmd>lua vim.diagnostic.open_float()<cr>', 'Diagnostics' },
-              n = { '<cmd>lua vim.diagnostic.goto_next()<cr>', 'Diagnostics Next' },
-              p = { '<cmd>lua vim.diagnostic.goto_prev()<cr>', 'Diagnostics Previous' },
-              q = { '<cmd>lua vim.diagnostic.setloclist()<cr>', 'Diagnostics LL' },
+            b = {
+              a = { function() vim.lsp.buf.code_action() end, 'Code Action' },
+              d = {
+                f = { function() vim.diagnostic.open_float() end, 'Diagnostics (Float)' },
+                l = { function() vim.diagnostic.setloclist() end, 'Diagnostics (LocationList)' },
+                n = { function() vim.diagnostic.goto_prev() end, 'Next Diagnostic' },
+                p = { function() vim.diagnostic.goto_next() end, 'Previous Diagnostic' },
+              },
+              f = { function() vim.lsp.buf.formatting_sync() end, 'Format Buffer' },
+              k = { function() vim.lsp.buf.signature_help() end, 'Signature Help' },
+              r = { function() vim.lsp.buf.rename() end, 'Rename Symbol' },
+              t = { function() vim.lsp.buf.type_definition() end, 'TypeDef' },
             },
-            r = { '<cmd>lua vim.lsp.buf.rename()<cr>', 'Rename Symbol' },
           },
-          ['<C-k>'] = { '<cmd>lua vim.lsp.buf.signature_help()<cr>', '' },
         },
         { buffer = bufnr })
 
         if client.resolved_capabilities.document_formatting then
           vim.cmd [[
-            augroup Format
-              autocmd! * <buffer>
-              au BufWritePre <buffer> lua vim.lsp.buf.formatting_sync()
+            augroup fmt
+              au! * <buffer>
+              " Seems like the undojoin may be a problem for certain providers
+              au BufWritePre <buffer> undojoin | lua vim.lsp.buf.formatting_sync()
             augroup END
           ]]
         end
@@ -367,18 +318,13 @@ return require('packer').startup(function(use)
       lspconfig.terraformls.setup {
         capabilities = capabilities,
         on_attach = on_attach,
-        filetypes = {
-          'hcl',
-          'terraform'
-        },
+        filetypes = { 'hcl', 'terraform' },
       }
 
       -- Generic lsp config
       local servers = {
         'bashls',
-        'cssls',
         'gopls',
-        'html',
         'pyright',
         'yamlls',
       }
@@ -400,13 +346,86 @@ return require('packer').startup(function(use)
   }
 
   use {
+    'nvim-lualine/lualine.nvim',
+    requires = 'kyazdani42/nvim-web-devicons',
+    config = function()
+      require('lualine').setup {
+        options = {
+          icons_enabled = true,
+          theme = 'auto',
+          component_separators = { left = '╱', right = '╲'},
+          section_separators = { left = '', right = ''},
+          disabled_filetypes = {
+            'alpha',
+            'fugitive',
+            'fugitiveblame',
+            'help',
+            'NvimTree',
+            'packer',
+            'qf',
+          },
+          always_divide_middle = true,
+        },
+        sections = {
+          lualine_a = {'mode'},
+          lualine_b = {'branch', 'diff', 'diagnostics'},
+          lualine_c = {'filename'},
+          lualine_x = {'encoding', 'fileformat', 'filetype'},
+          lualine_y = {'progress'},
+          lualine_z = {'location'}
+        },
+        inactive_sections = {
+          lualine_a = {},
+          lualine_b = {},
+          lualine_c = {'filename'},
+          lualine_x = {'location'},
+          lualine_y = {},
+          lualine_z = {}
+        },
+        tabline = {
+          lualine_a = {
+            {
+              'buffers',
+              buffers_color = {
+                active = 'TabLineSel',
+                inactive = 'TabLine',
+              }
+            }
+          },
+          lualine_b = {},
+          lualine_c = {},
+          lualine_x = {},
+          lualine_y = {},
+          lualine_z = {
+            {
+              'tabs',
+              tabs_color = {
+                active = 'TabLineSel',
+                inactive = 'TabLine',
+              }
+            }
+          }
+        },
+        extensions = {}
+      }
+    end
+  }
+
+  use {
     'nvim-telescope/telescope.nvim',
     requires = 'nvim-lua/plenary.nvim',
     config = function()
       require('telescope').setup {
+        defaults = {
+          mappings = {
+            i = {
+              ["<C-h>"] = "which_key"
+            }
+          }
+        },
         pickers = {
           find_files = {
-            find_command = { 'rg', '--files', '--hidden', '--glob=!.git' }
+            find_command = { "fd", "--type", "f", "--strip-cwd-prefix" }
           },
         }
       }
@@ -426,7 +445,6 @@ return require('packer').startup(function(use)
           'go',
           'gomod',
           'gowork',
-          'graphql',
           'hcl',
           'html',
           'http',
