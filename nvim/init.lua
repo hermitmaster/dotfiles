@@ -46,6 +46,50 @@ return require('packer').startup(function(use)
   use 'tpope/vim-fugitive'
 
   use {
+    'akinsho/bufferline.nvim',
+    requires = 'kyazdani42/nvim-web-devicons',
+    config = function()
+      require('bufferline').setup {}
+    end
+  }
+
+  use {
+    'feline-nvim/feline.nvim',
+    requires = 'kyazdani42/nvim-web-devicons',
+    config = function()
+      require('feline').setup {
+        force_inactive = {
+          filetypes = {
+            'alpha',
+            'fugitive',
+            'fugitiveblame',
+            'help$',
+            'NvimTree',
+            'packer',
+            'qf$',
+            'startify$',
+          },
+        },
+        theme = {
+          bg = '#383830',
+          fg = '#f9f8f5',
+          black = '#383830',
+          red = '#f92672',
+          green = '#a6e22e',
+          yellow = '#e6db74',
+          oceanblue = '#49483e',
+          magenta = '#ae81ff',
+          violet = '#ae81ff',
+          cyan = '#a1efe4',
+          skyblue = '#66d9ef',
+          orange = '#75715e',
+          white = '#f9f8f5',
+        }
+      }
+    end
+  }
+
+  use {
     'folke/which-key.nvim',
     config = function()
       local wk = require('which-key')
@@ -109,7 +153,7 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'goolord/alpha-nvim',
+    'hermitmaster/alpha-nvim',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function ()
       require('alpha').setup(require('alpha.themes.startify').opts)
@@ -177,8 +221,11 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'knubie/vim-kitty-navigator',
+    'hermitmaster/nvim-kitty-navigator',
     run = 'cp ./*.py ~/.config/kitty/',
+    config = function ()
+      require('nvim-kitty-navigator').setup {}
+    end
   }
 
   use {
@@ -342,72 +389,6 @@ return require('packer').startup(function(use)
     'numToStr/Comment.nvim',
     config = function()
       require('Comment').setup {}
-    end
-  }
-
-  use {
-    'nvim-lualine/lualine.nvim',
-    requires = 'kyazdani42/nvim-web-devicons',
-    config = function()
-      require('lualine').setup {
-        options = {
-          icons_enabled = true,
-          theme = 'auto',
-          component_separators = { left = '╱', right = '╲'},
-          section_separators = { left = '', right = ''},
-          disabled_filetypes = {
-            'alpha',
-            'fugitive',
-            'fugitiveblame',
-            'help',
-            'NvimTree',
-            'packer',
-            'qf',
-          },
-          always_divide_middle = true,
-        },
-        sections = {
-          lualine_a = {'mode'},
-          lualine_b = {'branch', 'diff', 'diagnostics'},
-          lualine_c = {'filename'},
-          lualine_x = {'encoding', 'fileformat', 'filetype'},
-          lualine_y = {'progress'},
-          lualine_z = {'location'}
-        },
-        inactive_sections = {
-          lualine_a = {},
-          lualine_b = {},
-          lualine_c = {'filename'},
-          lualine_x = {'location'},
-          lualine_y = {},
-          lualine_z = {}
-        },
-        tabline = {
-          lualine_a = {
-            {
-              'buffers',
-              buffers_color = {
-                active = 'TabLineSel',
-                inactive = 'TabLine',
-              }
-            }
-          },
-          lualine_b = {},
-          lualine_c = {},
-          lualine_x = {},
-          lualine_y = {},
-          lualine_z = {
-            {
-              'tabs',
-              tabs_color = {
-                active = 'TabLineSel',
-                inactive = 'TabLine',
-              }
-            }
-          }
-        },
-        extensions = {}
-      }
     end
   }
 
