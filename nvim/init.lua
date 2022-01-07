@@ -15,13 +15,12 @@ vim.opt.signcolumn = 'yes'
 vim.opt.smartcase = true
 vim.opt.smartindent = true
 vim.opt.tabstop = 2
+vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.updatetime = 300
 vim.opt.wrap = false
 
 vim.g.mapleader = ' '
-
-vim.cmd('colorscheme monokai')
 
 vim.cmd([[
   augroup core
@@ -43,6 +42,7 @@ end
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
   use 'nvim-lua/plenary.nvim'
+  use 'tpope/vim-commentary'
   use 'tpope/vim-fugitive'
 
   use {
@@ -153,10 +153,17 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'hermitmaster/alpha-nvim',
-    requires = 'kyazdani42/nvim-web-devicons',
+    'hermitmaster/nvim-kitty-navigator',
+    run = 'cp ./*.py ~/.config/kitty/',
     config = function ()
-      require('alpha').setup(require('alpha.themes.startify').opts)
+      require('nvim-kitty-navigator').setup {}
+    end
+  }
+
+  use {
+    'hermitmaster/nvim-monokai',
+    config = function ()
+      vim.cmd('colorscheme monokai')
     end
   }
 
@@ -221,14 +228,6 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'hermitmaster/nvim-kitty-navigator',
-    run = 'cp ./*.py ~/.config/kitty/',
-    config = function ()
-      require('nvim-kitty-navigator').setup {}
-    end
-  }
-
-  use {
     'kyazdani42/nvim-tree.lua',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
@@ -283,14 +282,23 @@ return require('packer').startup(function(use)
       require('indent_blankline').setup {
         char = '│',
         filetype_exclude = {
-          'alpha',
           'help',
           'packer',
+          'startify',
         },
         show_current_context = true,
         show_first_indent_level = false,
         use_treesitter = true
       }
+    end
+  }
+
+  use {
+    'mhinz/vim-startify',
+    config = function()
+      vim.g.startify_enable_special = 0
+      vim.g.startify_fortune_use_unicode = 1
+      vim.g.startify_relative_path = 1
     end
   }
 
@@ -386,13 +394,6 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'numToStr/Comment.nvim',
-    config = function()
-      require('Comment').setup {}
-    end
-  }
-
-  use {
     'nvim-telescope/telescope.nvim',
     requires = 'nvim-lua/plenary.nvim',
     config = function()
@@ -431,7 +432,6 @@ return require('packer').startup(function(use)
           'http',
           'javascript',
           'json',
-          'json5',
           'jsonc',
           'lua',
           'make',
@@ -439,9 +439,9 @@ return require('packer').startup(function(use)
           'python',
           'regex',
           'ruby',
-          'scss',
           'toml',
           'typescript',
+          'vim',
           'vue',
           'yaml',
         },
