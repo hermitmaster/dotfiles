@@ -11,7 +11,3 @@ kitty/pass_keys.py
 # neovim
 nvim/plugin/
 
-# zsh
-.zcompcache/
-*.zwc
-

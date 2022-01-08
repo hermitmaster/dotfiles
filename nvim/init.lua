@@ -28,7 +28,6 @@ vim.cmd([[
     au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
     au BufWinEnter * if(exists('b:_winview')) | call winrestview(b:_winview) | endif
     au BufWinLeave * let b:_winview = winsaveview()
-    au BufNewFile,BufRead .Brewfile set filetype=ruby
   augroup END
 ]])
 
@@ -56,7 +55,7 @@ return require('packer').startup(function(use)
             'alpha',
             'fugitive',
             'fugitiveblame',
-            'help$',
+            'help',
             'NvimTree',
             'packer',
             'qf',
@@ -89,54 +88,21 @@ return require('packer').startup(function(use)
       wk.register({
         ['<leader>'] = {
           b = { name = 'Buffer',
-            c = { function() require('telescope.builtin').grep_string() end, 'Find <cword>' },
             d = { '<cmd>bd<cr>', 'Delete Current Buffer' },
-            g = { function() require('telescope.builtin').current_buffer_fuzzy_find() end, 'Fuzzy Find' },
-            l = { function() require('telescope.builtin').git_bcommits() end, 'Git Log' },
             n = { '<cmd>bn<cr>', 'Next Buffer' },
             p = { '<cmd>bp<cr>', 'Previous Buffer' },
             v = { '<cmd>Gvdiffsplit<cr>', 'Diff' },
-            y = { function() require('telescope.builtin').lsp_document_symbols() end, 'Find Symbols' },
           },
-          f = {
-            name = 'File',
-            f = { function() require('telescope.builtin').find_files() end, 'Find Files' },
+          f = { name = 'File',
             n = { '<cmd>enew<cr>', 'New File' },
             s = { '<cmd>w<cr>', 'Save File' },
             t = { '<cmd>NvimTreeToggle<cr>', 'File Tree' },
           },
           g = { name = 'Global',
-            c = { function() require('telescope.builtin').live_grep({ default_text = vim.fn.expand('<cword>') }) end, 'Find <cword>' },
-            f = { function() require('telescope.builtin').live_grep() end, 'Fuzzy Find' },
-            h = { function() require('telescope.builtin').git_stash() end, 'Git Stashes' },
-            l = { function() require('telescope.builtin').git_commits() end, 'Git Log' },
-            m = { function() require('telescope.builtin').git_branches() end, 'Git Branches'},
-            p = {
-              function()
-                -- This is pretty close to the pattern I need to follow for tf/tg
-                local Job = require('plenary.job')
-                local chan = vim.api.nvim_open_term(vim.api.nvim_create_buf(true, true), {})
-
-                Job:new({
-                  command = 'pre-commit',
-                  args = { 'run', '-a' },
-                  cwd = os.getenv('PWD'),
-                  on_stdout = vim.schedule_wrap(function(_, data)
-                    vim.api.nvim_chan_send(chan, data .. '\r\n')
-                  end)
-                }):start()
-              end,
-              'pre-commit run -a'},
             s = { '<cmd>Git<cr>', 'Git Status' },
-            y = { function() require('telescope.builtin').lsp_workspace_symbols() end, 'Find Symbols' },
           },
           h = { name = 'Hunk', },
           q = { '<cmd>qall<cr>', 'Quit' },
-          r = { function() require('telescope.builtin').resume() end, 'Resume Search' },
-          w = { name = 'Window',
-            n = { '<cmd>wincmd w<cr>', 'Next Window' },
-            p = { '<cmd>wincmd p<cr>', 'Previous Window' },
-          },
         },
         ['<Tab>'] = { '<cmd>wincmd w<cr>', 'Next Window' },
         ['<S-Tab>'] = { '<cmd>wincmd p<cr>', 'Previous Window' },
@@ -154,6 +120,7 @@ return require('packer').startup(function(use)
 
   use {
     'hermitmaster/nvim-kitty-navigator',
+    run = 'cp kitty/* ~/.config/kitty/',
     config = function()
       require('nvim-kitty-navigator').setup {}
     end
@@ -239,9 +206,6 @@ return require('packer').startup(function(use)
               { key = '<cr>',  cb = tree_cb('edit') },
               { key = '<C-v>', cb = tree_cb('vsplit') },
               { key = '<C-x>', cb = tree_cb('split') },
-              { key = '<',     cb = tree_cb('prev_sibling') },
-              { key = '>',     cb = tree_cb('next_sibling') },
-              { key = 'P',     cb = tree_cb('parent_node') },
               { key = 'i',     cb = tree_cb('toggle_ignored') },
               { key = 'R',     cb = tree_cb('refresh') },
               { key = 'a',     cb = tree_cb('create') },
@@ -250,13 +214,8 @@ return require('packer').startup(function(use)
               { key = 'x',     cb = tree_cb('cut') },
               { key = 'c',     cb = tree_cb('copy') },
               { key = 'p',     cb = tree_cb('paste') },
-              { key = 'y',     cb = tree_cb('copy_name') },
-              { key = 'Y',     cb = tree_cb('copy_path') },
-              { key = 'gy',    cb = tree_cb('copy_absolute_path') },
-              { key = '[c',    cb = tree_cb('prev_git_item') },
-              { key = ']c',    cb = tree_cb('next_git_item') },
-              { key = '-',     cb = tree_cb('dir_up') },
-              { key = 'o',     cb = tree_cb('system_open') },
+              { key = 'y',     cb = tree_cb('copy_path') },
+              { key = 'Y',     cb = tree_cb('copy_absolute_path') },
               { key = 'K',     cb = tree_cb('toggle_help') },
             }
           }
@@ -391,6 +350,48 @@ return require('packer').startup(function(use)
   }
 
   use {
+    'nvim-telescope/telescope.nvim',
+    requires = {
+      'folke/which-key.nvim',
+      'nvim-lua/plenary.nvim',
+    },
+    after = 'which-key.nvim',
+    config = function()
+      require('telescope').setup {
+        pickers = {
+          find_files = {
+            find_command = { 'rg', '--files' }
+          },
+        }
+      }
+
+      require('which-key').register({
+        ['<leader>'] = {
+          b = {
+            c = { function() require('telescope.builtin').grep_string() end, 'Find <cword>' },
+            g = { function() require('telescope.builtin').current_buffer_fuzzy_find() end, 'Fuzzy Find' },
+            l = { function() require('telescope.builtin').git_bcommits() end, 'Git Log' },
+            y = { function() require('telescope.builtin').lsp_document_symbols() end, 'Find Symbols' },
+          },
+          f = {
+            f = { function() require('telescope.builtin').find_files() end, 'Find Files' },
+          },
+          g = {
+            c = { function() require('telescope.builtin').live_grep({ default_text = vim.fn.expand('<cword>') }) end, 'Find <cword>' },
+            f = { function() require('telescope.builtin').live_grep() end, 'Fuzzy Find' },
+            h = { function() require('telescope.builtin').git_stash() end, 'Git Stashes' },
+            l = { function() require('telescope.builtin').git_commits() end, 'Git Log' },
+            m = { function() require('telescope.builtin').git_branches() end, 'Git Branches'},
+            y = { function() require('telescope.builtin').lsp_workspace_symbols() end, 'Find Symbols' },
+          },
+          r = { function() require('telescope.builtin').resume() end, 'Resume Search' },
+        },
+      })
+
+    end
+  }
+
+  use {
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
@@ -405,7 +406,6 @@ return require('packer').startup(function(use)
           'gowork',
           'hcl',
           'html',
-          'http',
           'javascript',
           'json',
           'jsonc',
@@ -417,7 +417,6 @@ return require('packer').startup(function(use)
           'toml',
           'typescript',
           'vim',
-          'vue',
           'yaml',
         },
         highlight = {
