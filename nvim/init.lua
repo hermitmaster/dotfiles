@@ -25,8 +25,6 @@ vim.g.mapleader = ' '
 vim.cmd([[
   augroup core
     au!
-    au BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu | endif
-    au BufLeave,FocusLost,InsertEnter,WinLeave   * if &nu | set nornu | endif
     au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
     au BufWinEnter * if(exists('b:_winview')) | call winrestview(b:_winview) | endif
     au BufWinLeave * let b:_winview = winsaveview()
@@ -40,11 +38,6 @@ if not io.open(install_path) then
 end
 
 return require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'
-  use 'nvim-lua/plenary.nvim'
-  use 'tpope/vim-commentary'
-  use 'tpope/vim-fugitive'
-
   use {
     'akinsho/bufferline.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
@@ -66,8 +59,7 @@ return require('packer').startup(function(use)
             'help$',
             'NvimTree',
             'packer',
-            'qf$',
-            'startify$',
+            'qf',
           },
         },
         theme = {
@@ -136,7 +128,7 @@ return require('packer').startup(function(use)
               end,
               'pre-commit run -a'},
             s = { '<cmd>Git<cr>', 'Git Status' },
-            y = { function() require('telescope.builtin').lsp_workspace_symbols() end, 'Find Symbols (Project)' },
+            y = { function() require('telescope.builtin').lsp_workspace_symbols() end, 'Find Symbols' },
           },
           h = { name = 'Hunk', },
           q = { '<cmd>qall<cr>', 'Quit' },
@@ -153,16 +145,23 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'hermitmaster/nvim-kitty-navigator',
-    run = 'cp ./*.py ~/.config/kitty/',
+    'goolord/alpha-nvim',
+    requires = 'kyazdani42/nvim-web-devicons',
     config = function ()
+      require('alpha').setup(require('alpha.themes.startify').opts)
+    end
+  }
+
+  use {
+    'hermitmaster/nvim-kitty-navigator',
+    config = function()
       require('nvim-kitty-navigator').setup {}
     end
   }
 
   use {
     'hermitmaster/nvim-monokai',
-    config = function ()
+    config = function()
       vim.cmd('colorscheme monokai')
     end
   }
@@ -231,34 +230,34 @@ return require('packer').startup(function(use)
     'kyazdani42/nvim-tree.lua',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
-      local tree_cb = require'nvim-tree.config'.nvim_tree_callback
+      local tree_cb = require('nvim-tree.config').nvim_tree_callback
       require('nvim-tree').setup {
         view = {
           mappings = {
             custom_only = true,
             list = {
-              { key = "<cr>",  cb = tree_cb("edit") },
-              { key = "<C-v>", cb = tree_cb("vsplit") },
-              { key = "<C-x>", cb = tree_cb("split") },
-              { key = "<",     cb = tree_cb("prev_sibling") },
-              { key = ">",     cb = tree_cb("next_sibling") },
-              { key = "P",     cb = tree_cb("parent_node") },
-              { key = "i",     cb = tree_cb("toggle_ignored") },
-              { key = "R",     cb = tree_cb("refresh") },
-              { key = "a",     cb = tree_cb("create") },
-              { key = "d",     cb = tree_cb("trash") },
-              { key = "r",     cb = tree_cb("rename") },
-              { key = "x",     cb = tree_cb("cut") },
-              { key = "c",     cb = tree_cb("copy") },
-              { key = "p",     cb = tree_cb("paste") },
-              { key = "y",     cb = tree_cb("copy_name") },
-              { key = "Y",     cb = tree_cb("copy_path") },
-              { key = "gy",    cb = tree_cb("copy_absolute_path") },
-              { key = "[c",    cb = tree_cb("prev_git_item") },
-              { key = "]c",    cb = tree_cb("next_git_item") },
-              { key = "-",     cb = tree_cb("dir_up") },
-              { key = "o",     cb = tree_cb("system_open") },
-              { key = "K",     cb = tree_cb("toggle_help") },
+              { key = '<cr>',  cb = tree_cb('edit') },
+              { key = '<C-v>', cb = tree_cb('vsplit') },
+              { key = '<C-x>', cb = tree_cb('split') },
+              { key = '<',     cb = tree_cb('prev_sibling') },
+              { key = '>',     cb = tree_cb('next_sibling') },
+              { key = 'P',     cb = tree_cb('parent_node') },
+              { key = 'i',     cb = tree_cb('toggle_ignored') },
+              { key = 'R',     cb = tree_cb('refresh') },
+              { key = 'a',     cb = tree_cb('create') },
+              { key = 'd',     cb = tree_cb('trash') },
+              { key = 'r',     cb = tree_cb('rename') },
+              { key = 'x',     cb = tree_cb('cut') },
+              { key = 'c',     cb = tree_cb('copy') },
+              { key = 'p',     cb = tree_cb('paste') },
+              { key = 'y',     cb = tree_cb('copy_name') },
+              { key = 'Y',     cb = tree_cb('copy_path') },
+              { key = 'gy',    cb = tree_cb('copy_absolute_path') },
+              { key = '[c',    cb = tree_cb('prev_git_item') },
+              { key = ']c',    cb = tree_cb('next_git_item') },
+              { key = '-',     cb = tree_cb('dir_up') },
+              { key = 'o',     cb = tree_cb('system_open') },
+              { key = 'K',     cb = tree_cb('toggle_help') },
             }
           }
         }
@@ -282,23 +281,14 @@ return require('packer').startup(function(use)
       require('indent_blankline').setup {
         char = '│',
         filetype_exclude = {
+          'alpha',
           'help',
           'packer',
-          'startify',
         },
         show_current_context = true,
         show_first_indent_level = false,
         use_treesitter = true
       }
-    end
-  }
-
-  use {
-    'mhinz/vim-startify',
-    config = function()
-      vim.g.startify_enable_special = 0
-      vim.g.startify_fortune_use_unicode = 1
-      vim.g.startify_relative_path = 1
     end
   }
 
@@ -330,13 +320,13 @@ return require('packer').startup(function(use)
           ['<leader>'] = {
             b = {
               a = { function() vim.lsp.buf.code_action() end, 'Code Action' },
-              d = {
+              f = { function() vim.lsp.buf.formatting_sync() end, 'Format Buffer' },
+              i = {
                 f = { function() vim.diagnostic.open_float() end, 'Diagnostics (Float)' },
                 l = { function() vim.diagnostic.setloclist() end, 'Diagnostics (LocationList)' },
                 n = { function() vim.diagnostic.goto_prev() end, 'Next Diagnostic' },
                 p = { function() vim.diagnostic.goto_next() end, 'Previous Diagnostic' },
               },
-              f = { function() vim.lsp.buf.formatting_sync() end, 'Format Buffer' },
               k = { function() vim.lsp.buf.signature_help() end, 'Signature Help' },
               r = { function() vim.lsp.buf.rename() end, 'Rename Symbol' },
               t = { function() vim.lsp.buf.type_definition() end, 'TypeDef' },
@@ -394,23 +384,9 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'nvim-telescope/telescope.nvim',
-    requires = 'nvim-lua/plenary.nvim',
+    'numToStr/Comment.nvim',
     config = function()
-      require('telescope').setup {
-        defaults = {
-          mappings = {
-            i = {
-              ["<C-h>"] = "which_key"
-            }
-          }
-        },
-        pickers = {
-          find_files = {
-            find_command = { "fd", "--type", "f", "--strip-cwd-prefix" }
-          },
-        }
-      }
+      require('Comment').setup {}
     end
   }
 
@@ -435,7 +411,6 @@ return require('packer').startup(function(use)
           'jsonc',
           'lua',
           'make',
-          'markdown',
           'python',
           'regex',
           'ruby',
@@ -460,6 +435,11 @@ return require('packer').startup(function(use)
       }
     end
   }
+
+  use 'jeffkreeftmeijer/vim-numbertoggle'
+  use 'nvim-lua/plenary.nvim'
+  use 'tpope/vim-fugitive'
+  use 'wbthomason/packer.nvim'
 
   if PACKER_BOOTSTRAP then
     require('packer').sync()
