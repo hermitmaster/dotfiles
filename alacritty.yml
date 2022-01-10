@@ -1,0 +1,37 @@
+env:
+  SHELL_SESSIONS_DISABLE: '1'
+
+window:
+  decorations: none
+  dynamic_padding: true
+
+font:
+  size: 13.0
+  normal:
+    family: 'Hack Nerd Font Mono'
+
+colors:
+  primary:
+    background: '#272822'
+    foreground: '#f8f8f2'
+  cursor:
+    text: '#272822'
+    cursor: '#f8f8f2'
+  normal:
+    black: '#272822'
+    red: '#f92672'
+    green: '#a6e22e'
+    yellow: '#e6db74'
+    blue: '#66d9ef'
+    magenta: '#ae81ff'
+    cyan: '#a1efe4'
+    white: '#f8f8f2'
+  bright:
+    black: '#75715e'
+    red: '#fd971f'
+    green: '#383830'
+    yellow: '#49483e'
+    blue: '#a59f85'
+    magenta: '#f5f4f1'
+    cyan: '#cc6633'
+    white: '#f9f8f5'

@@ -25,6 +25,8 @@ vim.g.mapleader = ' '
 vim.cmd([[
   augroup core
     au!
+    au BufEnter,FocusGained,InsertLeave,WinEnter * if &nu && mode() != "i" | set rnu | endif
+    au BufLeave,FocusLost,InsertEnter,WinLeave * if &nu | set nornu | endif
     au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
     au BufWinEnter * if(exists('b:_winview')) | call winrestview(b:_winview) | endif
     au BufWinLeave * let b:_winview = winsaveview()
@@ -42,6 +44,22 @@ return require('packer').startup(function(use)
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
       require('bufferline').setup {}
+    end
+  }
+
+  use {
+    'alexghergh/nvim-tmux-navigation',
+    config = function()
+      require('nvim-tmux-navigation').setup {
+        keybindings = {
+          left = '<C-h>',
+          down = '<C-j>',
+          up = '<C-k>',
+          right = '<C-l>',
+          last_active = '<C-\\>',
+          next = '<C-Space>',
+        }
+      }
     end
   }
 
@@ -115,14 +133,6 @@ return require('packer').startup(function(use)
     requires = 'kyazdani42/nvim-web-devicons',
     config = function ()
       require('alpha').setup(require('alpha.themes.startify').opts)
-    end
-  }
-
-  use {
-    'hermitmaster/nvim-kitty-navigator',
-    run = 'cp kitty/* ~/.config/kitty/',
-    config = function()
-      require('nvim-kitty-navigator').setup {}
     end
   }
 
@@ -257,7 +267,6 @@ return require('packer').startup(function(use)
       'folke/which-key.nvim',
       'hrsh7th/cmp-nvim-lsp',
     },
-    after = 'which-key.nvim',
     config = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       local lspconfig = require('lspconfig')
@@ -355,7 +364,6 @@ return require('packer').startup(function(use)
       'folke/which-key.nvim',
       'nvim-lua/plenary.nvim',
     },
-    after = 'which-key.nvim',
     config = function()
       require('telescope').setup {
         pickers = {
@@ -369,7 +377,7 @@ return require('packer').startup(function(use)
         ['<leader>'] = {
           b = {
             c = { function() require('telescope.builtin').grep_string() end, 'Find <cword>' },
-            g = { function() require('telescope.builtin').current_buffer_fuzzy_find() end, 'Fuzzy Find' },
+            f = { function() require('telescope.builtin').current_buffer_fuzzy_find() end, 'Fuzzy Find' },
             l = { function() require('telescope.builtin').git_bcommits() end, 'Git Log' },
             y = { function() require('telescope.builtin').lsp_document_symbols() end, 'Find Symbols' },
           },
@@ -396,29 +404,7 @@ return require('packer').startup(function(use)
     run = ':TSUpdate',
     config = function()
       require('nvim-treesitter.configs').setup {
-        ensure_installed = {
-          'bash',
-          'comment',
-          'css',
-          'dockerfile',
-          'go',
-          'gomod',
-          'gowork',
-          'hcl',
-          'html',
-          'javascript',
-          'json',
-          'jsonc',
-          'lua',
-          'make',
-          'python',
-          'regex',
-          'ruby',
-          'toml',
-          'typescript',
-          'vim',
-          'yaml',
-        },
+        ensure_installed = 'maintained',
         highlight = {
           enable = true,
         },
@@ -435,8 +421,6 @@ return require('packer').startup(function(use)
     end
   }
 
-  use 'jeffkreeftmeijer/vim-numbertoggle'
-  use 'nvim-lua/plenary.nvim'
   use 'tpope/vim-fugitive'
   use 'wbthomason/packer.nvim'
 
