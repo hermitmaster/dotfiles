@@ -1,3 +1,6 @@
+local packer_install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+local packer_bootstrap
+
 vim.opt.clipboard = 'unnamed,unnamedplus'
 vim.opt.completeopt = 'menuone'
 vim.opt.expandtab = true
@@ -33,9 +36,8 @@ vim.cmd([[
   augroup END
 ]])
 
-local install_path = vim.fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
-if not io.open(install_path) then
-  PACKER_BOOTSTRAP = os.execute('git clone --depth 1 https://github.com/wbthomason/packer.nvim '..install_path..' &>/dev/null')
+if not io.open(packer_install_path) then
+  packer_bootstrap = os.execute('git clone --depth 1 https://github.com/wbthomason/packer.nvim '..packer_install_path..' &>/dev/null')
 end
 
 return require('packer').startup(function(use)
@@ -44,22 +46,6 @@ return require('packer').startup(function(use)
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
       require('bufferline').setup {}
-    end
-  }
-
-  use {
-    'alexghergh/nvim-tmux-navigation',
-    config = function()
-      require('nvim-tmux-navigation').setup {
-        keybindings = {
-          left = '<C-h>',
-          down = '<C-j>',
-          up = '<C-k>',
-          right = '<C-l>',
-          last_active = '<C-\\>',
-          next = '<C-Space>',
-        }
-      }
     end
   }
 
@@ -137,9 +123,17 @@ return require('packer').startup(function(use)
   }
 
   use {
+    'hermitmaster/nvim-kitty-navigator',
+    run = 'cp kitty/* ~/.config/kitty/',
+    config = function()
+      require('nvim-kitty-navigator').setup {}
+    end
+  }
+
+  use {
     'hermitmaster/nvim-monokai',
     config = function()
-      vim.cmd('colorscheme monokai')
+      require('monokai').setup {}
     end
   }
 
@@ -270,6 +264,7 @@ return require('packer').startup(function(use)
     config = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       local lspconfig = require('lspconfig')
+      local servers = { 'bashls', 'gopls', 'pyright', 'yamlls', }
       local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
       for type, icon in pairs(signs) do
         local hl = "DiagnosticSign"..type
@@ -334,14 +329,6 @@ return require('packer').startup(function(use)
         filetypes = { 'hcl', 'terraform' },
       }
 
-      -- Generic lsp config
-      local servers = {
-        'bashls',
-        'gopls',
-        'pyright',
-        'yamlls',
-      }
-
       for _, lsp in ipairs(servers) do
         lspconfig[lsp].setup {
           capabilities = capabilities,
@@ -354,7 +341,7 @@ return require('packer').startup(function(use)
   use {
     'numToStr/Comment.nvim',
     config = function()
-      require('Comment').setup {}
+      require('Comment').setup()
     end
   }
 
@@ -405,9 +392,7 @@ return require('packer').startup(function(use)
     config = function()
       require('nvim-treesitter.configs').setup {
         ensure_installed = 'maintained',
-        highlight = {
-          enable = true,
-        },
+        highlight = { enable = true },
       }
     end
   }
@@ -415,16 +400,12 @@ return require('packer').startup(function(use)
   use {
     'windwp/nvim-autopairs',
     config = function()
-      require('nvim-autopairs').setup {
-        check_ts = true
-      }
+      require('nvim-autopairs').setup { check_ts = true }
     end
   }
 
   use 'tpope/vim-fugitive'
   use 'wbthomason/packer.nvim'
 
-  if PACKER_BOOTSTRAP then
-    require('packer').sync()
-  end
+  if packer_bootstrap then require('packer').sync() end
 end)

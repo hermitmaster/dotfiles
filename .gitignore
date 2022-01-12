@@ -8,9 +8,6 @@
 kitty/neighboring_window.py
 kitty/pass_keys.py
 
-# lazygit
-lazygit/state.yml
-
 # neovim
 nvim/plugin/
 
