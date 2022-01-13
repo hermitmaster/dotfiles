@@ -4,9 +4,9 @@
 # Homebrew
 .Brewfile.lock.json
 
-# kitty
-kitty/neighboring_window.py
-kitty/pass_keys.py
+# JetBrains
+.idea/
+*.iml
 
 # neovim
 nvim/plugin/
