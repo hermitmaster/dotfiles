@@ -4,10 +4,6 @@
 # Homebrew
 .Brewfile.lock.json
 
-# JetBrains
-.idea/
-*.iml
-
 # neovim
 nvim/plugin/
 

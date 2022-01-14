@@ -1,16 +1,25 @@
 . <(brew shellenv)
 
 export XDG_CONFIG_HOME="${HOME}/.config"
+export BAT_THEME="Monokai Extended"
 export CLICOLOR=1
 export EDITOR=nvim
 export HOMEBREW_BUNDLE_FILE="${XDG_CONFIG_HOME}/.Brewfile"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 export NPM_CONFIG_PREFIX="${HOME}/.local"
 export PATH="${HOME}/.local/bin:/opt/homebrew/bin:${PATH}"
+export TIME_STYLE="long-iso"
 
 alias bb='brew bundle install --cleanup'
-alias ll='ls -Aho'
+alias ls='exa --git --group-directories-first'
+alias l='ls -blF'
+alias ll='ls -al'
+alias llm='ll --sort=modified'
+alias la='ls -abghilmu'
+alias lx='ls -abghilmuHSU@'
 alias tf='terraform'
 alias tg='terragrunt'
+alias tree='exa --tree'
 
 setopt hist_ignore_all_dups share_history
 
@@ -19,10 +28,10 @@ test -f "${HOMEBREW_BUNDLE_FILE}.lock.json" || brew bundle install
 
 autoload -Uz compinit && compinit
 
+. <(starship init zsh)
+. <(zoxide init zsh --cmd cd)
 . "${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 . "${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-. "${HOMEBREW_PREFIX}/opt/powerlevel10k/powerlevel10k.zsh-theme"
-. "${XDG_CONFIG_HOME}/.p10k.zsh"
 
 if [[ -z $TMUX && -z $VIM ]]; then
   tmux attach 2>/dev/null || exec tmux
