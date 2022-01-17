@@ -71,10 +71,18 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'hermitmaster/alpha-nvim',
+    'hermitmaster/neostartify',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function ()
-      require('alpha').setup(require('alpha.themes.startify').opts)
+      require('neostartify').setup()
+    end
+  }
+
+  use {
+    'hermitmaster/nvim-kitty-navigator',
+    run = 'cp kitty/* ~/.config/kitty/',
+    config = function()
+      require('nvim-kitty-navigator').setup {}
     end
   }
 
@@ -82,22 +90,6 @@ return require('packer').startup(function(use)
     'hermitmaster/nvim-monokai',
     config = function()
       require('monokai').setup {}
-    end
-  }
-
-  use {
-    'hermitmaster/nvim-tmux-navigation',
-    config = function()
-      require'nvim-tmux-navigation'.setup {
-        keybindings = {
-          left = '<C-h>',
-          down = '<C-j>',
-          up = '<C-k>',
-          right = '<C-l>',
-          last_active = '<C-\\>',
-          next = '<C-Space>',
-        }
-      }
     end
   }
 
@@ -209,8 +201,8 @@ return require('packer').startup(function(use)
       require('indent_blankline').setup {
         char = '│',
         filetype_exclude = {
-          'alpha',
           'help',
+          'neostartify',
           'packer',
         },
         show_current_context = true,
@@ -319,10 +311,10 @@ return require('packer').startup(function(use)
           component_separators = { left = '', right = '' },
           section_separators = { left = '', right = '' },
           disabled_filetypes = {
-            'alpha',
             'fugitive',
             'fugitiveblame',
             'help',
+            'neostartify',
             'NvimTree',
             'packer',
             'qf',
@@ -395,6 +387,7 @@ return require('packer').startup(function(use)
     end
   }
 
+  use 'fladson/vim-kitty'
   use 'tpope/vim-fugitive'
   use 'wbthomason/packer.nvim'
 
