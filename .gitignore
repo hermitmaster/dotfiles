@@ -4,12 +4,6 @@
 # Homebrew
 .Brewfile.lock.json
 
-# htop
-htop/
-
-# iterm2
-iterm2/AppSupport
-
 # neovim
 nvim/plugin/
 
