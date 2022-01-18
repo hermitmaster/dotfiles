@@ -71,10 +71,10 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'hermitmaster/neostartify',
+    'goolord/alpha-nvim',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function ()
-      require('neostartify').setup()
+      require('alpha').setup(require('alpha.themes.hermit').opts)
     end
   }
 
@@ -201,8 +201,8 @@ return require('packer').startup(function(use)
       require('indent_blankline').setup {
         char = '│',
         filetype_exclude = {
+          'alpha',
           'help',
-          'neostartify',
           'packer',
         },
         show_current_context = true,
@@ -311,10 +311,10 @@ return require('packer').startup(function(use)
           component_separators = { left = '', right = '' },
           section_separators = { left = '', right = '' },
           disabled_filetypes = {
+            'alpha',
             'fugitive',
             'fugitiveblame',
             'help',
-            'neostartify',
             'NvimTree',
             'packer',
             'qf',

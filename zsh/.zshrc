@@ -11,9 +11,21 @@ autoload -Uz compinit
 compinit -d "${HOME}/.zcompdump"
 
 . <(brew shellenv)
-. <(starship init zsh)
 . "${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 . "${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+fpath+="/opt/homebrew/share/zsh/site-functions"
+
+autoload -Uz promptinit && promptinit
+
+zstyle :prompt:pure:git:branch color green
+zstyle :prompt:pure:git:dirty color 5
+zstyle :prompt:pure:prompt:continuation color 8
+zstyle :prompt:pure:prompt:success color green
+
+prompt pure
+prompt_newline='%666v'
+PROMPT=" $PROMPT"
 
 function man {
   env \
