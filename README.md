@@ -6,6 +6,4 @@ bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/in
 mv "${XDG_CONFIG_HOME}" /tmp/.config.bak > /dev/null
 git clone git@github.com:hermitmaster/dotfiles.git "${XDG_CONFIG_HOME}"
 . "${XDG_CONFIG_HOME}/zsh/zshenv"
-ln -fs "${HOME}/.config/zsh/zshenv" "${HOME}/.zshenv"
-brew bundle install --file "${XDG_CONFIG_HOME}/.Brewfile"
 ```

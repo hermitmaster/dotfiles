@@ -14,8 +14,8 @@
   co = checkout
   cob = checkout -b
   com = checkout master
-  d = difftool --no-symlinks --dir-diff
-  ds = difftool --no-symlinks --dir-diff --staged
+  d = diff
+  ds = diff --staged
   fap = fetch --all --prune
   lg = log --graph
   lga = log --graph --decorate --all
@@ -36,22 +36,27 @@
 [branch]
   autosetuprebase = always
 
+[color]
+  ui = true
+
+[color "diff-highlight"]
+  oldNormal = red
+  oldHighlight = red bold 52
+  newNormal = green
+  newHighlight = green bold 22
+
+[color "diff"]
+  meta = yellow
+  frag = magenta bold
+  func = cyan bold
+  commit = yellow bold
+  old = red
+  new = green
+  whitespace = red reverse
+
 [core]
   autocrlf = input
-
-[diff]
-  tool = kitty
-  guitool = kitty.gui
-
-[difftool]
-  prompt = false
-  trustExitCode = true
-
-[difftool "kitty"]
-  cmd = kitty +kitten diff $LOCAL $REMOTE
-
-[difftool "kitty.gui"]
-  cmd = kitty kitty +kitten diff $LOCAL $remote
+  pager = diff-so-fancy | less --tabs=4 -RFX
 
 [init]
   defaultBranch = main

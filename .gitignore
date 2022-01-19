@@ -4,13 +4,9 @@
 # Homebrew
 .Brewfile.lock.json
 
-#htop
+# Intellij
+.idea/
+
+# htop
 htop/
-
-# kitty
-kitty/neighboring_window.py
-kitty/pass_keys.py
-
-# neovim
-nvim/plugin/
 
