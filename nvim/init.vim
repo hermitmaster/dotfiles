@@ -1,3 +1,5 @@
+colorscheme hermit
+
 set clipboard=unnamed,unnamedplus
 set colorcolumn=80
 set fillchars=eob:\ ,vert:│
@@ -13,62 +15,72 @@ set smartindent
 set ts=2 sw=2 et
 set undofile
 
+let g:airline#extensions#hunks#coc_git = 1
 let g:airline#extensions#tabline#enabled = 1
-let g:coc_global_extensions = [ 'coc-snippets' ]
-let g:is_posix = 1
-let g:mapleader = ' '
-let g:neoformat_hcl_terraform = {
-    \ 'exe': 'terraform',
-    \ 'args': ['fmt', '-write', '-'],
-    \ 'stdin': 1
-    \ }
-let g:neoformat_enabled_hcl = ['terraform']
-let g:NERDTreeGitStatusShowIgnored = 1
-let g:NERDTreeMinimalMenu = 1
-let g:NERDTreeMinimalUI = 1
-let g:NERDTreeShowHidden = 1
-let g:srcery_italic = 1
-let g:which_key_fallback_to_native_key=1
+let g:airline#extensions#tabline#buffer_idx_mode = 1
+let g:airline#extensions#tabline#show_tab_type = 0
 
-let packager = stdpath('config') . '/pack/packager/opt/vim-packager'
-if empty(glob(packager.'autoload/packager.vim'))
-  silent exe '!git clone https://github.com/kristijanhusak/vim-packager '.packager
+let g:coc_data_home = stdpath('data') . '/coc'
+let g:coc_global_extensions = [
+    \ 'coc-docker',
+    \ 'coc-explorer',
+    \ 'coc-git',
+    \ 'coc-go',
+    \ 'coc-json',
+    \ 'coc-lists',
+    \ 'coc-pairs',
+    \ 'coc-prettier',
+    \ 'coc-pyright',
+    \ 'coc-sh',
+    \ 'coc-snippets',
+    \ 'coc-toml',
+    \ 'coc-vimlsp',
+    \ 'coc-yaml',
+\ ]
+
+let g:is_posix = 1
+let g:loaded_netrw = 1
+let g:loaded_netrwPlugin = 1
+
+let g:mapleader = ' '
+let g:maplocalleader = ','
+
+let g:startify_change_to_vcs_root = 1
+let g:startify_enable_special = 0
+let g:startify_fortune_use_unicode = 1
+let g:startify_relative_path = 1
+let g:startify_update_oldfiles = 1
+
+let plug = stdpath('data') . '/site/autoload/plug.vim'
+if empty(glob(plug))
+  silent exe '!curl -fLo '.plug.' --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 endif
 
-function! s:packager_init(packager) abort
-  call a:packager.add('airblade/vim-gitgutter')
-  call a:packager.add('christoomey/vim-tmux-navigator')
-  call a:packager.add('davidhalter/jedi-vim')
-  call a:packager.add('fatih/vim-go')
-  call a:packager.add('jiangmiao/auto-pairs')
-  call a:packager.add('junegunn/fzf')
-  call a:packager.add('junegunn/fzf.vim')
-  call a:packager.add('kristijanhusak/vim-packager', { 'type': 'opt' })
-  call a:packager.add('liuchengxu/vim-which-key')
-  call a:packager.add('mhinz/vim-startify')
-  call a:packager.add('neoclide/coc.nvim', {'branch': 'release'})
-  call a:packager.add('preservim/nerdtree', {'requires': 'Xuyuanp/nerdtree-git-plugin'})
-  call a:packager.add('ryanoasis/vim-devicons')
-  call a:packager.add('sbdchd/neoformat')
-  call a:packager.add('sheerun/vim-polyglot')
-  call a:packager.add('srcery-colors/srcery-vim')
-  call a:packager.add('tpope/vim-commentary')
-  call a:packager.add('tpope/vim-dispatch')
-  call a:packager.add('tpope/vim-fugitive')
-  call a:packager.add('vim-airline/vim-airline')
-endfunction
+augroup vim_plug
+  au!
+  au VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)')) | PlugInstall --sync | source $MYVIMRC | endif
+augroup END
 
-packadd vim-packager
-call packager#setup(function('s:packager_init'))
+call plug#begin(stdpath('data') . '/plugged')
+Plug 'folke/which-key.nvim'
+Plug 'gcmt/wildfire.vim'
+Plug 'knubie/vim-kitty-navigator', {'do': 'cp ./*.py $XDG_CONFIG_HOME/kitty/'}
+Plug 'mhinz/vim-startify'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-fugitive'
+Plug 'vim-airline/vim-airline'
+Plug 'ryanoasis/vim-devicons'
+call plug#end()
 
-nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<cr>
-vnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<cr>
+lua require('which-key').setup()
 
 inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 inoremap <silent><expr> <c-space> coc#refresh()
 inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<cr>\<c-r>=coc#on_enter()\<cr>"
-inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<cr>"
 
 nnoremap <silent> K :call <SID>show_documentation()<cr>
 
@@ -79,13 +91,14 @@ nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gy <Plug>(coc-type-definition)
 
 nmap <silent> <leader>bd <cmd>bd<cr>
-nmap <silent> <leader>bf <cmd>Neoformat<cr>
+nmap <silent> <leader>be <cmd>enew<cr>
+nmap <silent> <leader>bf <cmd>call CocAction('format')<cr>
 nmap <silent> <leader>bh <cmd>Startify<cr>
 nmap <silent> <leader>bn <cmd>bn<cr>
 nmap <silent> <leader>bp <cmd>bp<cr>
 
 nmap <silent> <leader>fs <cmd>write<cr>
-nmap <silent> <leader>ft <cmd>NERDTreeToggle<cr>
+nmap <silent> <leader>ft <cmd>CocCommand explorer<cr>
 
 nmap <silent> <leader>ga <cmd>Git add %<cr>
 nmap <silent> <leader>gb <cmd>Git blame<cr>
@@ -98,17 +111,30 @@ nmap <silent> <leader>gs <cmd>Git<cr>
 nmap <silent> <leader>gL <cmd>Gclog -- %<cr>
 nmap <silent> <leader>gu <cmd>Git reset -q %<cr>
 
+nmap <silent> <leader>hp <cmd>CocCommand git.chunkInfo<cr>
+nmap <silent> <leader>hr <cmd>CocCommand git.chunkUndo<cr>
+nmap <silent> <leader>hs <cmd>CocCommand git.chunkStage<cr>
+
+nmap <silent> <leader>la <Plug>(coc-codeaction-selected)
+xmap <silent> <leader>la <Plug>(coc-codeaction-selected)
+nmap <silent> <leader>ld <cmd>CocDiagnostics<cr>
+nmap <silent> <leader>lf <Plug>(coc-format-selected)
+xmap <silent> <leader>lf <Plug>(coc-format-selected)
 nmap <silent> <leader>lq <Plug>(coc-fix-current)
 nmap <silent> <leader>lr <Plug>(coc-rename)
 nmap <silent> <leader>lt <Plug>(coc-codeaction)
 
 nmap <silent> <leader>q <cmd>qall<cr>
 
-nmap <silent> <leader>sf <cmd>Files<cr>
-nmap <silent> <leader>ss <cmd>BLines<cr>
-nmap <silent> <leader>sP <cmd>Rg <C-R><C-W><cr>
-nmap <silent> <leader>sS <cmd>BLines <C-R><C-W><cr>
-nmap <silent> <leader>s/ <cmd>Rg<cr>
+nnoremap <silent> <leader>sa :<C-u>CocList diagnostics<cr>
+nnoremap <silent> <leader>sb :<C-u>CocList buffers<cr>
+nnoremap <silent> <leader>sf :<C-u>CocList files<cr>
+nnoremap <silent> <leader>ss :<C-u>CocList words<cr>
+nnoremap <silent> <leader>sw :<C-u>CocList windows<cr>
+nnoremap <silent> <leader>sy :<C-u>CocList -I symbols<cr>
+nnoremap <silent> <leader>sP :<C-u>CocList -I --normal --input=<C-R><C-W> grep<cr>
+nnoremap <silent> <leader>sS :<C-u>CocList -I --normal --input=<C-R><C-W> words<cr>
+nnoremap <silent> <leader>s/ :<C-u>CocList grep<cr>
 
 nmap <leader>1 <Plug>AirlineSelectTab1
 nmap <leader>2 <Plug>AirlineSelectTab2
@@ -122,6 +148,24 @@ nmap <leader>9 <Plug>AirlineSelectTab9
 
 nnoremap <silent><Tab> :wincmd w<cr>
 nnoremap <silent><S-Tab> :wincmd p<cr>
+
+" Map function and class text objects
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
+inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
+vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -140,12 +184,9 @@ endfunction
 
 augroup core
   au!
-  au VimEnter * if @% == '' || @% == '.' | NERDTree | wincmd p | endif
+  au VimEnter * if @% == '' || @% == '.' | exe 'CocCommand explorer' | wincmd p | endif
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
   au BufWinEnter * if(exists('b:_winview')) | call winrestview(b:_winview) | endif
   au BufWinLeave * let b:_winview = winsaveview()
-  au BufWritePre * try | undojoin | Neoformat | catch /^Vim\%((\a\+)\)\=:E790/ | finally | silent Neoformat | endtry
 augroup END
-
-silent! colorscheme srcery
 

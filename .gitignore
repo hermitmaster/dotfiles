@@ -7,10 +7,7 @@
 # Intellij
 .idea/
 
-# htop
-htop/
-
-# nvim
-coc/
-nvim/pack/
+# kitty
+kitty/neighboring_window.py
+kitty/pass_keys.py
 
