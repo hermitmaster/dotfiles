@@ -10,3 +10,7 @@
 # htop
 htop/
 
+# nvim
+coc/
+nvim/pack/
+
