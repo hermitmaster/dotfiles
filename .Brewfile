@@ -30,6 +30,7 @@ brew 'zsh-syntax-highlighting'
 cask 'alacritty', args: { 'no-quarantine': true }
 cask 'docker'
 cask 'font-hack-nerd-font'
+cask 'goland'
 cask 'rectangle'
 cask 'slack'
 

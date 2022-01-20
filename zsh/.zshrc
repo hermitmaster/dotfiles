@@ -29,7 +29,7 @@ prompt pure
 prompt_newline='%666v'
 PROMPT=" $PROMPT"
 
-if [[ -z $TMUX && -z $VIM ]]; then
+if [[ -z $TMUX && -z $VIM && -z $INTELLIJ_ENVIRONMENT_READER  && "$TERMINAL_EMULATOR" != "JetBrains-JediTerm" ]]; then
   tmux attach 2>/dev/null || exec tmux
 fi
 
