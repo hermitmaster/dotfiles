@@ -1,6 +1,5 @@
 map <buffer> <leader>ta :Dispatch  terraform -no-color -chdir="%:p:h" apply<cr>
 map <buffer> <leader>td :Dispatch  terraform -no-color -chdir="%:p:h" destroy<cr>
-map <buffer> <leader>tf :Dispatch! terraform -no-color -chdir="%:p:h" fmt<cr>
 map <buffer> <leader>tg :Dispatch! terraform -no-color -chdir="%:p:h" get<cr>
 map <buffer> <leader>ti :Dispatch! terraform -no-color -chdir="%:p:h" init<cr>
 map <buffer> <leader>tp :Dispatch  terraform -no-color -chdir="%:p:h" plan<cr>

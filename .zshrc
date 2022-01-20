@@ -17,7 +17,7 @@ setopt pushd_ignore_dups auto_cd auto_pushd
 
 test -L "${HOME}/.zshrc" || ln -fs "${HOME}/.config/.zshrc" "${HOME}/.zshrc"
 test -f "${HOMEBREW_BUNDLE_FILE}.lock.json" || brew bundle install
-test -f "${HOME}/.zshenv" || echo "SHELL_SESSIONS_DISABLE=1" > "${HOME}/.zshenv"
+test -f "${HOME}/.zshenv" || echo "SHELL_SESSIONS_DISABLE=1" >"${HOME}/.zshenv"
 
 . <(brew shellenv)
 . "${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
@@ -25,17 +25,16 @@ test -f "${HOME}/.zshenv" || echo "SHELL_SESSIONS_DISABLE=1" > "${HOME}/.zshenv"
 
 fpath+="/opt/homebrew/share/zsh/site-functions"
 
-autoload -Uz compinit promptinit \
-  && compinit -d "${HOME}/.zcompdump" \
-  && promptinit
+autoload -Uz compinit promptinit &&
+  compinit -d "${HOME}/.zcompdump" &&
+  promptinit
 
-zstyle :prompt:pure:path color green
+zstyle :prompt:pure:prompt:success color green
 
 prompt pure
 prompt_newline='%666v'
 PROMPT=" $PROMPT"
 
-if [[ -z $TMUX && -z $VIM && -z $INTELLIJ_ENVIRONMENT_READER  && "$TERMINAL_EMULATOR" != "JetBrains-JediTerm" ]]; then
+if [[ -z $TMUX && -z $VIM && -z $INTELLIJ_ENVIRONMENT_READER && "$TERMINAL_EMULATOR" != "JetBrains-JediTerm" ]]; then
   tmux attach 2>/dev/null || exec tmux
 fi
-
