@@ -1,7 +1,7 @@
 set clipboard=unnamed,unnamedplus
 set colorcolumn=80
 set fillchars=eob:\ ,vert:│
-set ignorecase smartcase
+set ignorecase smartcase wildignorecase
 set list lcs=tab:→\ ,lead:·,trail:·,extends:↷,precedes:↶,eol:↵
 set mouse=a
 set nosc nosmd
@@ -13,21 +13,22 @@ set smartindent
 set ts=2 sw=2 et
 set undofile
 
-let g:mapleader = ' '
 let g:airline#extensions#tabline#enabled = 1
 let g:coc_global_extensions = [ 'coc-snippets' ]
 let g:is_posix = 1
-let g:neoformat_terragrunt_terraform = {
+let g:mapleader = ' '
+let g:neoformat_hcl_terraform = {
     \ 'exe': 'terraform',
     \ 'args': ['fmt', '-write', '-'],
     \ 'stdin': 1
     \ }
-let g:neoformat_enabled_terragrunt = ['terraform']
+let g:neoformat_enabled_hcl = ['terraform']
 let g:NERDTreeGitStatusShowIgnored = 1
 let g:NERDTreeMinimalMenu = 1
 let g:NERDTreeMinimalUI = 1
 let g:NERDTreeShowHidden = 1
 let g:srcery_italic = 1
+let g:which_key_fallback_to_native_key=1
 
 let packager = stdpath('config') . '/pack/packager/opt/vim-packager'
 if empty(glob(packager.'autoload/packager.vim'))
@@ -35,18 +36,19 @@ if empty(glob(packager.'autoload/packager.vim'))
 endif
 
 function! s:packager_init(packager) abort
-  call a:packager.add('kristijanhusak/vim-packager', { 'type': 'opt' })
   call a:packager.add('airblade/vim-gitgutter')
   call a:packager.add('christoomey/vim-tmux-navigator')
   call a:packager.add('davidhalter/jedi-vim')
   call a:packager.add('fatih/vim-go')
-  call a:packager.add('folke/which-key.nvim')
   call a:packager.add('jiangmiao/auto-pairs')
   call a:packager.add('junegunn/fzf')
   call a:packager.add('junegunn/fzf.vim')
+  call a:packager.add('kristijanhusak/vim-packager', { 'type': 'opt' })
+  call a:packager.add('liuchengxu/vim-which-key')
   call a:packager.add('mhinz/vim-startify')
   call a:packager.add('neoclide/coc.nvim', {'branch': 'release'})
   call a:packager.add('preservim/nerdtree', {'requires': 'Xuyuanp/nerdtree-git-plugin'})
+  call a:packager.add('ryanoasis/vim-devicons')
   call a:packager.add('sbdchd/neoformat')
   call a:packager.add('sheerun/vim-polyglot')
   call a:packager.add('srcery-colors/srcery-vim')
@@ -54,13 +56,13 @@ function! s:packager_init(packager) abort
   call a:packager.add('tpope/vim-dispatch')
   call a:packager.add('tpope/vim-fugitive')
   call a:packager.add('vim-airline/vim-airline')
-  call a:packager.add('ryanoasis/vim-devicons')
 endfunction
 
 packadd vim-packager
 call packager#setup(function('s:packager_init'))
 
-lua require('which-key').setup()
+nnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<cr>
+vnoremap <silent> <leader> :<c-u>WhichKey '<Space>'<cr>
 
 inoremap <silent><expr> <TAB> pumvisible() ? "\<C-n>" : <SID>check_back_space() ? "\<TAB>" : coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
@@ -77,7 +79,6 @@ nmap <silent> gr <Plug>(coc-references)
 nmap <silent> gy <Plug>(coc-type-definition)
 
 nmap <silent> <leader>bd <cmd>bd<cr>
-nmap <silent> <leader>be <cmd>enew<cr>
 nmap <silent> <leader>bf <cmd>Neoformat<cr>
 nmap <silent> <leader>bh <cmd>Startify<cr>
 nmap <silent> <leader>bn <cmd>bn<cr>
@@ -93,20 +94,15 @@ nmap <silent> <leader>gd <cmd>Gvdiffsplit<cr>
 nmap <silent> <leader>ge <cmd>Dispatch pre-commit run -a<cr>
 nmap <silent> <leader>gf <cmd>Git fetch --all --prune<cr>
 nmap <silent> <leader>gl <cmd>Gclog --<cr>
-nmap <silent> <leader>gm <cmd>Git branch<cr>
-nmap <silent> <leader>gp <cmd>Git push<cr>
-nmap <silent> <leader>gP <cmd>Git push --force<cr>
 nmap <silent> <leader>gs <cmd>Git<cr>
 nmap <silent> <leader>gL <cmd>Gclog -- %<cr>
 nmap <silent> <leader>gu <cmd>Git reset -q %<cr>
 
-nmap <silent> <leader>la <Plug>(coc-codeaction-selected)
-xmap <silent> <leader>la <Plug>(coc-codeaction-selected)
 nmap <silent> <leader>lq <Plug>(coc-fix-current)
 nmap <silent> <leader>lr <Plug>(coc-rename)
 nmap <silent> <leader>lt <Plug>(coc-codeaction)
 
-nmap <silent> <leader>q :qall<cr>
+nmap <silent> <leader>q <cmd>qall<cr>
 
 nmap <silent> <leader>sf <cmd>Files<cr>
 nmap <silent> <leader>ss <cmd>BLines<cr>
@@ -126,14 +122,6 @@ nmap <leader>9 <Plug>AirlineSelectTab9
 
 nnoremap <silent><Tab> :wincmd w<cr>
 nnoremap <silent><S-Tab> :wincmd p<cr>
-
-" Remap <C-f> and <C-b> for scroll float windows/popups.
-nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
 
 function! s:check_back_space() abort
   let col = col('.') - 1

@@ -3,7 +3,6 @@ export CLICOLOR=1
 export EDITOR=nvim
 export HOMEBREW_BUNDLE_FILE="${XDG_CONFIG_HOME}/.Brewfile"
 export NPM_CONFIG_PREFIX="${HOME}/.local"
-export PAGER=most
 export PATH="${HOME}/.local/bin:/opt/homebrew/bin:${PATH}"
 
 alias bb='brew bundle install --cleanup'
@@ -38,3 +37,24 @@ PROMPT=" $PROMPT"
 if [[ -z $TMUX && -z $VIM && -z $INTELLIJ_ENVIRONMENT_READER && "$TERMINAL_EMULATOR" != "JetBrains-JediTerm" ]]; then
   tmux attach 2>/dev/null || exec tmux
 fi
+
+function man {
+  env \
+    LESS_TERMCAP_md=$(
+      tput bold
+      tput setaf 1
+    ) \
+    LESS_TERMCAP_so=$(
+      tput rev
+      tput setaf 4
+    ) \
+    LESS_TERMCAP_us=$(
+      tput smul
+      tput setaf 5
+    ) \
+    LESS_TERMCAP_me=$(tput sgr0) \
+    LESS_TERMCAP_ue=$(tput sgr0) \
+    LESS_TERMCAP_se=$(tput sgr0) \
+    PAGER="less -s -MR +Gg" \
+    command man "${@}"
+}

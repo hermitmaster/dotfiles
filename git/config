@@ -36,27 +36,8 @@
 [branch]
   autosetuprebase = always
 
-[color]
-  ui = true
-
-[color "diff-highlight"]
-  oldNormal = red
-  oldHighlight = red bold 52
-  newNormal = green
-  newHighlight = green bold 22
-
-[color "diff"]
-  meta = yellow
-  frag = magenta bold
-  func = cyan bold
-  commit = yellow bold
-  old = red
-  new = green
-  whitespace = red reverse
-
 [core]
   autocrlf = input
-  pager = diff-so-fancy | less --tabs=4 -RFX
 
 [init]
   defaultBranch = main
