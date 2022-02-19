@@ -1,0 +1,77 @@
+[alias]
+  aa = add -A
+  au = add --update
+  av = add --verbose
+  b = branch
+  ba = branch --all
+  bd = branch --delete
+  br = branch --remote
+  c = commit -v
+  ca = commit -v --amend
+  cane = commit -v --amend --no-edit
+  cl = clone
+  cm = commit -m
+  co = checkout
+  cob = checkout -b
+  com = checkout master
+  d = difftool --no-symlinks --dir-diff
+  ds = difftool --staged --no-symlinks --dir-diff
+  fap = fetch --all --prune
+  lg = log --graph
+  lga = log --graph --decorate --all
+  lgo = log --graph --oneline --decorate
+  lgoa = log --graph --oneline --decorate --all
+  lo = log --oneline --decorate
+  ls = log --stat --paginate
+  p = push
+  pf = push --force
+  rb = rebase
+  st = status
+
+[branch]
+  autosetuprebase = always
+
+[core]
+  autocrlf = input
+
+[diff]
+  colorMoved = plain
+  renames = true
+  renameLimit = 2000
+  tool = kitty
+  guitool = kitty.gui
+
+[difftool]
+  prompt = false
+  trustExitCode = true
+
+[difftool "kitty"]
+  cmd = kitty +kitten diff $LOCAL $REMOTE
+
+[difftool "kitty.gui"]
+  cmd = kitty kitty +kitten diff $LOCAL $REMOTE
+
+[fetch]
+  parallel = 0
+
+[init]
+  defaultBranch = main
+
+[pull]
+  rebase = true
+
+[push]
+  default = simple
+
+[rebase]
+  autostash = true
+
+[submodule]
+  recurse = true
+
+[user]
+  email = hermitmaster@icloud.com
+  name = Dennis Rausch
+
+[includeIf "gitdir:~/work/"]
+  path = ~/work/.gitconfig

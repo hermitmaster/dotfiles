@@ -1,0 +1,116 @@
+[aws]
+symbol = ' '
+
+[cmd_duration]
+format = '[$duration ]($style)'
+style = 'bold 8'
+
+[conda]
+format = '[$symbol$environment ]($style)'
+symbol = ' '
+
+[dart]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[directory]
+read_only = ' '
+style = 'bold blue'
+
+[docker_context]
+format = '[$symbol$context ]($style)'
+symbol = ' '
+
+[elixir]
+format = '[$symbol($version \(OTP $otp_version\) )]($style)'
+symbol = ' '
+
+[elm]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[git_branch]
+format = '[$symbol$branch ]($style)'
+symbol = ' '
+
+[golang]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[hg_branch]
+format = '[$symbol$branch ]($style)'
+symbol = ' '
+
+[java]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[julia]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[line_break]
+disabled = true
+
+[lua]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[memory_usage]
+symbol = ' '
+
+[nim]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[nix_shell]
+symbol = ' '
+
+[nodejs]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[package]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[perl]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[php]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[python]
+format = '[${symbol}${pyenv_prefix}(${version} )(\($virtualenv\) )]($style)'
+symbol = ' '
+
+[ruby]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[rust]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[scala]
+format = '[$symbol($version )]($style)'
+symbol = ' '
+
+[shlvl]
+symbol = ' '
+
+[swift]
+disabled = true
+
+[terraform]
+format = '[$symbol$workspace ]($style)'
+symbol = '  '
+
+[vlang]
+format = '[$symbol($version )]($style)'
+
+[zig]
+format = '[$symbol($version )]($style)'
+

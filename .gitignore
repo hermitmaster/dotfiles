@@ -1,0 +1,19 @@
+# common
+.DS_Store
+
+# homebrew
+.Brewfile.lock.json
+
+# jetbrains
+.idea/
+
+# k9s
+k9s/config.yml
+
+# kitty
+kitty/neighboring_window.py
+kitty/pass_keys.py
+
+# nvim
+nvim/plugin/
+
