@@ -42,11 +42,11 @@
 #default_widget_type = "proc"
 #default_widget_count = 1
 # Use basic mode
-#basic = false
+basic = true
 # Use the old network legend style
 #use_old_network_legend = false
 # Remove space in tables
-#hide_table_gap = false
+hide_table_gap = true
 # Show the battery widgets
 #battery = false
 # Disable mouse clicks

@@ -1,0 +1,4 @@
+reporting: "off"
+
+commandTemplates:
+  dockerCompose: docker-compose

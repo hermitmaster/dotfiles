@@ -1,0 +1,48 @@
+k9s:
+  refreshRate: 2
+  maxConnRetry: 5
+  enableMouse: true
+  headless: false
+  logoless: true
+  crumbsless: false
+  readOnly: false
+  noExitOnCtrlC: false
+  noIcons: false
+  logger:
+    tail: 200
+    buffer: 5000
+    sinceSeconds: 60
+    fullScreenLogs: false
+    textWrap: true
+    showTime: true
+  currentContext: rancher-desktop
+  currentCluster: rancher-desktop
+  clusters:
+    rancher-desktop:
+      namespace:
+        active: all
+        lockFavorites: true
+        favorites:
+          - all
+          - default
+      view:
+        active: po
+      featureGates:
+        nodeShell: false
+      shellPod:
+        image: alpine:edge
+        command: []
+        args: []
+        namespace: default
+        limits:
+          cpu: 500m
+          memory: 256Mi
+      portForwardAddress: localhost
+  thresholds:
+    cpu:
+      critical: 90
+      warn: 70
+    memory:
+      critical: 90
+      warn: 70
+  screenDumpDir: /var/folders/72/4gjzk9m5697b0z81drd94d6rw8jy7y/T/k9s-screens-dennis.rausch

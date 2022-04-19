@@ -1,19 +1,29 @@
-# common
-.DS_Store
+# efm
+efm-langserver/
 
 # homebrew
-.Brewfile.lock.json
+Brewfile.rb.lock.json
 
-# jetbrains
-.idea/
-
-# k9s
-k9s/config.yml
+# htop
+htop/
 
 # kitty
 kitty/neighboring_window.py
 kitty/pass_keys.py
 
+# lazydocker
+lazydocker/state.yml
+
+# lazygit
+lazygit/state.yml
+
+# npm
+configstore/
+
 # nvim
 nvim/plugin/
+
+# zsh
+.zcomp*
+*.zwc
 

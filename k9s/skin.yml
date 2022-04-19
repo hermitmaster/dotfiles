@@ -1,0 +1,131 @@
+black: &black "#272822"
+red: &red "#f92672"
+green: &green "#a6e22e"
+yellow: &yellow "#e6db74"
+blue: &blue "#66d9ef"
+magenta: &magenta "#ae81ff"
+cyan: &cyan "#a1efe4"
+white: &white "#f8f8f2"
+brightBlack: &brightBlack "#75715e"
+xgray1: &xgray1 "#3c3d38"
+orange: &orange "#fd971f"
+darkBlue: &darkBlue "#3d828f"
+
+# Skin...
+k9s:
+  # General K9s styles
+  body:
+    fgColor: *white
+    bgColor: *black
+    logoColor: *brightBlack
+  # Command prompt styles
+  prompt:
+    fgColor: *white
+    bgColor: default
+    suggestColor: *brightBlack
+  # ClusterInfoView styles.
+  info:
+    fgColor: *blue
+    sectionColor: *yellow
+  # Dialog styles.
+  dialog:
+    fgColor: *white
+    bgColor: default
+    buttonFgColor: *white
+    buttonBgColor: *green
+    buttonFocusFgColor: *white
+    buttonFocusBgColor: *darkBlue
+    labelFgColor: *orange
+    fieldFgColor: *blue
+  frame:
+    # Borders styles.
+    border:
+      fgColor: *blue
+      focusColor: *darkBlue
+    menu:
+      fgColor: *cyan
+      keyColor: *green
+      # Used for favorite namespaces
+      numKeyColor: *green
+    # CrumbView attributes for history navigation.
+    crumbs:
+      fgColor: *white
+      bgColor: *xgray1
+      activeColor: *blue
+    # Resource status and update styles
+    status:
+      newColor: *blue
+      modifyColor: *magenta
+      addColor: *green
+      pendingColor: *yellow
+      errorColor: *red
+      highlightcolor: *blue
+      killColor: *orange
+      completedColor: *green
+    # Border title styles.
+    title:
+      fgColor: *white
+      bgColor: default
+      highlightColor: *blue
+      counterColor: *cyan
+      filterColor: *orange
+  views:
+    # Charts skins...
+    charts:
+      bgColor: default
+      dialBgColor: default
+      chartBgColor: *xgray1
+      defaultDialColors:
+        - *blue
+        - *magenta
+      defaultChartColors:
+        - *blue
+        - *magenta
+      resourceColors:
+        batch/v1/jobs:
+          - *blue
+          - *magenta
+        v1/persistentvolumes:
+          - *blue
+          - *magenta
+        cpu:
+          - *blue
+          - *magenta
+        mem:
+          - *blue
+          - *magenta
+        v1/events:
+          - *blue
+          - *magenta
+        v1/pods:
+          - *blue
+          - *magenta
+    # TableView attributes.
+    table:
+      fgColor: *white
+      bgColor: *black
+      markColor: *magenta
+      # Header row styles.
+      header:
+        fgColor: *white
+        bgColor: *xgray1
+        sorterColor: *blue
+    # Xray view attributes.
+    xray:
+      fgColor: *white
+      bgColor: default
+      cursorColor: *blue
+      cursorTextColor: *white
+      graphicColor: *blue
+    # YAML info styles.
+    yaml:
+      keyColor: *orange
+      colonColor: *orange
+      valueColor: *white
+    # Logs styles.
+    logs:
+      fgColor: *white
+      bgColor: *xgray1
+      indicator:
+        fgColor: *white
+        bgColor: *darkBlue
