@@ -5,10 +5,8 @@ test $(arch) = "arm64" && DEFAULT_HOMEBREW_PREFIX="/opt/homebrew"
 . <("${DEFAULT_HOMEBREW_PREFIX:-"/usr/local"}/bin/brew" shellenv)
 test -e "${HOMEBREW_BUNDLE_FILE}.lock.json" || brew bundle install --clean
 
-export BAT_THEME="Monokai Extended"
-export CLICOLOR="1"
 export EDITOR="nvim"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANPAGER='nvim +Man!'
 export NPM_CONFIG_PREFIX="${HOME}/.local"
 export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/config.toml"
 export PATH="${HOME}/.local/bin:${HOME}/.rd/bin:${PATH}"
