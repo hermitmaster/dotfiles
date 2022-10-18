@@ -38,7 +38,7 @@ vim.fn.sign_define({
   { name = 'DiagnosticSignError', numhl = 'DiagnosticSignError', texthl = 'DiagnosticSignError', text = ' ' },
   { name = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint', texthl = 'DiagnosticSignHint', text = ' ' },
   { name = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo', texthl = 'DiagnosticSignInfo', text = ' ' },
-  { name = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn', texthl = 'DiagnosticSignWarn', text = ' ' }
+  { name = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn', texthl = 'DiagnosticSignWarn', text = ' ' },
 })
 
 if not io.open(packer_install_path) then
@@ -48,8 +48,6 @@ if not io.open(packer_install_path) then
 end
 
 return require('packer').startup(function(use)
-  use 'wbthomason/packer.nvim'
-
   use {
     'alexghergh/nvim-tmux-navigation',
     config = function()
@@ -76,25 +74,22 @@ return require('packer').startup(function(use)
         ['<leader>'] = {
           b = {
             name = 'Buffer',
-            d = { '<cmd>bd<cr>', 'Delete Current Buffer' },
-            h = { '<cmd>Alpha<cr>', 'Dashboard' },
-            v = { '<cmd>Gvdiffsplit<cr>', 'Diff' },
             w = { '<cmd>w<cr>', 'Write Buffer' },
           },
           f = {
             name = 'File',
-            j = { '<cmd>NvimTreeFindFile<cr>', 'Jump to File' },
             n = { '<cmd>enew<cr>', 'New File' },
             s = { '<cmd>w<cr>', 'Save File' },
-            t = { '<cmd>NvimTreeToggle<cr>', 'File Tree' },
           },
           g = {
             name = 'Global',
           },
+          h = {
+            name = 'Hunk',
+          },
           q = { '<cmd>qall<cr>', 'Quit' },
-          w = {
-            name = 'Window',
-            d = { '<cmd>close<cr>', 'Close Current Window' },
+          s = {
+            name = 'Spectre',
           },
         },
         ['['] = {
@@ -123,9 +118,20 @@ return require('packer').startup(function(use)
 
   use {
     'goolord/alpha-nvim',
-    requires = 'kyazdani42/nvim-web-devicons',
+    requires = {
+      'folke/which-key.nvim',
+      'nvim-tree/nvim-web-devicons',
+    },
     config = function()
       require('alpha').setup(require('alpha.themes.hermit').config)
+
+      require('which-key').register({
+        ['<leader>'] = {
+          b = {
+            h = { '<cmd>Alpha<cr>', 'Dashboard' },
+          },
+        },
+      })
     end,
   }
 
@@ -191,9 +197,9 @@ return require('packer').startup(function(use)
           end,
         },
         sources = {
-          { name = 'buffer' },
-          { name = 'luasnip' },
           { name = 'nvim_lsp' },
+          { name = 'luasnip' },
+          { name = 'buffer' },
           { name = 'path' },
         },
       }
@@ -201,8 +207,11 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'kyazdani42/nvim-tree.lua',
-    requires = 'kyazdani42/nvim-web-devicons',
+    'nvim-tree/nvim-tree.lua',
+    requires = {
+      'folke/which-key.nvim',
+      'nvim-tree/nvim-web-devicons',
+    },
     ft = 'alpha',
     config = function()
       local tree_cb = require('nvim-tree.config').nvim_tree_callback
@@ -241,6 +250,22 @@ return require('packer').startup(function(use)
         },
       }
     end,
+
+    require('which-key').register({
+      ['<leader>'] = {
+        f = {
+          j = { function() require('nvim-tree.api').tree.find_file(vim.fn.expand('%')) end, 'Jump to File' },
+          t = { function() require('nvim-tree.api').tree.toggle() end, 'Toggle File Tree' },
+        },
+      },
+    })
+  }
+
+  use {
+    'kylechui/nvim-surround',
+    config = function()
+      require('nvim-surround').setup()
+    end
   }
 
   use {
@@ -257,9 +282,9 @@ return require('packer').startup(function(use)
           require('which-key').register({
             ['<leader>'] = {
               h = {
-                name = 'Hunk',
                 b = { function() gs.blame_line({ full = true }) end, 'Blame Hunk', },
                 B = { function() gs.toggle_current_line_blame() end, 'Toggle Line Blame', },
+                d = { function() gs.diffthis() end, 'Diff', },
                 p = { function() gs.preview_hunk() end, 'Preview Hunk', },
                 r = { function() gs.reset_hunk() end, 'Reset Hunk', },
                 R = { function() gs.reset_buffer() end, 'Reset Buffer', },
@@ -301,17 +326,16 @@ return require('packer').startup(function(use)
     end,
   }
 
-  use { 'mfussenegger/nvim-dap' }
-
   use {
     'neovim/nvim-lspconfig',
     requires = {
       'folke/which-key.nvim',
       'hrsh7th/cmp-nvim-lsp',
-      'williamboman/nvim-lsp-installer',
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
     },
     config = function()
-      local capabilities = require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+      local capabilities = require('cmp_nvim_lsp').default_capabilities()
       local lspconfig = require('lspconfig')
       local servers = {
         'bashls',
@@ -321,15 +345,18 @@ return require('packer').startup(function(use)
         'gopls',
         'html',
         'jsonls',
+        'jsonnet_ls',
         'pyright',
         'sumneko_lua',
         'terraformls',
+        'tflint',
         'tsserver',
         'volar',
         'yamlls',
       }
 
-      require('nvim-lsp-installer').setup({
+      require('mason').setup()
+      require('mason-lspconfig').setup({
         ensure_installed = servers,
         automatic_installation = true,
       })
@@ -346,7 +373,7 @@ return require('packer').startup(function(use)
           ['<leader>'] = {
             b = {
               a = { function() vim.lsp.buf.code_action() end, 'Code Action', },
-              f = { function() vim.lsp.buf.formatting_sync() end, 'Format Buffer', },
+              f = { function() vim.lsp.buf.format() end, 'Format Buffer', },
               i = {
                 f = { function() vim.diagnostic.open_float() end, 'Diagnostics (Float)', },
                 l = { function() vim.diagnostic.setloclist() end, 'Diagnostics (LocationList)', },
@@ -360,7 +387,7 @@ return require('packer').startup(function(use)
           },
         }, { buffer = bufnr })
 
-        if client.resolved_capabilities.document_formatting then
+        if client.server_capabilities.documentFormattingProvider then
           local augroup = 'lsp_fmt'
 
           vim.api.nvim_create_augroup(augroup, { clear = true })
@@ -368,7 +395,7 @@ return require('packer').startup(function(use)
             group = augroup,
             buffer = bufnr,
             callback = function()
-              vim.lsp.buf.formatting_sync()
+              vim.lsp.buf.format()
             end,
           })
         end
@@ -435,24 +462,22 @@ return require('packer').startup(function(use)
   use {
     'numToStr/Comment.nvim',
     config = function()
-      require('Comment').setup({
+      require('Comment').setup {
         ignore = '^$',
-      })
+      }
     end,
   }
 
   use {
     'nvim-lualine/lualine.nvim',
-    requires = 'kyazdani42/nvim-web-devicons',
+    requires = 'nvim-tree/nvim-web-devicons',
     after = 'monokai.nvim',
     config = function()
       require('lualine').setup {
         options = {
-          icons_enabled = true,
-          theme = 'auto',
           component_separators = { left = '', right = '' },
           section_separators = { left = '', right = '' },
-          disabled_filetypes = { 'alpha', 'help', 'NvimTree' },
+          disabled_filetypes = { 'alpha', 'NvimTree' },
         },
         sections = {
           lualine_a = {
@@ -470,6 +495,7 @@ return require('packer').startup(function(use)
             },
             {
               'filename',
+              path = 1,
               symbols = {
                 modified = ' ●',
                 readonly = ' ',
@@ -532,14 +558,16 @@ return require('packer').startup(function(use)
           lualine_a = {
             {
               'buffers',
+              filetype_names = {
+                alpha = 'Alpha',
+                packer = 'Packer',
+                NvimTree = 'NvimTree',
+                TelescopePrompt = 'Telescope',
+              },
               show_filename_only = false
             }
           },
           lualine_z = { 'tabs' },
-        },
-        extensions = {
-          'fugitive',
-          'nvim-tree',
         },
       }
     end,
@@ -548,76 +576,27 @@ return require('packer').startup(function(use)
   use {
     'nvim-pack/nvim-spectre',
     requires = {
-      'kyazdani42/nvim-web-devicons',
+      'folke/which-key.nvim',
       'nvim-lua/plenary.nvim',
+      'nvim-tree/nvim-web-devicons',
     },
     config = function()
       require('spectre').setup({
         live_update = true,
-        mapping = {
-          ['toggle_line'] = {
-            map = "dd",
-            cmd = "<cmd>lua require('spectre').toggle_line()<CR>",
-            desc = "toggle current item"
-          },
-          ['enter_file'] = {
-            map = "<cr>",
-            cmd = "<cmd>lua require('spectre.actions').select_entry()<CR>",
-            desc = "goto current file"
-          },
-          ['send_to_qf'] = {
-            map = "<leader>sq",
-            cmd = "<cmd>lua require('spectre.actions').send_to_qf()<CR>",
-            desc = "send all item to quickfix"
-          },
-          ['replace_cmd'] = {
-            map = "<leader>sc",
-            cmd = "<cmd>lua require('spectre.actions').replace_cmd()<CR>",
-            desc = "input replace vim command"
-          },
-          ['show_option_menu'] = {
-            map = "<leader>so",
-            cmd = "<cmd>lua require('spectre').show_options()<CR>",
-            desc = "show option"
-          },
-          ['run_replace'] = {
-            map = "<leader>sR",
-            cmd = "<cmd>lua require('spectre.actions').run_replace()<CR>",
-            desc = "replace all"
-          },
-          ['change_view_mode'] = {
-            map = "<leader>sv",
-            cmd = "<cmd>lua require('spectre').change_view()<CR>",
-            desc = "change result view mode"
-          },
-          ['toggle_live_update'] = {
-            map = "tu",
-            cmd = "<cmd>lua require('spectre').toggle_live_update()<CR>",
-            desc = "update change when vim write file."
-          },
-          ['toggle_ignore_case'] = {
-            map = "ti",
-            cmd = "<cmd>lua require('spectre').change_options('ignore-case')<CR>",
-            desc = "toggle ignore case"
-          },
-          ['toggle_ignore_hidden'] = {
-            map = "th",
-            cmd = "<cmd>lua require('spectre').change_options('hidden')<CR>",
-            desc = "toggle search hidden"
-          },
-        },
         replace_engine = {
           ['sed'] = {
-            cmd = "gsed",
+            cmd = 'gsed',
             args = nil
           },
-          options = {
-            ['ignore-case'] = {
-              value = "--ignore-case",
-              icon = "[I]",
-              desc = "ignore case"
-            },
-          }
+        },
+      })
+
+      require('which-key').register({
+        ['<leader>'] = {
+          s = {
+            o = { function() require('spectre').open_visual() end, 'Open Spectre', },
+            w = { function() require('spectre').open_visual({ select_word = true }) end, 'Search <cword> Using Spectre', },
+          },
         },
       })
     end
@@ -675,6 +654,7 @@ return require('packer').startup(function(use)
               end,
               'Find Files',
             },
+            r = { function() require('telescope.builtin').oldfiles() end, 'Find Files', },
           },
           g = {
             c = { function() require('telescope.builtin').live_grep { default_text = vim.fn.expand '<cword>', } end,
@@ -706,18 +686,24 @@ return require('packer').startup(function(use)
           'comment',
           'css',
           'dockerfile',
+          'gitignore',
           'go',
           'gomod',
           'gowork',
           'hcl',
+          'help',
           'html',
+          'http',
+          'java',
           'javascript',
           'json',
           'jsonc',
+          'jsonnet',
           'lua',
           'make',
           'markdown',
           'python',
+          'regex',
           'ruby',
           'sql',
           'toml',
@@ -755,6 +741,13 @@ return require('packer').startup(function(use)
   }
 
   use {
+    'rcarriga/nvim-dap-ui',
+    requires = {
+      'mfussenegger/nvim-dap',
+    }
+  }
+
+  use {
     'sindrets/diffview.nvim',
     requires = 'nvim-lua/plenary.nvim'
   }
@@ -764,6 +757,10 @@ return require('packer').startup(function(use)
     config = function()
       require('numbertoggle').setup()
     end
+  }
+
+  use {
+    'wbthomason/packer.nvim'
   }
 
   use {
