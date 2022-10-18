@@ -7,13 +7,13 @@ test -e "${HOMEBREW_BUNDLE_FILE}.lock.json" || brew bundle install --clean
 
 export EDITOR="nvim"
 export MANPAGER='nvim +Man!'
+export MOST_INITFILE="${XDG_CONFIG_HOME}/most/.mostrc"
 export NPM_CONFIG_PREFIX="${HOME}/.local"
 export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/config.toml"
 export PATH="${HOME}/.local/bin:${HOME}/.rd/bin:${PATH}"
-export TIME_STYLE="long-iso"
 
 alias bb='brew bundle install --clean'
-alias ls='exa --git --group-directories-first'
+alias ls='exa --git --group-directories-first --time-style long-iso'
 alias ll='ls -al'
 alias la='ls -abghilmu'
 alias tf='terraform'
@@ -26,10 +26,10 @@ SAVEHIST=$HISTSIZE
 
 . "${HOMEBREW_PREFIX}/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 . "${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-. "${HOMEBREW_PREFIX}/opt/fzf/shell/completion.zsh" 2> /dev/null
+. "${HOMEBREW_PREFIX}/opt/fzf/shell/completion.zsh"
 . "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
 . "${HOMEBREW_PREFIX}/opt/powerlevel10k/powerlevel10k.zsh-theme"
-. "${XDG_CONFIG_HOME}/.p10k.zsh"
+. "${XDG_CONFIG_HOME}/zsh/.p10k.zsh"
 . <(direnv hook zsh)
 
 fpath+="${HOMEBREW_PREFIX}/share/zsh/site-functions"
