@@ -45,4 +45,3 @@ k9s:
     memory:
       critical: 90
       warn: 70
-  screenDumpDir: /var/folders/72/4gjzk9m5697b0z81drd94d6rw8jy7y/T/k9s-screens-dennis.rausch

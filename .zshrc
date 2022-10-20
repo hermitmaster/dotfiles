@@ -7,19 +7,20 @@ test -e "${HOMEBREW_BUNDLE_FILE}.lock.json" || brew bundle install --clean
 
 export EDITOR="nvim"
 export MANPAGER='nvim +Man!'
-export MOST_INITFILE="${XDG_CONFIG_HOME}/most/.mostrc"
 export NPM_CONFIG_PREFIX="${HOME}/.local"
-export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/config.toml"
 export PATH="${HOME}/.local/bin:${HOME}/.rd/bin:${PATH}"
 
-alias bb='brew bundle install --clean'
-alias docker='nerdctl'
-alias ls='exa --git --group-directories-first --time-style long-iso'
-alias ll='ls -al'
-alias la='ls -abghilmu'
-alias tf='terraform'
-alias tg='terragrunt'
-alias tree='exa --tree'
+alias bb="brew bundle install --clean"
+alias btm="btm --basic"
+alias docker="nerdctl"
+alias kctx="kubectx"
+alias kns="kubens"
+alias ls="exa --git --group-directories-first --time-style long-iso"
+alias ll="ls -al"
+alias la="ls -abghilmu"
+alias tf="terraform"
+alias tg="terragrunt"
+alias tree="exa --tree"
 
 setopt hist_ignore_all_dups inc_append_history share_history
 HISTSIZE=100000
@@ -30,7 +31,7 @@ SAVEHIST=$HISTSIZE
 . "${HOMEBREW_PREFIX}/opt/fzf/shell/completion.zsh"
 . "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
 . "${HOMEBREW_PREFIX}/opt/powerlevel10k/powerlevel10k.zsh-theme"
-. "${XDG_CONFIG_HOME}/zsh/.p10k.zsh"
+. "${XDG_CONFIG_HOME}/.p10k.zsh"
 . <(direnv hook zsh)
 
 fpath+="${HOMEBREW_PREFIX}/share/zsh/site-functions"
@@ -42,6 +43,12 @@ function _nvim_packer_sync {
 }
 
 function _bs {
+  if [[ ! -f "${HOME}/.hushlogin" ]]; then
+    touch "${HOME}/.hushlogin"
+    ln -fs "${XDG_CONFIG_HOME}/.zshrc" "${HOME}/.zshrc"
+    ln -fs "${XDG_CONFIG_HOME}/.editorconfig" "${HOME}/.editorconfig"
+  fi
+
   brew bundle install --clean
   _nvim_packer_sync
 }

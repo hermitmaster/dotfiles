@@ -10,10 +10,12 @@ vim.opt.list = true
 vim.opt.listchars = 'tab:→ ,extends:↷,precedes:↶,eol:↵'
 vim.opt.mouse = 'a'
 vim.opt.number = true
+vim.opt.scrolloff = 1
 vim.opt.shiftwidth = 2
 vim.opt.shortmess:append('acs')
 vim.opt.showcmd = false
 vim.opt.showmode = false
+vim.opt.sidescrolloff = 3
 vim.opt.signcolumn = 'yes'
 vim.opt.smartcase = true
 vim.opt.smartindent = true
@@ -49,18 +51,12 @@ end
 
 return require('packer').startup(function(use)
   use {
-    'alexghergh/nvim-tmux-navigation',
+    'folke/trouble.nvim',
+    requires = {
+      'kyazdani42/nvim-web-devicons'
+    },
     config = function()
-      require('nvim-tmux-navigation').setup {
-        keybindings = {
-          left = '<C-h>',
-          down = '<C-j>',
-          up = '<C-k>',
-          right = '<C-l>',
-          last_active = '<C-\\>',
-          next = '<C-Space>',
-        }
-      }
+      require('trouble').setup {}
     end
   }
 
@@ -76,9 +72,9 @@ return require('packer').startup(function(use)
             name = 'Buffer',
             w = { '<cmd>w<cr>', 'Write Buffer' },
           },
+          d = { '<cmd>DiffviewOpen<cr>', 'DiffviewOpen' },
           f = {
             name = 'File',
-            n = { '<cmd>enew<cr>', 'New File' },
             s = { '<cmd>w<cr>', 'Save File' },
           },
           g = {
@@ -87,6 +83,7 @@ return require('packer').startup(function(use)
           h = {
             name = 'Hunk',
           },
+          n = { '<cmd>enew<cr>', 'New File' },
           q = { '<cmd>qall<cr>', 'Quit' },
           s = {
             name = 'Spectre',
@@ -94,15 +91,15 @@ return require('packer').startup(function(use)
         },
         ['['] = {
           name = 'Previous',
-          ['b'] = { '<cmd>bp<cr>', 'Previous Buffer' },
-          ['t'] = { '<cmd>tabp<cr>', 'Previous Tab' },
-          ['w'] = { '<cmd>wincmd p<cr>', 'Previous Window' },
+          b = { '<cmd>bp<cr>', 'Previous Buffer' },
+          t = { '<cmd>tabp<cr>', 'Previous Tab' },
+          w = { '<cmd>wincmd p<cr>', 'Previous Window' },
         },
         [']'] = {
           name = 'Next',
-          ['b'] = { '<cmd>bn<cr>', 'Next Buffer' },
-          ['t'] = { '<cmd>tabn<cr>', 'Next Tab' },
-          ['w'] = { '<cmd>wincmd w<cr>', 'Next Window' },
+          b = { '<cmd>bn<cr>', 'Next Buffer' },
+          t = { '<cmd>tabn<cr>', 'Next Tab' },
+          w = { '<cmd>wincmd w<cr>', 'Next Window' },
         },
         ['<esc>'] = { '<cmd>noh<cr><esc>', 'Clear Search Highlights' },
         ['<Tab>'] = { '<cmd>wincmd w<cr>', 'Next Window' },
@@ -154,7 +151,7 @@ return require('packer').startup(function(use)
       'L3MON4D3/LuaSnip',
     },
     config = function()
-      local cmp = require('cmp')
+      local cmp = require('cmp') ---@cast cmp -?
       local luasnip = require('luasnip')
 
       cmp.setup {
@@ -217,6 +214,16 @@ return require('packer').startup(function(use)
       local tree_cb = require('nvim-tree.config').nvim_tree_callback
 
       require('nvim-tree').setup {
+        diagnostics = {
+          enable = true,
+          icons = {
+            error = vim.fn.sign_getdefined('DiagnosticSignError').icon,
+            hint = vim.fn.sign_getdefined('DiagnosticSignHint').icon,
+            info = vim.fn.sign_getdefined('DiagnosticSignInfo').icon,
+            warn = vim.fn.sign_getdefined('DiagnosticSignWarn').icon,
+          },
+          show_on_dirs = false,
+        },
         disable_netrw = true,
         ignore_buffer_on_setup = true,
         open_on_setup = true,
@@ -238,7 +245,7 @@ return require('packer').startup(function(use)
               { key = 'd', cb = tree_cb('trash') },
               { key = 'q', cb = tree_cb('close') },
               { key = 'r', cb = tree_cb('rename') },
-              { key = 's', cb = tree_cb('system_open') },
+              { key = 'o', cb = tree_cb('system_open') },
               { key = 'x', cb = tree_cb('cut') },
               { key = 'c', cb = tree_cb('copy') },
               { key = 'p', cb = tree_cb('paste') },
@@ -338,6 +345,7 @@ return require('packer').startup(function(use)
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
       local lspconfig = require('lspconfig')
       local servers = {
+        'ansiblels',
         'bashls',
         'cssls',
         'dockerls',
@@ -347,10 +355,12 @@ return require('packer').startup(function(use)
         'jsonls',
         'jsonnet_ls',
         'pyright',
+        'rust_analyzer',
         'sumneko_lua',
         'terraformls',
         'tflint',
         'tsserver',
+        'vimls',
         'volar',
         'yamlls',
       }
@@ -373,18 +383,15 @@ return require('packer').startup(function(use)
           ['<leader>'] = {
             b = {
               a = { function() vim.lsp.buf.code_action() end, 'Code Action', },
+              d = { function() vim.diagnostic.setloclist() end, 'Diagnostics', },
               f = { function() vim.lsp.buf.format() end, 'Format Buffer', },
-              i = {
-                f = { function() vim.diagnostic.open_float() end, 'Diagnostics (Float)', },
-                l = { function() vim.diagnostic.setloclist() end, 'Diagnostics (LocationList)', },
-                n = { function() vim.diagnostic.goto_prev() end, 'Next Diagnostic', },
-                p = { function() vim.diagnostic.goto_next() end, 'Previous Diagnostic', },
-              },
               k = { function() vim.lsp.buf.signature_help() end, 'Signature Help', },
               r = { function() vim.lsp.buf.rename() end, 'Rename Symbol', },
               t = { function() vim.lsp.buf.type_definition() end, 'TypeDef', },
             },
           },
+          ['[d'] = { function() vim.diagnostic.goto_next() end, 'Previous Diagnostic', },
+          [']d'] = { function() vim.diagnostic.goto_prev() end, 'Next Diagnostic', },
         }, { buffer = bufnr })
 
         if client.server_capabilities.documentFormattingProvider then
@@ -448,6 +455,15 @@ return require('packer').startup(function(use)
               diagnostics = {
                 globals = { 'vim' },
               },
+              runtime = {
+                version = 'LuaJIT',
+              },
+              telemetry = {
+                enable = false,
+              },
+              workspace = {
+                library = vim.api.nvim_get_runtime_file("", true),
+              },
             },
           }
         elseif server == 'terraformls' then
@@ -466,6 +482,24 @@ return require('packer').startup(function(use)
         ignore = '^$',
       }
     end,
+  }
+
+  use {
+    'numToStr/Navigator.nvim',
+    requires = {
+      'folke/which-key.nvim',
+    },
+    config = function()
+      require('Navigator').setup()
+
+      require('which-key').register({
+        ['<C-h>'] = { function() require('Navigator').left() end, 'Left' },
+        ['<C-j>'] = { function() require('Navigator').down() end, 'Left' },
+        ['<C-k>'] = { function() require('Navigator').up() end, 'Left' },
+        ['<C-l>'] = { function() require('Navigator').right() end, 'Left' },
+        ['<C-\\>'] = { function() require('Navigator').previous() end, 'Left' },
+      })
+    end
   }
 
   use {
@@ -569,6 +603,10 @@ return require('packer').startup(function(use)
           },
           lualine_z = { 'tabs' },
         },
+        extensions = {
+          'man',
+          'nvim-tree',
+        }
       }
     end,
   }
@@ -630,7 +668,13 @@ return require('packer').startup(function(use)
         },
         pickers = {
           find_files = {
-            find_command = { 'rg', '--files', '--hidden' },
+            find_command = {
+              'fd',
+              '--type',
+              'f',
+              '--strip-cwd-prefix',
+              '--hidden'
+            },
           },
         },
       }
@@ -654,7 +698,7 @@ return require('packer').startup(function(use)
               end,
               'Find Files',
             },
-            r = { function() require('telescope.builtin').oldfiles() end, 'Find Files', },
+            r = { function() require('telescope.builtin').oldfiles() end, 'Recent Files', },
           },
           g = {
             c = { function() require('telescope.builtin').live_grep { default_text = vim.fn.expand '<cword>', } end,
@@ -666,7 +710,7 @@ return require('packer').startup(function(use)
             s = { function() require('telescope.builtin').git_status() end, 'Git Status', },
             y = { function() require('telescope.builtin').lsp_workspace_symbols() end, 'Find Symbols', },
           },
-          r = { function() require('telescope.builtin').resume() end, 'Resume Search', },
+          r = { function() require('telescope.builtin').resume() end, 'Resume Search (Telescope)', },
         },
       })
     end,
@@ -681,37 +725,7 @@ return require('packer').startup(function(use)
     run = ':TSUpdate',
     config = function()
       require('nvim-treesitter.configs').setup {
-        ensure_installed = {
-          'bash',
-          'comment',
-          'css',
-          'dockerfile',
-          'gitignore',
-          'go',
-          'gomod',
-          'gowork',
-          'hcl',
-          'help',
-          'html',
-          'http',
-          'java',
-          'javascript',
-          'json',
-          'jsonc',
-          'jsonnet',
-          'lua',
-          'make',
-          'markdown',
-          'python',
-          'regex',
-          'ruby',
-          'sql',
-          'toml',
-          'typescript',
-          'vim',
-          'vue',
-          'yaml',
-        },
+        ensure_installed = "all",
         highlight = { enable = true },
         incremental_selection = {
           enable = true,
