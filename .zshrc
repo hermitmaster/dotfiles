@@ -13,6 +13,7 @@ export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/config.toml"
 export PATH="${HOME}/.local/bin:${HOME}/.rd/bin:${PATH}"
 
 alias bb='brew bundle install --clean'
+alias docker='nerdctl'
 alias ls='exa --git --group-directories-first --time-style long-iso'
 alias ll='ls -al'
 alias la='ls -abghilmu'
