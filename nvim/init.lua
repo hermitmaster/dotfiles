@@ -144,8 +144,8 @@ return require('packer').startup(function(use)
     requires = {
       'hrsh7th/cmp-buffer',
       'hrsh7th/cmp-nvim-lsp',
+      'hrsh7th/cmp-nvim-lsp-signature-help',
       'hrsh7th/cmp-path',
-      'hrsh7th/nvim-cmp',
       'onsails/lspkind-nvim',
       'saadparwaiz1/cmp_luasnip',
       'L3MON4D3/LuaSnip',
@@ -202,6 +202,7 @@ return require('packer').startup(function(use)
         },
         sources = {
           { name = 'nvim_lsp' },
+          { name = 'nvim_lsp_signature_help' },
           { name = 'luasnip' },
           { name = 'buffer' },
           { name = 'path' },
@@ -360,15 +361,12 @@ return require('packer').startup(function(use)
         'gopls',
         'html',
         'jsonls',
-        'jsonnet_ls',
         'pyright',
         'rust_analyzer',
         'sumneko_lua',
         'terraformls',
         'tflint',
         'tsserver',
-        'vimls',
-        'volar',
         'yamlls',
       }
 
