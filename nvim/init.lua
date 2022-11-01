@@ -669,6 +669,8 @@ return require('packer').startup(function(use)
             '--smart-case',
             '--trim',
             '--with-filename',
+            '--glob',
+            '!.git/*'
           },
         },
         pickers = {
