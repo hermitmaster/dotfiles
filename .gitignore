@@ -4,9 +4,6 @@ efm-langserver/
 # homebrew
 Brewfile.rb.lock.json
 
-# htop
-htop/
-
 # kitty
 kitty/neighboring_window.py
 kitty/pass_keys.py

@@ -2,7 +2,6 @@ tap 'homebrew/cask'
 tap 'homebrew/cask-fonts'
 tap 'romkatv/powerlevel10k'
 
-brew 'ansible'
 brew 'awscli'
 brew 'bottom'
 brew 'coreutils'
@@ -50,6 +49,7 @@ brew 'zsh-syntax-highlighting'
 
 cask 'alacritty', args: { 'no-quarantine': true }
 cask 'font-hack-nerd-font'
+cask 'kitty'
 cask 'mouse-fix', args: { 'no-quarantine': true }
 cask 'openemu', args: { 'no-quarantine': true } if ENV['USER'] == 'hermitmaster'
 cask 'rancher'

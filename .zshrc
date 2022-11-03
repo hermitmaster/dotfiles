@@ -35,7 +35,9 @@ SAVEHIST=$HISTSIZE
 . <(direnv hook zsh)
 
 fpath+="${HOMEBREW_PREFIX}/share/zsh/site-functions"
-autoload -Uz compinit && compinit
+autoload -Uz compinit bashcompinit
+compinit
+bashcompinit
 
 function _nvim_packer_sync {
   rm -rf "${XDG_CONFIG_HOME}/nvim/plugin/" &>/dev/null
@@ -43,11 +45,9 @@ function _nvim_packer_sync {
 }
 
 function _bs {
-  if [[ ! -f "${HOME}/.hushlogin" ]]; then
-    touch "${HOME}/.hushlogin"
-    ln -fs "${XDG_CONFIG_HOME}/.zshrc" "${HOME}/.zshrc"
-    ln -fs "${XDG_CONFIG_HOME}/.editorconfig" "${HOME}/.editorconfig"
-  fi
+  test -f "${HOME}/.hushlogin" || touch "${HOME}/.hushlogin"
+  test -L "${HOME}/.editorconfig" || ln -fs "${XDG_CONFIG_HOME}/.editorconfig" "${HOME}/.editorconfig"
+  test -L "${HOME}/.zshrc" || ln -fs "${XDG_CONFIG_HOME}/.zshrc" "${HOME}/.zshrc"
 
   brew bundle install --clean
   _nvim_packer_sync

@@ -51,10 +51,14 @@ end
 
 return require('packer').startup(function(use)
   use {
+    'mfussenegger/nvim-dap',
+    'rcarriga/nvim-dap-ui',
+    'wbthomason/packer.nvim'
+  }
+
+  use {
     'folke/trouble.nvim',
-    requires = {
-      'kyazdani42/nvim-web-devicons'
-    },
+    requires = 'kyazdani42/nvim-web-devicons',
     config = function()
       require('trouble').setup {}
     end
@@ -143,7 +147,6 @@ return require('packer').startup(function(use)
     'hrsh7th/nvim-cmp',
     requires = {
       'hrsh7th/cmp-buffer',
-      'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-nvim-lsp-signature-help',
       'hrsh7th/cmp-path',
       'onsails/lspkind-nvim',
@@ -162,7 +165,7 @@ return require('packer').startup(function(use)
       cmp.setup {
         formatting = {
           format = require('lspkind').cmp_format({
-            mode = 'symbol_text',
+            mode = 'symbol',
             maxwidth = 50,
           }),
         },
@@ -173,8 +176,8 @@ return require('packer').startup(function(use)
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
           ['<C-Space>'] = cmp.mapping.complete(),
           ['<C-e>'] = cmp.mapping.close(),
-          ['<cr>'] = cmp.mapping.confirm({ behavior = cmp.ConfirmBehavior.Replace, select = true }),
-          ['<Tab>'] = function(fallback)
+          ['<cr>'] = cmp.mapping.confirm({ select = true }),
+          ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
             elseif luasnip.expand_or_jumpable() then
@@ -184,8 +187,8 @@ return require('packer').startup(function(use)
             else
               fallback()
             end
-          end,
-          ['<S-Tab>'] = function(fallback)
+          end, { 'i', 's' }),
+          ['<S-Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
@@ -193,7 +196,7 @@ return require('packer').startup(function(use)
             else
               fallback()
             end
-          end,
+          end, { 'i', 's' }),
         },
         snippet = {
           expand = function(args)
@@ -274,13 +277,6 @@ return require('packer').startup(function(use)
         },
       },
     })
-  }
-
-  use {
-    'kylechui/nvim-surround',
-    config = function()
-      require('nvim-surround').setup()
-    end
   }
 
   use {
@@ -434,15 +430,6 @@ return require('packer').startup(function(use)
               },
               sh = {
                 { formatCommand = 'shfmt -bn -ci -i 2 -s', formatStdin = true },
-                {
-                  lintCommand = 'shellcheck -f gcc -x',
-                  lintSource = 'shellcheck',
-                  lintFormats = {
-                    '%f:%l:%c: %trror: %m',
-                    '%f:%l:%c: %tarning: %m',
-                    '%f:%l:%c: %tote: %m',
-                  },
-                },
               },
               yaml = {
                 { formatCommand = 'prettier --stdin --stdin-filepath ${INPUT}', formatStdin = true }
@@ -467,12 +454,29 @@ return require('packer').startup(function(use)
                 enable = false,
               },
               workspace = {
-                library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
+                library = vim.api.nvim_get_runtime_file('', true),
               },
             },
           }
         elseif server == 'terraformls' then
-          config.filetypes = { 'hcl', 'terraform' }
+          config.filetypes = {
+            'hcl',
+            'terraform',
+          }
+        elseif server == 'yamlls' then
+          config.settings = {
+            redhat = {
+              telemetry = {
+                enabled = false
+              }
+            },
+            yaml = {
+              schemaStore = {
+                enable = true
+              }
+            }
+          }
         end
 
         lspconfig[server].setup(config)
@@ -732,7 +736,7 @@ return require('packer').startup(function(use)
     run = ':TSUpdate',
     config = function()
       require('nvim-treesitter.configs').setup {
-        ensure_installed = "all",
+        ensure_installed = 'all',
         highlight = { enable = true },
         incremental_selection = {
           enable = true,
@@ -762,13 +766,6 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'rcarriga/nvim-dap-ui',
-    requires = {
-      'mfussenegger/nvim-dap',
-    }
-  }
-
-  use {
     'sindrets/diffview.nvim',
     requires = 'nvim-lua/plenary.nvim'
   }
@@ -778,10 +775,6 @@ return require('packer').startup(function(use)
     config = function()
       require('numbertoggle').setup()
     end
-  }
-
-  use {
-    'wbthomason/packer.nvim'
   }
 
   use {
