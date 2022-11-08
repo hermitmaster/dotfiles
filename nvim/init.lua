@@ -520,7 +520,6 @@ return require('packer').startup(function(use)
         options = {
           component_separators = { left = '', right = '' },
           section_separators = { left = '', right = '' },
-          disabled_filetypes = { 'alpha', 'NvimTree' },
         },
         sections = {
           lualine_a = {
@@ -586,7 +585,7 @@ return require('packer').startup(function(use)
           },
           lualine_z = {
             'location',
-            '%P',
+            'progress',
           },
         },
         inactive_sections = {
@@ -601,19 +600,16 @@ return require('packer').startup(function(use)
           lualine_a = {
             {
               'buffers',
-              filetype_names = {
-                alpha = 'Alpha',
-                packer = 'Packer',
-                NvimTree = 'NvimTree',
-                TelescopePrompt = 'Telescope',
-              },
               show_filename_only = false
             }
           },
           lualine_z = { 'tabs' },
         },
         extensions = {
-          'man',
+          'alpha',
+          'help',
+          'manpage',
+          'packer',
           'nvim-tree',
         }
       }
