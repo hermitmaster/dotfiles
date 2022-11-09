@@ -37,6 +37,10 @@
   colorMoved = plain
   renames = true
   renameLimit = 2000
+  tool = nvimdiff
+
+[difftool]
+  prompt = false
 
 [fetch]
   parallel = 0
