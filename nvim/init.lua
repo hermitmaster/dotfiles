@@ -150,6 +150,7 @@ return require('packer').startup(function(use)
       'hrsh7th/cmp-nvim-lsp-signature-help',
       'hrsh7th/cmp-path',
       'onsails/lspkind-nvim',
+      'rafamadriz/friendly-snippets',
       'saadparwaiz1/cmp_luasnip',
       'L3MON4D3/LuaSnip',
     },
@@ -211,6 +212,8 @@ return require('packer').startup(function(use)
           { name = 'path' },
         },
       }
+
+      require('luasnip.loaders.from_vscode').lazy_load()
     end,
   }
 
