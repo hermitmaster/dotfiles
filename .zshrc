@@ -1,4 +1,7 @@
+export XDG_CACHE_HOME="${HOME}/.cache"
 export XDG_CONFIG_HOME="${HOME}/.config"
+export XDG_DATA_HOME="${HOME}/.local/share"
+
 export HOMEBREW_BUNDLE_FILE="${XDG_CONFIG_HOME}/Brewfile.rb"
 
 test $(arch) = "arm64" && DEFAULT_HOMEBREW_PREFIX="/opt/homebrew"
@@ -6,12 +9,12 @@ test $(arch) = "arm64" && DEFAULT_HOMEBREW_PREFIX="/opt/homebrew"
 test -e "${HOMEBREW_BUNDLE_FILE}.lock.json" || brew bundle install --clean
 
 export EDITOR="nvim"
-export MANPAGER='nvim +Man!'
+export MANPAGER="nvim +Man!"
 export NPM_CONFIG_PREFIX="${HOME}/.local"
 export PATH="${HOME}/.local/bin:${HOME}/.rd/bin:${PATH}"
 
 alias bb="brew bundle install --clean"
-alias btm="btm --basic"
+alias btm='btm --basic'
 alias docker="nerdctl"
 alias kctx="kubectx"
 alias kns="kubens"
@@ -46,7 +49,6 @@ function _nvim_packer_sync {
 
 function _bs {
   test -f "${HOME}/.hushlogin" || touch "${HOME}/.hushlogin"
-  test -L "${HOME}/.editorconfig" || ln -fs "${XDG_CONFIG_HOME}/.editorconfig" "${HOME}/.editorconfig"
   test -L "${HOME}/.zshrc" || ln -fs "${XDG_CONFIG_HOME}/.zshrc" "${HOME}/.zshrc"
 
   brew bundle install --clean
