@@ -2,6 +2,7 @@ tap 'homebrew/cask'
 tap 'homebrew/cask-fonts'
 tap 'romkatv/powerlevel10k'
 
+brew 'ansible'
 brew 'awscli'
 brew 'bottom'
 brew 'coreutils'
@@ -12,13 +13,11 @@ brew 'fd'
 brew 'fzf'
 brew 'git'
 brew 'gnu-sed'
-brew 'gnupg'
 brew 'go'
 brew 'gomodifytags'
 brew 'gotests'
 brew 'jq'
 brew 'k9s'
-brew 'kops', args: ['ignore-dependencies']
 brew 'kubectx', args: ['ignore-dependencies']
 brew 'luarocks'
 brew 'mas'
@@ -51,10 +50,25 @@ cask 'alacritty', args: { 'no-quarantine': true }
 cask 'font-hack-nerd-font'
 cask 'kitty'
 cask 'mouse-fix', args: { 'no-quarantine': true }
-cask 'openemu', args: { 'no-quarantine': true } if ENV['USER'] == 'hermitmaster'
 cask 'rancher'
 cask 'rectangle'
 
 mas 'AdGuard for Safari', id: 1440147259
 mas 'Vimari', id: 1480933944
 
+if ENV['USER'] == 'hermitmaster'
+  tap 'homebrew/cask-drivers'
+
+  cask 'openemu', args: { 'no-quarantine': true }
+  cask 'steam'
+  cask 'zsa-wally'
+else
+  brew 'gnupg'
+  brew 'kops', args: ['ignore-dependencies']
+
+  mas 'OneLogin for Safari', id: 1475824389
+  mas 'Xcode', id: 497799835
+
+  tap 'synfinatic/aws-sso-cli'
+  brew 'aws-sso-cli'
+end
