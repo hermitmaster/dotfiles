@@ -48,6 +48,7 @@ function _nvim_packer_sync {
 
 function _bs {
   test -f "${HOME}/.hushlogin" || touch "${HOME}/.hushlogin"
+  test -L "${HOME}/.editorconfig" || ln -fs "${XDG_CONFIG_HOME}/.editorconfig" "${HOME}/.editorconfig"
   test -L "${HOME}/.zshrc" || ln -fs "${XDG_CONFIG_HOME}/.zshrc" "${HOME}/.zshrc"
 
   brew bundle install --clean

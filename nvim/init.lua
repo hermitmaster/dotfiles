@@ -2,8 +2,8 @@ local packer_install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/p
 local packer_bootstrap
 
 vim.opt.clipboard = 'unnamed,unnamedplus'
+vim.opt.colorcolumn = '+1'
 vim.opt.completeopt = 'menuone'
-vim.opt.expandtab = true
 vim.opt.fillchars = 'eob: ,vert:│'
 vim.opt.ignorecase = true
 vim.opt.list = true
@@ -11,7 +11,6 @@ vim.opt.listchars = 'tab:→ ,extends:↷,precedes:↶,eol:↵'
 vim.opt.mouse = 'a'
 vim.opt.number = true
 vim.opt.scrolloff = 1
-vim.opt.shiftwidth = 2
 vim.opt.shortmess:append('acs')
 vim.opt.showcmd = false
 vim.opt.showmode = false
@@ -19,7 +18,6 @@ vim.opt.sidescrolloff = 3
 vim.opt.signcolumn = 'yes'
 vim.opt.smartcase = true
 vim.opt.smartindent = true
-vim.opt.tabstop = 2
 vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.updatetime = 300
@@ -52,6 +50,7 @@ end
 
 return require('packer').startup(function(use)
   use {
+    'gpanders/editorconfig.nvim',
     'mfussenegger/nvim-dap',
     'rcarriga/nvim-dap-ui',
     'wbthomason/packer.nvim'
