@@ -58,6 +58,13 @@ return require('packer').startup(function(use)
   }
 
   use {
+    'andymass/vim-matchup',
+    config = function()
+      vim.g.matchup_surround_enabled = 1
+    end
+  }
+
+  use {
     'folke/trouble.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
@@ -726,10 +733,6 @@ return require('packer').startup(function(use)
 
   use {
     'nvim-treesitter/nvim-treesitter',
-    requires = {
-      'andymass/vim-matchup',
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
     run = ':TSUpdate',
     config = function()
       require('nvim-treesitter.configs').setup {
@@ -746,18 +749,6 @@ return require('packer').startup(function(use)
         },
         indent = { enable = true },
         matchup = { enable = true },
-        textobjects = {
-          select = {
-            enable = true,
-            lookahead = true,
-            keymaps = {
-              ['af'] = '@function.outer',
-              ['if'] = '@function.inner',
-              ['ac'] = '@class.outer',
-              ['ic'] = '@class.inner',
-            },
-          },
-        },
       }
     end,
   }
