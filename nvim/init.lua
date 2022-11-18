@@ -1,9 +1,7 @@
-local packer_install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-local packer_bootstrap
-
 vim.opt.clipboard = 'unnamed,unnamedplus'
 vim.opt.colorcolumn = '+1'
 vim.opt.completeopt = 'menuone'
+vim.opt.cursorline = true
 vim.opt.fillchars = 'eob: ,vert:│'
 vim.opt.ignorecase = true
 vim.opt.list = true
@@ -23,6 +21,8 @@ vim.opt.undofile = true
 vim.opt.updatetime = 300
 vim.opt.wrap = false
 
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = ' '
 
 vim.cmd([[
@@ -42,11 +42,18 @@ vim.fn.sign_define({
   { name = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn', texthl = 'DiagnosticSignWarn', text = ' ' },
 })
 
-if not io.open(packer_install_path) then
-  vim.api.nvim_create_autocmd('User', { command = 'quitall', once = true, pattern = 'PackerComplete' })
-  packer_bootstrap = os.execute('git clone --depth 1 https://github.com/wbthomason/packer.nvim ' ..
-    packer_install_path .. ' &>/dev/null')
+local ensure_packer = function()
+  local packer_install_path = vim.fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+  if io.open(packer_install_path) then
+    return false
+  else
+    os.execute('git clone --depth 1 https://github.com/wbthomason/packer.nvim ' .. packer_install_path)
+    vim.cmd([[packadd packer.nvim]])
+    return true
+  end
 end
+
+local packer_bootstrap = ensure_packer()
 
 return require('packer').startup(function(use)
   use {
@@ -234,20 +241,19 @@ return require('packer').startup(function(use)
     },
     ft = 'alpha',
     config = function()
-      local tree_cb = require('nvim-tree.config').nvim_tree_callback
-
       require('nvim-tree').setup {
         diagnostics = {
           enable = true,
           icons = {
-            error = vim.fn.sign_getdefined('DiagnosticSignError').icon,
-            hint = vim.fn.sign_getdefined('DiagnosticSignHint').icon,
-            info = vim.fn.sign_getdefined('DiagnosticSignInfo').icon,
-            warn = vim.fn.sign_getdefined('DiagnosticSignWarn').icon,
+            error = vim.fn.sign_getdefined('DiagnosticSignError')[1].text,
+            hint = vim.fn.sign_getdefined('DiagnosticSignHint')[1].text,
+            info = vim.fn.sign_getdefined('DiagnosticSignInfo')[1].text,
+            warning = vim.fn.sign_getdefined('DiagnosticSignWarn')[1].text,
           },
-          show_on_dirs = false,
+          show_on_dirs = true,
         },
         disable_netrw = true,
+        filters = { custom = { "^.git$" } },
         ignore_buffer_on_setup = true,
         open_on_setup = true,
         trash = {
@@ -255,26 +261,27 @@ return require('packer').startup(function(use)
           require_confirm = true,
         },
         view = {
+          hide_root_folder = true,
           mappings = {
             custom_only = true,
             list = {
-              { key = '<cr>', cb = tree_cb('edit') },
-              { key = '<C-v>', cb = tree_cb('vsplit') },
-              { key = '<C-x>', cb = tree_cb('split') },
-              { key = 'h', cb = tree_cb('toggle_dotfiles') },
-              { key = 'i', cb = tree_cb('toggle_git_ignored') },
-              { key = 'R', cb = tree_cb('refresh') },
-              { key = 'a', cb = tree_cb('create') },
-              { key = 'd', cb = tree_cb('trash') },
-              { key = 'q', cb = tree_cb('close') },
-              { key = 'r', cb = tree_cb('rename') },
-              { key = 'o', cb = tree_cb('system_open') },
-              { key = 'x', cb = tree_cb('cut') },
-              { key = 'c', cb = tree_cb('copy') },
-              { key = 'p', cb = tree_cb('paste') },
-              { key = 'y', cb = tree_cb('copy_path') },
-              { key = 'Y', cb = tree_cb('copy_absolute_path') },
-              { key = 'K', cb = tree_cb('toggle_help') },
+              { key = '<cr>', action = 'edit' },
+              { key = '<C-v>', action = 'vsplit' },
+              { key = '<C-x>', action = 'split' },
+              { key = 'h', action = 'toggle_dotfiles' },
+              { key = 'i', action = 'toggle_git_ignored' },
+              { key = 'R', action = 'refresh' },
+              { key = 'a', action = 'create' },
+              { key = 'd', action = 'trash' },
+              { key = 'q', action = 'close' },
+              { key = 'r', action = 'rename' },
+              { key = 'o', action = 'system_open' },
+              { key = 'x', action = 'cut' },
+              { key = 'c', action = 'copy' },
+              { key = 'p', action = 'paste' },
+              { key = 'y', action = 'copy_path' },
+              { key = 'Y', action = 'copy_absolute_path' },
+              { key = 'K', action = 'toggle_help' },
             },
           },
         },
@@ -337,11 +344,6 @@ return require('packer').startup(function(use)
     config = function()
       require('indent_blankline').setup {
         char = '│',
-        filetype_exclude = {
-          'alpha',
-          'help',
-          'packer',
-        },
         show_current_context = true,
         show_first_indent_level = false,
         use_treesitter = true,
@@ -553,7 +555,16 @@ return require('packer').startup(function(use)
             },
           },
           lualine_c = {
-            'diagnostics',
+            {
+              'diagnostics',
+              sources = { 'nvim_diagnostic' },
+              symbols = {
+                error = vim.fn.sign_getdefined('DiagnosticSignError')[1].text,
+                hint = vim.fn.sign_getdefined('DiagnosticSignHint')[1].text,
+                info = vim.fn.sign_getdefined('DiagnosticSignInfo')[1].text,
+                warn = vim.fn.sign_getdefined('DiagnosticSignWarn')[1].text,
+              },
+            },
           },
           lualine_x = {
             { 'b:gitsigns_head', icon = '' },
@@ -614,10 +625,9 @@ return require('packer').startup(function(use)
         },
         extensions = {
           'alpha',
-          'help',
-          'manpage',
-          'packer',
           'nvim-tree',
+          'packer',
+          'pager',
         }
       }
     end,
@@ -660,6 +670,8 @@ return require('packer').startup(function(use)
       { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
     },
     config = function()
+      local builtin = require('telescope.builtin')
+
       require('telescope').setup {
         defaults = {
           file_ignore_patterns = {
@@ -698,33 +710,25 @@ return require('packer').startup(function(use)
       require('which-key').register({
         ['<leader>'] = {
           b = {
-            c = { function() require('telescope.builtin').grep_string() end, 'Find <cword>', },
-            g = { function() require('telescope.builtin').current_buffer_fuzzy_find() end, 'Fuzzy Find', },
-            l = { function() require('telescope.builtin').git_bcommits() end, 'Git Log', },
-            y = { function() require('telescope.builtin').lsp_document_symbols() end, 'Find Symbols', },
+            c = { function() builtin.grep_string() end, 'Find <cword>', },
+            g = { function() builtin.current_buffer_fuzzy_find() end, 'Fuzzy Find', },
+            l = { function() builtin.git_bcommits() end, 'Git Log', },
+            y = { function() builtin.lsp_document_symbols() end, 'Find Symbols', },
           },
           f = {
-            f = {
-              function()
-                if not pcall(require('telescope.builtin').git_files) then
-                  require('telescope.builtin').find_files()
-                end
-              end,
-              'Find Files',
-            },
-            r = { function() require('telescope.builtin').oldfiles() end, 'Recent Files', },
+            f = { function() if not pcall(builtin.git_files) then builtin.find_files() end end, 'Find Files', },
+            r = { function() builtin.oldfiles({ cwd_only = true }) end, 'Recent Files', },
           },
           g = {
-            c = { function() require('telescope.builtin').live_grep { default_text = vim.fn.expand '<cword>', } end,
-              'Find <cword>', },
-            g = { function() require('telescope.builtin').live_grep() end, 'Fuzzy Find', },
-            h = { function() require('telescope.builtin').git_stash() end, 'Git Stashes', },
-            l = { function() require('telescope.builtin').git_commits() end, 'Git Log', },
-            m = { function() require('telescope.builtin').git_branches() end, 'Git Branches', },
-            s = { function() require('telescope.builtin').git_status() end, 'Git Status', },
-            y = { function() require('telescope.builtin').lsp_workspace_symbols() end, 'Find Symbols', },
+            c = { function() builtin.live_grep { default_text = vim.fn.expand('<cword>'), } end, 'Find <cword>', },
+            g = { function() builtin.live_grep() end, 'Fuzzy Find', },
+            h = { function() builtin.git_stash() end, 'Git Stashes', },
+            l = { function() builtin.git_commits() end, 'Git Log', },
+            m = { function() builtin.git_branches() end, 'Git Branches', },
+            s = { function() builtin.git_status() end, 'Git Status', },
+            y = { function() builtin.lsp_workspace_symbols() end, 'Find Symbols', },
           },
-          r = { function() require('telescope.builtin').resume() end, 'Resume Search (Telescope)', },
+          r = { function() builtin.resume() end, 'Resume Search (Telescope)', },
         },
       })
     end,

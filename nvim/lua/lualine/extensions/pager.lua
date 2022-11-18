@@ -6,8 +6,13 @@ M.sections = {
       return string.upper(vim.bo.filetype)
     end,
   },
+  lualine_b = { { 'filename', file_status = false } },
+  lualine_y = { 'progress' },
 }
 
-M.filetypes = { 'alpha' }
+M.filetypes = {
+  'help',
+  'man',
+}
 
 return M
