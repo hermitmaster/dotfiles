@@ -15,10 +15,10 @@ k9s:
     fullScreenLogs: false
     textWrap: true
     showTime: true
-  currentContext: rancher-desktop
-  currentCluster: rancher-desktop
+  currentContext: docker-desktop
+  currentCluster: docker-desktop
   clusters:
-    rancher-desktop:
+    docker-desktop:
       namespace:
         active: all
         lockFavorites: true

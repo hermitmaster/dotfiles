@@ -18,7 +18,9 @@ brew 'gomodifytags'
 brew 'gotests'
 brew 'jq'
 brew 'k9s'
-brew 'kubectx', args: ['ignore-dependencies']
+brew 'kops'
+brew 'kubectx'
+brew 'kubernetes-cli'
 brew 'luarocks'
 brew 'mas'
 brew 'neovim'
@@ -44,10 +46,10 @@ brew 'yq'
 brew 'zsh-autosuggestions'
 brew 'zsh-syntax-highlighting'
 
+cask 'docker'
 cask 'font-hack-nerd-font'
 cask 'kitty'
 cask 'mouse-fix', args: { 'no-quarantine': true }
-cask 'rancher'
 cask 'rectangle'
 
 mas 'AdGuard for Safari', id: 1440147259
@@ -61,7 +63,6 @@ if ENV['USER'] == 'hermitmaster'
   cask 'zsa-wally'
 else
   brew 'gnupg'
-  brew 'kops', args: ['ignore-dependencies']
 
   mas 'OneLogin for Safari', id: 1475824389
   mas 'Xcode', id: 497799835

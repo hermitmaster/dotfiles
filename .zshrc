@@ -9,13 +9,12 @@ test $(arch) = "arm64" && DEFAULT_HOMEBREW_PREFIX="/opt/homebrew"
 test -e "${HOMEBREW_BUNDLE_FILE}.lock.json" || brew bundle install --clean
 
 export EDITOR="nvim"
-export MANPAGER="nvim +Man!"
+export MANPAGER="nvim +Man! +'set cmdheight=0'"
 export NPM_CONFIG_PREFIX="${HOME}/.local"
-export PATH="${HOME}/.local/bin:${HOME}/.rd/bin:${PATH}"
+export PATH="${HOME}/.local/bin:${PATH}"
 
 alias bb="brew bundle install --clean"
-alias btm='btm --basic'
-alias docker="nerdctl"
+alias btm="btm --basic"
 alias kctx="kubectx"
 alias kns="kubens"
 alias ls="exa --git --group-directories-first --time-style long-iso"
