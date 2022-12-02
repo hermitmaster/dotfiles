@@ -137,14 +137,6 @@ return require('packer').startup(function(use)
   }
 
   use {
-    'hermitmaster/nvim-kitty-navigator',
-    run = './install',
-    config = function()
-      require('nvim-kitty-navigator').setup()
-    end
-  }
-
-  use {
     'hermitmaster/monokai.nvim',
     config = function()
       vim.cmd('colorscheme monokai')
@@ -499,6 +491,19 @@ return require('packer').startup(function(use)
         ignore = '^$',
       }
     end,
+  }
+
+  use {
+    'numToStr/Navigator.nvim',
+    config = function()
+      require('Navigator').setup()
+
+      vim.keymap.set('n', '<C-h>', '<CMD>NavigatorLeft<CR>')
+      vim.keymap.set('n', '<C-l>', '<CMD>NavigatorRight<CR>')
+      vim.keymap.set('n', '<C-k>', '<CMD>NavigatorUp<CR>')
+      vim.keymap.set('n', '<C-j>', '<CMD>NavigatorDown<CR>')
+      vim.keymap.set('n', '<C-\\>', '<CMD>NavigatorPrevious<CR>')
+    end
   }
 
   use {

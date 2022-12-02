@@ -14,8 +14,8 @@
   co = checkout
   cob = checkout -b
   com = checkout master
-  d = difftool --no-symlinks --dir-diff
-  ds = difftool --staged --no-symlinks --dir-diff
+  d = diff
+  ds = diff --staged
   fap = fetch --all --prune
   lg = log --graph
   lga = log --graph --decorate --all
@@ -39,8 +39,7 @@
   colorMoved = plain
   renames = true
   renameLimit = 2000
-  tool = kitty
-  guitool = kitty.gui
+  tool = nvimdiff
 
 [difftool]
   prompt = false

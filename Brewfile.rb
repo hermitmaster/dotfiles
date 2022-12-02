@@ -39,6 +39,8 @@ brew 'terraform-docs'
 brew 'terragrunt'
 brew 'tflint'
 brew 'tfsec'
+brew 'tmux'
+brew 'tmux-mem-cpu-load'
 brew 'trash'
 brew 'virtualenv'
 brew 'wget'
@@ -46,9 +48,9 @@ brew 'yq'
 brew 'zsh-autosuggestions'
 brew 'zsh-syntax-highlighting'
 
+cask 'alacritty', args: { 'no-quarantine': true }
 cask 'docker'
 cask 'font-hack-nerd-font'
-cask 'kitty'
 cask 'mouse-fix', args: { 'no-quarantine': true }
 cask 'rectangle'
 
