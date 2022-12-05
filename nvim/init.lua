@@ -442,6 +442,9 @@ return require('packer').startup(function(use)
                 { formatCommand = 'isort --profile black --quiet -', formatStdin = true },
                 { formatCommand = 'black --quiet -', formatStdin = true },
               },
+              rego = {
+                { formatCommand = 'opa fmt --write' },
+              },
               sh = {
                 { formatCommand = 'shfmt -bn -ci -i 2 -s', formatStdin = true },
               },
