@@ -5,7 +5,6 @@ tap 'romkatv/powerlevel10k'
 brew 'ansible'
 brew 'awscli'
 brew 'bottom'
-brew 'coreutils'
 brew 'delve'
 brew 'direnv'
 brew 'exa'
@@ -28,7 +27,6 @@ brew 'node'
 brew 'opa'
 brew 'powerlevel10k'
 brew 'pre-commit'
-brew 'prettier'
 brew 'python'
 brew 'ripgrep'
 brew 'rust'
@@ -44,7 +42,6 @@ brew 'tfsec'
 brew 'tmux'
 brew 'tmux-mem-cpu-load'
 brew 'trash'
-brew 'virtualenv'
 brew 'wget'
 brew 'yq'
 brew 'zsh-autosuggestions'
@@ -60,14 +57,9 @@ mas 'AdGuard for Safari', id: 1440147259
 mas 'Vimari', id: 1480933944
 
 if ENV['USER'] == 'hermitmaster'
-  tap 'homebrew/cask-drivers'
-
   cask 'openemu', args: { 'no-quarantine': true }
   cask 'steam'
-  cask 'zsa-wally'
 else
-  brew 'gnupg'
-
   mas 'OneLogin for Safari', id: 1475824389
   mas 'Xcode', id: 497799835
 

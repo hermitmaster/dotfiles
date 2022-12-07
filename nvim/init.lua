@@ -55,6 +55,43 @@ end
 
 local packer_bootstrap = ensure_packer()
 
+LSP_ON_ATTACH = function(client, bufnr)
+  require('which-key').register({
+    g = {
+      d = { function() vim.lsp.buf.definition() end, 'Go to Definition', },
+      D = { function() vim.lsp.buf.declaration() end, 'Go to Declaration', },
+      I = { function() vim.lsp.buf.implementation() end, 'Go to Implementation', },
+      R = { function() vim.lsp.buf.references() end, 'Show References', },
+    },
+    K = { function() vim.lsp.buf.hover() end, 'Help Tags', },
+    ['<leader>'] = {
+      b = {
+        a = { function() vim.lsp.buf.code_action() end, 'Code Action', },
+        d = { function() vim.diagnostic.setloclist() end, 'Diagnostics', },
+        f = { function() vim.lsp.buf.format() end, 'Format Buffer', },
+        k = { function() vim.lsp.buf.signature_help() end, 'Signature Help', },
+        r = { function() vim.lsp.buf.rename() end, 'Rename Symbol', },
+        t = { function() vim.lsp.buf.type_definition() end, 'TypeDef', },
+      },
+    },
+    ['[d'] = { function() vim.diagnostic.goto_next() end, 'Previous Diagnostic', },
+    [']d'] = { function() vim.diagnostic.goto_prev() end, 'Next Diagnostic', },
+  }, { buffer = bufnr })
+
+  if client.server_capabilities.documentFormattingProvider then
+    local augroup = 'lsp_fmt'
+
+    vim.api.nvim_create_augroup(augroup, { clear = true })
+    vim.api.nvim_create_autocmd('BufWritePre', {
+      group = augroup,
+      buffer = bufnr,
+      callback = function()
+        vim.lsp.buf.format()
+      end,
+    })
+  end
+end
+
 return require('packer').startup(function(use)
   use {
     'gpanders/editorconfig.nvim',
@@ -92,7 +129,6 @@ return require('packer').startup(function(use)
             name = 'Buffer',
             w = { '<cmd>w<cr>', 'Write Buffer' },
           },
-          d = { '<cmd>DiffviewOpen<cr>', 'DiffviewOpen' },
           f = {
             name = 'File',
             s = { '<cmd>w<cr>', 'Save File' },
@@ -136,19 +172,12 @@ return require('packer').startup(function(use)
   use {
     'goolord/alpha-nvim',
     requires = {
-      'folke/which-key.nvim',
       'nvim-tree/nvim-web-devicons',
     },
     config = function()
       require('alpha').setup(require('alpha.themes.hermit').config)
 
-      require('which-key').register({
-        ['<leader>'] = {
-          b = {
-            h = { '<cmd>Alpha<cr>', 'Dashboard' },
-          },
-        },
-      })
+      vim.keymap.set('n', '<leader>bh', '<cmd>Alpha<cr>', { desc = 'Dashboard' })
     end,
   }
 
@@ -234,9 +263,46 @@ return require('packer').startup(function(use)
   }
 
   use {
+    'jose-elias-alvarez/null-ls.nvim',
+    requires = {
+      'jayp0521/mason-null-ls.nvim',
+      'nvim-lua/plenary.nvim',
+      'williamboman/mason.nvim',
+    },
+    config = function()
+      local nls = require('null-ls')
+
+      nls.setup {
+        on_attach = LSP_ON_ATTACH,
+        sources = {
+          nls.builtins.diagnostics.commitlint,
+          nls.builtins.diagnostics.hadolint,
+          nls.builtins.diagnostics.opacheck,
+          nls.builtins.diagnostics.tidy,
+          nls.builtins.diagnostics.yamllint,
+          nls.builtins.diagnostics.zsh,
+          nls.builtins.formatting.black,
+          nls.builtins.formatting.goimports,
+          nls.builtins.formatting.isort,
+          nls.builtins.formatting.markdown_toc,
+          nls.builtins.formatting.prettier,
+          nls.builtins.formatting.rego,
+          nls.builtins.formatting.shfmt,
+          nls.builtins.formatting.stylua,
+          nls.builtins.formatting.taplo,
+          nls.builtins.formatting.tidy,
+        },
+      }
+
+      require('mason-null-ls').setup {
+        automatic_installation = true,
+      }
+    end,
+  }
+
+  use {
     'nvim-tree/nvim-tree.lua',
     requires = {
-      'folke/which-key.nvim',
       'nvim-tree/nvim-web-devicons',
     },
     ft = 'alpha',
@@ -286,16 +352,11 @@ return require('packer').startup(function(use)
           },
         },
       }
+
+      vim.keymap.set('n', '<leader>fj', '<cmd>NvimTreeFindFile<cr>', { desc = 'Jump to File' })
+      vim.keymap.set('n', '<leader>ft', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle File Tree' })
     end,
 
-    require('which-key').register({
-      ['<leader>'] = {
-        f = {
-          j = { function() require('nvim-tree.api').tree.find_file(vim.fn.expand('%')) end, 'Jump to File' },
-          t = { function() require('nvim-tree.api').tree.toggle() end, 'Toggle File Tree' },
-        },
-      },
-    })
   }
 
   use {
@@ -367,7 +428,6 @@ return require('packer').startup(function(use)
         'bashls',
         'cssls',
         'dockerls',
-        'efm',
         'gopls',
         'html',
         'jsonls',
@@ -386,79 +446,13 @@ return require('packer').startup(function(use)
         automatic_installation = true,
       })
 
-      local on_attach = function(client, bufnr)
-        require('which-key').register({
-          g = {
-            d = { function() vim.lsp.buf.definition() end, 'Go to Definition', },
-            D = { function() vim.lsp.buf.declaration() end, 'Go to Declaration', },
-            I = { function() vim.lsp.buf.implementation() end, 'Go to Implementation', },
-            R = { function() vim.lsp.buf.references() end, 'Show References', },
-          },
-          K = { function() vim.lsp.buf.hover() end, 'Help Tags', },
-          ['<leader>'] = {
-            b = {
-              a = { function() vim.lsp.buf.code_action() end, 'Code Action', },
-              d = { function() vim.diagnostic.setloclist() end, 'Diagnostics', },
-              f = { function() vim.lsp.buf.format() end, 'Format Buffer', },
-              k = { function() vim.lsp.buf.signature_help() end, 'Signature Help', },
-              r = { function() vim.lsp.buf.rename() end, 'Rename Symbol', },
-              t = { function() vim.lsp.buf.type_definition() end, 'TypeDef', },
-            },
-          },
-          ['[d'] = { function() vim.diagnostic.goto_next() end, 'Previous Diagnostic', },
-          [']d'] = { function() vim.diagnostic.goto_prev() end, 'Next Diagnostic', },
-        }, { buffer = bufnr })
-
-        if client.server_capabilities.documentFormattingProvider then
-          local augroup = 'lsp_fmt'
-
-          vim.api.nvim_create_augroup(augroup, { clear = true })
-          vim.api.nvim_create_autocmd('BufWritePre', {
-            group = augroup,
-            buffer = bufnr,
-            callback = function()
-              vim.lsp.buf.format()
-            end,
-          })
-        end
-      end
-
       for _, server in ipairs(servers) do
         local config = {
           capabilities = capabilities,
-          on_attach = on_attach,
+          on_attach = LSP_ON_ATTACH,
         }
 
-        if server == 'efm' then
-          config.filetypes = {}
-          config.init_options = { documentFormatting = true }
-          config.settings = {
-            rootMarkers = { '.git/' },
-            languages = {
-              markdown = {
-                { formatCommand = 'prettier --stdin --stdin-filepath ${INPUT}', formatStdin = true }
-              },
-              python = {
-                { formatCommand = 'isort --profile black --quiet -', formatStdin = true },
-                { formatCommand = 'black --quiet -', formatStdin = true },
-              },
-              rego = {
-                { formatCommand = 'opa fmt --write' },
-              },
-              sh = {
-                { formatCommand = 'shfmt -bn -ci -i 2 -s', formatStdin = true },
-              },
-              yaml = {
-                { formatCommand = 'prettier --stdin --stdin-filepath ${INPUT}', formatStdin = true }
-              },
-            },
-          }
-
-          -- Get the filetypes from the languages table
-          for k, _ in pairs(config.settings.languages) do
-            table.insert(config.filetypes, k)
-          end
-        elseif server == 'sumneko_lua' then
+        if server == 'sumneko_lua' then
           config.settings = {
             Lua = {
               diagnostics = {
@@ -472,28 +466,12 @@ return require('packer').startup(function(use)
               },
               workspace = {
                 checkThirdParty = false,
-                library = vim.api.nvim_get_runtime_file('', true),
+                library = vim.api.nvim_get_runtime_file('*.lua', true),
               },
             },
           }
         elseif server == 'terraformls' then
-          config.filetypes = {
-            'hcl',
-            'terraform',
-          }
-        elseif server == 'yamlls' then
-          config.settings = {
-            redhat = {
-              telemetry = {
-                enabled = false
-              }
-            },
-            yaml = {
-              schemaStore = {
-                enable = true
-              }
-            }
-          }
+          config.filetypes = { 'hcl', 'terraform' }
         end
 
         lspconfig[server].setup(config)
@@ -504,9 +482,7 @@ return require('packer').startup(function(use)
   use {
     'numToStr/Comment.nvim',
     config = function()
-      require('Comment').setup {
-        ignore = '^$',
-      }
+      require('Comment').setup()
     end,
   }
 
@@ -515,11 +491,11 @@ return require('packer').startup(function(use)
     config = function()
       require('Navigator').setup()
 
-      vim.keymap.set('n', '<C-h>', '<CMD>NavigatorLeft<CR>')
-      vim.keymap.set('n', '<C-l>', '<CMD>NavigatorRight<CR>')
-      vim.keymap.set('n', '<C-k>', '<CMD>NavigatorUp<CR>')
-      vim.keymap.set('n', '<C-j>', '<CMD>NavigatorDown<CR>')
-      vim.keymap.set('n', '<C-\\>', '<CMD>NavigatorPrevious<CR>')
+      vim.keymap.set('n', '<C-h>', '<cmd>NavigatorLeft<cr>')
+      vim.keymap.set('n', '<C-l>', '<cmd>NavigatorRight<cr>')
+      vim.keymap.set('n', '<C-k>', '<cmd>NavigatorUp<cr>')
+      vim.keymap.set('n', '<C-j>', '<cmd>NavigatorDown<cr>')
+      vim.keymap.set('n', '<C-\\>', '<cmd>NavigatorPrevious<cr>')
     end
   }
 
@@ -639,7 +615,6 @@ return require('packer').startup(function(use)
   use {
     'nvim-pack/nvim-spectre',
     requires = {
-      'folke/which-key.nvim',
       'nvim-lua/plenary.nvim',
       'nvim-tree/nvim-web-devicons',
     },
@@ -654,14 +629,9 @@ return require('packer').startup(function(use)
         },
       })
 
-      require('which-key').register({
-        ['<leader>'] = {
-          s = {
-            o = { function() require('spectre').open_visual() end, 'Open Spectre', },
-            w = { function() require('spectre').open_visual({ select_word = true }) end, 'Search <cword> Using Spectre', },
-          },
-        },
-      })
+      vim.keymap.set('n', '<leader>so', function() require('spectre').open_visual() end, { desc = 'Open Spectre' })
+      vim.keymap.set('n', '<leader>sw', function() require('spectre').open_visual({ select_word = true }) end,
+        { desc = 'Search <cword> Using Spectre' })
     end
   }
 
@@ -761,7 +731,11 @@ return require('packer').startup(function(use)
 
   use {
     'sindrets/diffview.nvim',
-    requires = 'nvim-lua/plenary.nvim'
+    requires = 'nvim-lua/plenary.nvim',
+    commit = 'bd6c0c2df6c00a72342f631a58e1ea28549b6ac8',
+    config = function()
+      vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' })
+    end
   }
 
   use {
