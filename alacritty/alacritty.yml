@@ -1,3 +1,4 @@
+---
 window:
   decorations: none
   dynamic_padding: true
@@ -33,12 +34,18 @@ colors:
     cyan: "#a1efe4"
     white: "#f8f8f5"
   indexed_colors:
-    - { index: 202, color: "#fd971f" }
-    - { index: 208, color: "#fda135" }
-    - { index: 236, color: "#3c3d38" }
-    - { index: 238, color: "#52524e" }
-    - { index: 240, color: "#676864" }
-    - { index: 242, color: "#7d7e7a" }
+    - index: 202
+      color: "#fd971f"
+    - index: 208
+      color: "#fda135"
+    - index: 236
+      color: "#3c3d38"
+    - index: 238
+      color: "#52524e"
+    - index: 240
+      color: "#676864"
+    - index: 242
+      color: "#7d7e7a"
 shell:
   program: /bin/zsh
   args:
