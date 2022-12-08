@@ -2,9 +2,7 @@ local M = {}
 
 M.sections = {
   lualine_a = {
-    function()
-      return string.upper(vim.bo.filetype)
-    end,
+    function() return string.upper(vim.bo.filetype) end,
   },
 }
 

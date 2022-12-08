@@ -2,7 +2,7 @@ vim.opt.clipboard = 'unnamed,unnamedplus'
 vim.opt.colorcolumn = '+1'
 vim.opt.completeopt = 'menuone'
 vim.opt.cursorline = true
-vim.opt.diffopt:append("vertical")
+vim.opt.diffopt:append('vertical')
 vim.opt.fillchars = 'eob: ,vert:│'
 vim.opt.ignorecase = true
 vim.opt.list = true
@@ -59,24 +59,24 @@ local packer_bootstrap = ensure_packer()
 LSP_ON_ATTACH = function(client, bufnr)
   require('which-key').register({
     g = {
-      d = { function() vim.lsp.buf.definition() end, 'Go to Definition', },
-      D = { function() vim.lsp.buf.declaration() end, 'Go to Declaration', },
-      I = { function() vim.lsp.buf.implementation() end, 'Go to Implementation', },
-      R = { function() vim.lsp.buf.references() end, 'Show References', },
+      d = { function() vim.lsp.buf.definition() end, 'Go to Definition' },
+      D = { function() vim.lsp.buf.declaration() end, 'Go to Declaration' },
+      I = { function() vim.lsp.buf.implementation() end, 'Go to Implementation' },
+      R = { function() vim.lsp.buf.references() end, 'Show References' },
     },
-    K = { function() vim.lsp.buf.hover() end, 'Help Tags', },
+    K = { function() vim.lsp.buf.hover() end, 'Help Tags' },
     ['<leader>'] = {
       b = {
-        a = { function() vim.lsp.buf.code_action() end, 'Code Action', },
-        d = { function() vim.diagnostic.setloclist() end, 'Diagnostics', },
-        f = { function() vim.lsp.buf.format() end, 'Format Buffer', },
-        k = { function() vim.lsp.buf.signature_help() end, 'Signature Help', },
-        r = { function() vim.lsp.buf.rename() end, 'Rename Symbol', },
-        t = { function() vim.lsp.buf.type_definition() end, 'TypeDef', },
+        a = { function() vim.lsp.buf.code_action() end, 'Code Action' },
+        d = { function() vim.diagnostic.setloclist() end, 'Diagnostics' },
+        f = { function() vim.lsp.buf.format() end, 'Format Buffer' },
+        k = { function() vim.lsp.buf.signature_help() end, 'Signature Help' },
+        r = { function() vim.lsp.buf.rename() end, 'Rename Symbol' },
+        t = { function() vim.lsp.buf.type_definition() end, 'TypeDef' },
       },
     },
-    ['[d'] = { function() vim.diagnostic.goto_next() end, 'Previous Diagnostic', },
-    [']d'] = { function() vim.diagnostic.goto_prev() end, 'Next Diagnostic', },
+    ['[d'] = { function() vim.diagnostic.goto_next() end, 'Previous Diagnostic' },
+    [']d'] = { function() vim.diagnostic.goto_prev() end, 'Next Diagnostic' },
   }, { buffer = bufnr })
 
   if client.server_capabilities.documentFormattingProvider then
@@ -86,44 +86,40 @@ LSP_ON_ATTACH = function(client, bufnr)
     vim.api.nvim_create_autocmd('BufWritePre', {
       group = augroup,
       buffer = bufnr,
-      callback = function()
-        vim.lsp.buf.format()
-      end,
+      callback = function() vim.lsp.buf.format() end,
     })
   end
 end
 
 return require('packer').startup(function(use)
-  use {
+  use({
     'gpanders/editorconfig.nvim',
     'mfussenegger/nvim-dap',
     'rcarriga/nvim-dap-ui',
-    'wbthomason/packer.nvim'
-  }
+    'wbthomason/packer.nvim',
+  })
 
-  use {
+  use({
     'andymass/vim-matchup',
-    config = function()
-      vim.g.matchup_surround_enabled = 1
-    end
-  }
+    config = function() vim.g.matchup_surround_enabled = 1 end,
+  })
 
-  use {
+  use({
     'folke/trouble.nvim',
     requires = 'kyazdani42/nvim-web-devicons',
     config = function()
-      require('trouble').setup {
+      require('trouble').setup({
         use_diagnostic_signs = true,
-      }
-    end
-  }
+      })
+    end,
+  })
 
-  use {
+  use({
     'folke/which-key.nvim',
     config = function()
       local wk = require('which-key')
 
-      wk.setup {}
+      wk.setup({})
       wk.register({
         ['<leader>'] = {
           b = {
@@ -168,9 +164,9 @@ return require('packer').startup(function(use)
         },
       })
     end,
-  }
+  })
 
-  use {
+  use({
     'goolord/alpha-nvim',
     requires = {
       'nvim-tree/nvim-web-devicons',
@@ -180,16 +176,14 @@ return require('packer').startup(function(use)
 
       vim.keymap.set('n', '<leader>bh', '<cmd>Alpha<cr>', { desc = 'Dashboard' })
     end,
-  }
+  })
 
-  use {
+  use({
     'hermitmaster/monokai.nvim',
-    config = function()
-      vim.cmd('colorscheme monokai')
-    end,
-  }
+    config = function() vim.cmd('colorscheme monokai') end,
+  })
 
-  use {
+  use({
     'hrsh7th/nvim-cmp',
     requires = {
       'hrsh7th/cmp-buffer',
@@ -203,13 +197,13 @@ return require('packer').startup(function(use)
     config = function()
       local has_words_before = function()
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
+        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
       end
 
       local cmp = require('cmp') ---@cast cmp -?
       local luasnip = require('luasnip')
 
-      cmp.setup {
+      cmp.setup({
         formatting = {
           format = require('lspkind').cmp_format({
             mode = 'symbol',
@@ -246,9 +240,7 @@ return require('packer').startup(function(use)
           end, { 'i', 's' }),
         },
         snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
+          expand = function(args) luasnip.lsp_expand(args.body) end,
         },
         sources = {
           { name = 'nvim_lsp' },
@@ -257,13 +249,13 @@ return require('packer').startup(function(use)
           { name = 'buffer' },
           { name = 'path' },
         },
-      }
+      })
 
       require('luasnip.loaders.from_vscode').lazy_load()
     end,
-  }
+  })
 
-  use {
+  use({
     'jose-elias-alvarez/null-ls.nvim',
     requires = {
       'jayp0521/mason-null-ls.nvim',
@@ -273,7 +265,7 @@ return require('packer').startup(function(use)
     config = function()
       local nls = require('null-ls')
 
-      nls.setup {
+      nls.setup({
         on_attach = LSP_ON_ATTACH,
         sources = {
           nls.builtins.diagnostics.commitlint,
@@ -293,22 +285,22 @@ return require('packer').startup(function(use)
           nls.builtins.formatting.taplo,
           nls.builtins.formatting.tidy,
         },
-      }
+      })
 
-      require('mason-null-ls').setup {
+      require('mason-null-ls').setup({
         automatic_installation = true,
-      }
+      })
     end,
-  }
+  })
 
-  use {
+  use({
     'nvim-tree/nvim-tree.lua',
     requires = {
       'nvim-tree/nvim-web-devicons',
     },
     ft = 'alpha',
     config = function()
-      require('nvim-tree').setup {
+      require('nvim-tree').setup({
         diagnostics = {
           enable = true,
           icons = {
@@ -320,7 +312,7 @@ return require('packer').startup(function(use)
           show_on_dirs = true,
         },
         disable_netrw = true,
-        filters = { custom = { "^.git$" } },
+        filters = { custom = { '^.git$' } },
         ignore_buffer_on_setup = true,
         open_on_setup = true,
         trash = {
@@ -352,41 +344,40 @@ return require('packer').startup(function(use)
             },
           },
         },
-      }
+      })
 
       vim.keymap.set('n', '<leader>fj', '<cmd>NvimTreeFindFile<cr>', { desc = 'Jump to File' })
       vim.keymap.set('n', '<leader>ft', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle File Tree' })
     end,
+  })
 
-  }
-
-  use {
+  use({
     'lewis6991/gitsigns.nvim',
     requires = {
       'folke/which-key.nvim',
       'nvim-lua/plenary.nvim',
     },
     config = function()
-      require('gitsigns').setup {
+      require('gitsigns').setup({
         on_attach = function(bufnr)
           local gs = package.loaded.gitsigns
 
           require('which-key').register({
             ['<leader>'] = {
               h = {
-                b = { function() gs.blame_line({ full = true }) end, 'Blame Hunk', },
-                B = { function() gs.toggle_current_line_blame() end, 'Toggle Line Blame', },
-                d = { function() gs.diffthis() end, 'Diff', },
-                p = { function() gs.preview_hunk() end, 'Preview Hunk', },
-                r = { function() gs.reset_hunk() end, 'Reset Hunk', },
-                R = { function() gs.reset_buffer() end, 'Reset Buffer', },
-                s = { function() gs.stage_hunk() end, 'Stage Hunk', },
-                S = { function() gs.stage_buffer() end, 'Stage Buffer', },
-                u = { function() gs.undo_stage_hunk() end, 'Undo Stage Hunk', },
+                b = { function() gs.blame_line({ full = true }) end, 'Blame Hunk' },
+                B = { function() gs.toggle_current_line_blame() end, 'Toggle Line Blame' },
+                d = { function() gs.diffthis() end, 'Diff' },
+                p = { function() gs.preview_hunk() end, 'Preview Hunk' },
+                r = { function() gs.reset_hunk() end, 'Reset Hunk' },
+                R = { function() gs.reset_buffer() end, 'Reset Buffer' },
+                s = { function() gs.stage_hunk() end, 'Stage Hunk' },
+                S = { function() gs.stage_buffer() end, 'Stage Buffer' },
+                u = { function() gs.undo_stage_hunk() end, 'Undo Stage Hunk' },
               },
             },
-            [']c'] = { function() gs.next_hunk() end, 'Next Hunk', },
-            ['[c'] = { function() gs.prev_hunk() end, 'Prev Hunk', },
+            [']c'] = { function() gs.next_hunk() end, 'Next Hunk' },
+            ['[c'] = { function() gs.prev_hunk() end, 'Prev Hunk' },
           }, { buffer = bufnr })
 
           require('which-key').register({
@@ -397,23 +388,23 @@ return require('packer').startup(function(use)
             ['ih'] = { ':<C-U>Gitsigns select_hunk<cr>', 'Select Hunk' },
           }, { buffer = bufnr, mode = 'x' })
         end,
-      }
+      })
     end,
-  }
+  })
 
-  use {
+  use({
     'lukas-reineke/indent-blankline.nvim',
     config = function()
-      require('indent_blankline').setup {
+      require('indent_blankline').setup({
         char = '│',
         show_current_context = true,
         show_first_indent_level = false,
         use_treesitter = true,
-      }
+      })
     end,
-  }
+  })
 
-  use {
+  use({
     'neovim/nvim-lspconfig',
     requires = {
       'folke/which-key.nvim',
@@ -478,16 +469,14 @@ return require('packer').startup(function(use)
         lspconfig[server].setup(config)
       end
     end,
-  }
+  })
 
-  use {
+  use({
     'numToStr/Comment.nvim',
-    config = function()
-      require('Comment').setup()
-    end,
-  }
+    config = function() require('Comment').setup() end,
+  })
 
-  use {
+  use({
     'numToStr/Navigator.nvim',
     config = function()
       require('Navigator').setup()
@@ -497,15 +486,15 @@ return require('packer').startup(function(use)
       vim.keymap.set('n', '<C-k>', '<cmd>NavigatorUp<cr>')
       vim.keymap.set('n', '<C-j>', '<cmd>NavigatorDown<cr>')
       vim.keymap.set('n', '<C-\\>', '<cmd>NavigatorPrevious<cr>')
-    end
-  }
+    end,
+  })
 
-  use {
+  use({
     'nvim-lualine/lualine.nvim',
     requires = 'nvim-tree/nvim-web-devicons',
     after = 'monokai.nvim',
     config = function()
-      require('lualine').setup {
+      require('lualine').setup({
         options = {
           component_separators = { left = '', right = '' },
           section_separators = { left = '', right = '' },
@@ -598,8 +587,8 @@ return require('packer').startup(function(use)
           lualine_a = {
             {
               'buffers',
-              show_filename_only = false
-            }
+              show_filename_only = false,
+            },
           },
           lualine_z = { 'tabs' },
         },
@@ -608,12 +597,12 @@ return require('packer').startup(function(use)
           'nvim-tree',
           'packer',
           'pager',
-        }
-      }
+        },
+      })
     end,
-  }
+  })
 
-  use {
+  use({
     'nvim-pack/nvim-spectre',
     requires = {
       'nvim-lua/plenary.nvim',
@@ -625,18 +614,22 @@ return require('packer').startup(function(use)
         replace_engine = {
           ['sed'] = {
             cmd = 'gsed',
-            args = nil
+            args = nil,
           },
         },
       })
 
       vim.keymap.set('n', '<leader>so', function() require('spectre').open_visual() end, { desc = 'Open Spectre' })
-      vim.keymap.set('n', '<leader>sw', function() require('spectre').open_visual({ select_word = true }) end,
-        { desc = 'Search <cword> Using Spectre' })
-    end
-  }
+      vim.keymap.set(
+        'n',
+        '<leader>sw',
+        function() require('spectre').open_visual({ select_word = true }) end,
+        { desc = 'Search <cword> Using Spectre' }
+      )
+    end,
+  })
 
-  use {
+  use({
     'nvim-telescope/telescope.nvim',
     requires = {
       'folke/which-key.nvim',
@@ -646,7 +639,7 @@ return require('packer').startup(function(use)
     config = function()
       local builtin = require('telescope.builtin')
 
-      require('telescope').setup {
+      require('telescope').setup({
         defaults = {
           file_ignore_patterns = {
             '%.git/.*',
@@ -663,7 +656,7 @@ return require('packer').startup(function(use)
             '--trim',
             '--with-filename',
             '--glob',
-            '!.git/*'
+            '!.git/*',
           },
         },
         pickers = {
@@ -673,46 +666,51 @@ return require('packer').startup(function(use)
               '--type',
               'f',
               '--strip-cwd-prefix',
-              '--hidden'
+              '--hidden',
             },
           },
         },
-      }
+      })
 
       require('telescope').load_extension('fzf')
 
       require('which-key').register({
         ['<leader>'] = {
           b = {
-            c = { function() builtin.grep_string() end, 'Find <cword>', },
-            g = { function() builtin.current_buffer_fuzzy_find() end, 'Fuzzy Find', },
-            l = { function() builtin.git_bcommits() end, 'Git Log', },
-            y = { function() builtin.lsp_document_symbols() end, 'Find Symbols', },
+            c = { function() builtin.grep_string() end, 'Find <cword>' },
+            g = { function() builtin.current_buffer_fuzzy_find() end, 'Fuzzy Find' },
+            l = { function() builtin.git_bcommits() end, 'Git Log' },
+            y = { function() builtin.lsp_document_symbols() end, 'Find Symbols' },
           },
           f = {
-            f = { function() if not pcall(builtin.git_files) then builtin.find_files() end end, 'Find Files', },
-            r = { function() builtin.oldfiles({ cwd_only = true }) end, 'Recent Files', },
+            f = {
+              function()
+                if not pcall(builtin.git_files) then builtin.find_files() end
+              end,
+              'Find Files',
+            },
+            r = { function() builtin.oldfiles({ cwd_only = true }) end, 'Recent Files' },
           },
           g = {
-            c = { function() builtin.live_grep { default_text = vim.fn.expand('<cword>'), } end, 'Find <cword>', },
-            g = { function() builtin.live_grep() end, 'Fuzzy Find', },
-            h = { function() builtin.git_stash() end, 'Git Stashes', },
-            l = { function() builtin.git_commits() end, 'Git Log', },
-            m = { function() builtin.git_branches() end, 'Git Branches', },
-            s = { function() builtin.git_status() end, 'Git Status', },
-            y = { function() builtin.lsp_workspace_symbols() end, 'Find Symbols', },
+            c = { function() builtin.live_grep({ default_text = vim.fn.expand('<cword>') }) end, 'Find <cword>' },
+            g = { function() builtin.live_grep() end, 'Fuzzy Find' },
+            h = { function() builtin.git_stash() end, 'Git Stashes' },
+            l = { function() builtin.git_commits() end, 'Git Log' },
+            m = { function() builtin.git_branches() end, 'Git Branches' },
+            s = { function() builtin.git_status() end, 'Git Status' },
+            y = { function() builtin.lsp_workspace_symbols() end, 'Find Symbols' },
           },
-          r = { function() builtin.resume() end, 'Resume Search (Telescope)', },
+          r = { function() builtin.resume() end, 'Resume Search (Telescope)' },
         },
       })
     end,
-  }
+  })
 
-  use {
+  use({
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
-      require('nvim-treesitter.configs').setup {
+      require('nvim-treesitter.configs').setup({
         ensure_installed = 'all',
         highlight = { enable = true },
         incremental_selection = {
@@ -726,35 +724,29 @@ return require('packer').startup(function(use)
         },
         indent = { enable = true },
         matchup = { enable = true },
-      }
+      })
     end,
-  }
+  })
 
-  use {
+  use({
     'sindrets/diffview.nvim',
     requires = 'nvim-lua/plenary.nvim',
-    config = function()
-      vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' })
-    end
-  }
+    config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
+  })
 
-  use {
+  use({
     'sitiom/nvim-numbertoggle',
-    config = function()
-      require('numbertoggle').setup()
-    end
-  }
+    config = function() require('numbertoggle').setup() end,
+  })
 
-  use {
+  use({
     'windwp/nvim-autopairs',
     config = function()
-      require('nvim-autopairs').setup {
+      require('nvim-autopairs').setup({
         check_ts = true,
-      }
+      })
     end,
-  }
+  })
 
-  if packer_bootstrap then
-    require('packer').sync()
-  end
+  if packer_bootstrap then require('packer').sync() end
 end)

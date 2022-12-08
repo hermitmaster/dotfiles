@@ -6,7 +6,7 @@ local plenary_path = require('plenary.path')
 --- @optional keybind_opts table
 local function button(sc, txt, keybind, keybind_opts)
   local leader = 'SPC'
-  local sc_ = sc:gsub("%s", ""):gsub(leader, "<leader>")
+  local sc_ = sc:gsub('%s', ''):gsub(leader, '<leader>')
 
   local opts = {
     position = 'center',
@@ -28,7 +28,7 @@ local function button(sc, txt, keybind, keybind_opts)
   end
 
   return {
-    type = "button",
+    type = 'button',
     val = txt,
     on_press = on_press,
     opts = opts,
@@ -43,12 +43,10 @@ local nvim_web_devicons = {
 }
 
 local function get_extension(fn)
-  local match = fn:match("^.+(%..+)$")
+  local match = fn:match('^.+(%..+)$')
   local ext = ''
 
-  if match ~= nil then
-    ext = match:sub(2)
-  end
+  if match ~= nil then ext = match:sub(2) end
 
   return ext
 end
@@ -76,11 +74,9 @@ local function file_button(fn, sc, short_fn)
   ico_txt = ico .. '  '
 
   local file_button_el = button(sc, ico_txt .. short_fn, '<cmd>e ' .. fn .. ' <CR>')
-  local fn_start = short_fn:match(".*/")
+  local fn_start = short_fn:match('.*/')
 
-  if fn_start ~= nil then
-    table.insert(fb_hl, { 'Comment', #ico_txt - 2, #fn_start + #ico_txt })
-  end
+  if fn_start ~= nil then table.insert(fb_hl, { 'Comment', #ico_txt - 2, #fn_start + #ico_txt }) end
 
   file_button_el.opts.hl = fb_hl
 
@@ -105,9 +101,7 @@ local function mru(start, cwd, items_number, opts)
 
   local oldfiles = {}
   for _, v in pairs(vim.v.oldfiles) do
-    if #oldfiles == items_number then
-      break
-    end
+    if #oldfiles == items_number then break end
     local cwd_cond
     if not cwd then
       cwd_cond = true
@@ -115,9 +109,7 @@ local function mru(start, cwd, items_number, opts)
       cwd_cond = vim.startswith(v, cwd)
     end
     local ignore = (opts.ignore and opts.ignore(v, get_extension(v))) or false
-    if (vim.fn.filereadable(v) == 1) and cwd_cond and not ignore then
-      oldfiles[#oldfiles + 1] = v
-    end
+    if (vim.fn.filereadable(v) == 1) and cwd_cond and not ignore then oldfiles[#oldfiles + 1] = v end
   end
   local target_width = 35
 
@@ -125,16 +117,14 @@ local function mru(start, cwd, items_number, opts)
   for i, fn in ipairs(oldfiles) do
     local short_fn
     if cwd then
-      short_fn = vim.fn.fnamemodify(fn, ":.")
+      short_fn = vim.fn.fnamemodify(fn, ':.')
     else
-      short_fn = vim.fn.fnamemodify(fn, ":~")
+      short_fn = vim.fn.fnamemodify(fn, ':~')
     end
 
     if #short_fn > target_width then
       short_fn = plenary_path.new(short_fn):shorten(1, { -2, -1 })
-      if #short_fn > target_width then
-        short_fn = plenary_path.new(short_fn):shorten(1, { -1 })
-      end
+      if #short_fn > target_width then short_fn = plenary_path.new(short_fn):shorten(1, { -1 }) end
     end
 
     local shortcut = tostring(i + start - 1)
@@ -183,9 +173,7 @@ local config = {
         { type = 'padding', val = 1 },
         {
           type = 'group',
-          val = function()
-            return { mru(0, cdir) }
-          end,
+          val = function() return { mru(0, cdir) } end,
           opts = { shrink_margin = false },
         },
       },
@@ -207,7 +195,7 @@ local config = {
         button('u', '  Update plugins', '<cmd>PackerSync<CR>'),
         button('q', '  Quit', '<cmd>qa<CR>'),
       },
-      position = "center",
+      position = 'center',
     },
     { type = 'padding', val = 2 },
     {
@@ -224,9 +212,7 @@ local config = {
     setup = function()
       vim.api.nvim_create_autocmd('DirChanged', {
         group = 'alpha_temp',
-        callback = function()
-          require('alpha').redraw()
-        end,
+        callback = function() require('alpha').redraw() end,
       })
     end,
   },
