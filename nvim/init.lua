@@ -138,9 +138,6 @@ return require('packer').startup(function(use)
           },
           n = { '<cmd>enew<cr>', 'New File' },
           q = { '<cmd>qall<cr>', 'Quit' },
-          s = {
-            name = 'Spectre',
-          },
         },
         ['['] = {
           name = 'Previous',
@@ -599,33 +596,6 @@ return require('packer').startup(function(use)
           'pager',
         },
       })
-    end,
-  })
-
-  use({
-    'nvim-pack/nvim-spectre',
-    requires = {
-      'nvim-lua/plenary.nvim',
-      'nvim-tree/nvim-web-devicons',
-    },
-    config = function()
-      require('spectre').setup({
-        live_update = true,
-        replace_engine = {
-          ['sed'] = {
-            cmd = 'gsed',
-            args = nil,
-          },
-        },
-      })
-
-      vim.keymap.set('n', '<leader>so', function() require('spectre').open_visual() end, { desc = 'Open Spectre' })
-      vim.keymap.set(
-        'n',
-        '<leader>sw',
-        function() require('spectre').open_visual({ select_word = true }) end,
-        { desc = 'Search <cword> Using Spectre' }
-      )
     end,
   })
 
