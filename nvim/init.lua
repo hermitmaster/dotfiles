@@ -619,29 +619,11 @@ return require('packer').startup(function(use)
             '%.git/.*',
             'node_modules/.*',
           },
-          vimgrep_arguments = {
-            'rg',
-            '--color=never',
-            '--column',
-            '--hidden',
-            '--line-number',
-            '--no-heading',
-            '--smart-case',
-            '--trim',
-            '--with-filename',
-            '--glob',
-            '!.git/*',
-          },
+          vimgrep_arguments = { 'rg', '-nHS.', '--column', '--no-heading', '--trim' },
         },
         pickers = {
           find_files = {
-            find_command = {
-              'fd',
-              '--type',
-              'f',
-              '--strip-cwd-prefix',
-              '--hidden',
-            },
+            find_command = { 'rg', '--files', '--hidden' },
           },
         },
       })
