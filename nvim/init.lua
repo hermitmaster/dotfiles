@@ -2,6 +2,7 @@ vim.opt.clipboard = 'unnamed,unnamedplus'
 vim.opt.colorcolumn = '+1'
 vim.opt.completeopt = 'menuone'
 vim.opt.cursorline = true
+vim.opt.diffopt:append("vertical")
 vim.opt.fillchars = 'eob: ,vert:│'
 vim.opt.ignorecase = true
 vim.opt.list = true
@@ -732,7 +733,6 @@ return require('packer').startup(function(use)
   use {
     'sindrets/diffview.nvim',
     requires = 'nvim-lua/plenary.nvim',
-    commit = 'bd6c0c2df6c00a72342f631a58e1ea28549b6ac8',
     config = function()
       vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' })
     end
