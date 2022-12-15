@@ -46,6 +46,7 @@ colors:
       color: "#676864"
     - index: 242
       color: "#7d7e7a"
+
 shell:
   program: /bin/zsh
   args:

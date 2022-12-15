@@ -1,6 +1,3 @@
-# efm
-efm-langserver/
-
 # homebrew
 Brewfile.rb.lock.json
 
@@ -18,7 +15,7 @@ lazygit/state.yml
 configstore/
 
 # nvim
-nvim/plugin/
+nvim/plugin/packer_compiled.lua
 
 # zsh
 .zcomp*

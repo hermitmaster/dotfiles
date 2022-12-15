@@ -26,15 +26,6 @@ vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = ' '
 
-vim.cmd([[
-  augroup core
-    au!
-    au BufReadPost * if line("'\"") > 0 && line("'\"") <= line('$') | exe "normal! g`\"" | endif
-    au BufWinEnter * if(exists('b:_winview')) | call winrestview(b:_winview) | endif
-    au BufWinLeave * let b:_winview = winsaveview()
-  augroup END
-]])
-
 vim.fn.sign_define({
   { name = 'DiagnosticSignError', numhl = 'DiagnosticSignError', texthl = 'DiagnosticSignError', text = ' ' },
   { name = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint', texthl = 'DiagnosticSignHint', text = ' ' },
@@ -57,32 +48,25 @@ end
 local packer_bootstrap = ensure_packer()
 
 LSP_ON_ATTACH = function(client, bufnr)
-  require('which-key').register({
-    g = {
-      d = { function() vim.lsp.buf.definition() end, 'Go to Definition' },
-      D = { function() vim.lsp.buf.declaration() end, 'Go to Declaration' },
-      I = { function() vim.lsp.buf.implementation() end, 'Go to Implementation' },
-      R = { function() vim.lsp.buf.references() end, 'Show References' },
-    },
-    K = { function() vim.lsp.buf.hover() end, 'Help Tags' },
-    ['<leader>'] = {
-      b = {
-        a = { function() vim.lsp.buf.code_action() end, 'Code Action' },
-        d = { function() vim.diagnostic.setloclist() end, 'Diagnostics' },
-        f = { function() vim.lsp.buf.format() end, 'Format Buffer' },
-        k = { function() vim.lsp.buf.signature_help() end, 'Signature Help' },
-        r = { function() vim.lsp.buf.rename() end, 'Rename Symbol' },
-        t = { function() vim.lsp.buf.type_definition() end, 'TypeDef' },
-      },
-    },
-    ['[d'] = { function() vim.diagnostic.goto_next() end, 'Previous Diagnostic' },
-    [']d'] = { function() vim.diagnostic.goto_prev() end, 'Next Diagnostic' },
-  }, { buffer = bufnr })
+  vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, { desc = 'Go to Definition' })
+  vim.keymap.set('n', 'gD', function() vim.lsp.buf.declaration() end, { desc = 'Go to Declaration' })
+  vim.keymap.set('n', 'gI', function() vim.lsp.buf.implementation() end, { desc = 'Go to Implementation' })
+  vim.keymap.set('n', 'gR', function() vim.lsp.buf.references() end, { desc = 'Show References' })
+
+  vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, { desc = 'Help Tags' })
+
+  vim.keymap.set('n', '<leader>ba', function() vim.lsp.buf.code_action() end, { desc = 'Code Action' })
+  vim.keymap.set('n', '<leader>bd', function() vim.diagnostic.setloclist() end, { desc = 'Diagnostics' })
+  vim.keymap.set('n', '<leader>bf', function() vim.lsp.buf.format() end, { desc = 'Format Buffer' })
+  vim.keymap.set('n', '<leader>bk', function() vim.lsp.buf.signature_help() end, { desc = 'Signature Help' })
+  vim.keymap.set('n', '<leader>br', function() vim.lsp.buf.rename() end, { desc = 'Rename Symbol' })
+  vim.keymap.set('n', '<leader>bt', function() vim.lsp.buf.type_definition() end, { desc = 'TypeDef' })
+
+  vim.keymap.set('n', '[d', function() vim.diagnostic.goto_next() end, { desc = 'Previous Diagnostic' })
+  vim.keymap.set('n', ']d', function() vim.diagnostic.goto_prev() end, { desc = 'Next Diagnostic' })
 
   if client.server_capabilities.documentFormattingProvider then
-    local augroup = 'lsp_fmt'
-
-    vim.api.nvim_create_augroup(augroup, { clear = true })
+    local augroup = vim.api.nvim_create_augroup('lsp_fmt', { clear = true })
     vim.api.nvim_create_autocmd('BufWritePre', {
       group = augroup,
       buffer = bufnr,
@@ -105,8 +89,15 @@ return require('packer').startup(function(use)
   })
 
   use({
+    'ethanholz/nvim-lastplace',
+    config = function() require('nvim-lastplace').setup({}) end,
+  })
+
+  use({
     'folke/trouble.nvim',
-    requires = 'kyazdani42/nvim-web-devicons',
+    requires = {
+      'nvim-tree/nvim-web-devicons',
+    },
     config = function()
       require('trouble').setup({
         use_diagnostic_signs = true,
@@ -265,22 +256,13 @@ return require('packer').startup(function(use)
       nls.setup({
         on_attach = LSP_ON_ATTACH,
         sources = {
-          nls.builtins.diagnostics.commitlint,
-          nls.builtins.diagnostics.hadolint,
           nls.builtins.diagnostics.opacheck,
-          nls.builtins.diagnostics.tidy,
           nls.builtins.diagnostics.yamllint,
-          nls.builtins.diagnostics.zsh,
-          nls.builtins.formatting.black,
           nls.builtins.formatting.goimports,
-          nls.builtins.formatting.isort,
-          nls.builtins.formatting.markdown_toc,
           nls.builtins.formatting.prettier,
           nls.builtins.formatting.rego,
           nls.builtins.formatting.shfmt,
           nls.builtins.formatting.stylua,
-          nls.builtins.formatting.taplo,
-          nls.builtins.formatting.tidy,
         },
       })
 
@@ -351,7 +333,6 @@ return require('packer').startup(function(use)
   use({
     'lewis6991/gitsigns.nvim',
     requires = {
-      'folke/which-key.nvim',
       'nvim-lua/plenary.nvim',
     },
     config = function()
@@ -359,31 +340,32 @@ return require('packer').startup(function(use)
         on_attach = function(bufnr)
           local gs = package.loaded.gitsigns
 
-          require('which-key').register({
-            ['<leader>'] = {
-              h = {
-                b = { function() gs.blame_line({ full = true }) end, 'Blame Hunk' },
-                B = { function() gs.toggle_current_line_blame() end, 'Toggle Line Blame' },
-                d = { function() gs.diffthis() end, 'Diff' },
-                p = { function() gs.preview_hunk() end, 'Preview Hunk' },
-                r = { function() gs.reset_hunk() end, 'Reset Hunk' },
-                R = { function() gs.reset_buffer() end, 'Reset Buffer' },
-                s = { function() gs.stage_hunk() end, 'Stage Hunk' },
-                S = { function() gs.stage_buffer() end, 'Stage Buffer' },
-                u = { function() gs.undo_stage_hunk() end, 'Undo Stage Hunk' },
-              },
-            },
-            [']c'] = { function() gs.next_hunk() end, 'Next Hunk' },
-            ['[c'] = { function() gs.prev_hunk() end, 'Prev Hunk' },
-          }, { buffer = bufnr })
-
-          require('which-key').register({
-            ['ih'] = { ':<C-U>Gitsigns select_hunk<cr>', 'Select Hunk' },
-          }, { buffer = bufnr, mode = 'o' })
-
-          require('which-key').register({
-            ['ih'] = { ':<C-U>Gitsigns select_hunk<cr>', 'Select Hunk' },
-          }, { buffer = bufnr, mode = 'x' })
+          vim.keymap.set(
+            'n',
+            '<leader>hb',
+            function() gs.blame_line({ full = true }) end,
+            { desc = 'Blame Hunk', buffer = bufnr }
+          )
+          vim.keymap.set(
+            'n',
+            '<leader>hB',
+            function() gs.toggle_current_line_blame() end,
+            { desc = 'Line Blame', buffer = bufnr }
+          )
+          vim.keymap.set('n', '<leader>hd', function() gs.diffthis() end, { desc = 'Diff', buffer = bufnr })
+          vim.keymap.set('n', '<leader>hp', function() gs.preview_hunk() end, { desc = 'Preview Hunk', buffer = bufnr })
+          vim.keymap.set('n', '<leader>hr', function() gs.reset_hunk() end, { desc = 'Reset Hunk', buffer = bufnr })
+          vim.keymap.set('n', '<leader>hR', function() gs.reset_buffer() end, { desc = 'Reset Buffer', buffer = bufnr })
+          vim.keymap.set('n', '<leader>hs', function() gs.stage_hunk() end, { desc = 'Stage Hunk', buffer = bufnr })
+          vim.keymap.set('n', '<leader>hS', function() gs.stage_buffer() end, { desc = 'Stage Buffer', buffer = bufnr })
+          vim.keymap.set(
+            'n',
+            '<leader>hu',
+            function() gs.undo_stage_hunk() end,
+            { desc = 'Undo Stage Hunk', buffer = bufnr }
+          )
+          vim.keymap.set('n', '[c', function() gs.prev_hunk() end, { desc = 'Previous Hunk', buffer = bufnr })
+          vim.keymap.set('n', ']c', function() gs.next_hunk() end, { desc = 'Next Hunk', buffer = bufnr })
         end,
       })
     end,
@@ -404,7 +386,6 @@ return require('packer').startup(function(use)
   use({
     'neovim/nvim-lspconfig',
     requires = {
-      'folke/which-key.nvim',
       'hrsh7th/cmp-nvim-lsp',
       'williamboman/mason.nvim',
       'williamboman/mason-lspconfig.nvim',
@@ -413,19 +394,20 @@ return require('packer').startup(function(use)
       local capabilities = require('cmp_nvim_lsp').default_capabilities()
       local lspconfig = require('lspconfig')
       local servers = {
-        'ansiblels',
         'bashls',
         'cssls',
         'dockerls',
         'gopls',
         'html',
         'jsonls',
+        'marksman',
         'pyright',
-        'rust_analyzer',
         'sumneko_lua',
+        'taplo',
         'terraformls',
         'tflint',
         'tsserver',
+        'vimls',
         'yamlls',
       }
 
@@ -441,7 +423,17 @@ return require('packer').startup(function(use)
           on_attach = LSP_ON_ATTACH,
         }
 
-        if server == 'sumneko_lua' then
+        if server == 'gopls' then
+          config.settings = {
+            gopls = {
+              analyses = {
+                unusedparams = true,
+              },
+              staticcheck = true,
+              gofumpt = true,
+            },
+          }
+        elseif server == 'sumneko_lua' then
           config.settings = {
             Lua = {
               diagnostics = {
@@ -460,7 +452,23 @@ return require('packer').startup(function(use)
             },
           }
         elseif server == 'terraformls' then
-          config.filetypes = { 'hcl', 'terraform' }
+          config.filetypes = {
+            'hcl',
+            'terraform',
+          }
+        elseif server == 'yamlls' then
+          config.settings = {
+            redhat = {
+              telemetry = {
+                enabled = false,
+              },
+            },
+            yaml = {
+              schemaStore = {
+                enable = true,
+              },
+            },
+          }
         end
 
         lspconfig[server].setup(config)
@@ -606,12 +614,11 @@ return require('packer').startup(function(use)
   use({
     'nvim-telescope/telescope.nvim',
     requires = {
-      'folke/which-key.nvim',
       'nvim-lua/plenary.nvim',
       { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' },
     },
     config = function()
-      local builtin = require('telescope.builtin')
+      local tb = require('telescope.builtin')
 
       require('telescope').setup({
         defaults = {
@@ -630,35 +637,29 @@ return require('packer').startup(function(use)
 
       require('telescope').load_extension('fzf')
 
-      require('which-key').register({
-        ['<leader>'] = {
-          b = {
-            c = { function() builtin.grep_string() end, 'Find <cword>' },
-            g = { function() builtin.current_buffer_fuzzy_find() end, 'Fuzzy Find' },
-            l = { function() builtin.git_bcommits() end, 'Git Log' },
-            y = { function() builtin.lsp_document_symbols() end, 'Find Symbols' },
-          },
-          f = {
-            f = {
-              function()
-                if not pcall(builtin.git_files) then builtin.find_files() end
-              end,
-              'Find Files',
-            },
-            r = { function() builtin.oldfiles({ cwd_only = true }) end, 'Recent Files' },
-          },
-          g = {
-            c = { function() builtin.live_grep({ default_text = vim.fn.expand('<cword>') }) end, 'Find <cword>' },
-            g = { function() builtin.live_grep() end, 'Fuzzy Find' },
-            h = { function() builtin.git_stash() end, 'Git Stashes' },
-            l = { function() builtin.git_commits() end, 'Git Log' },
-            m = { function() builtin.git_branches() end, 'Git Branches' },
-            s = { function() builtin.git_status() end, 'Git Status' },
-            y = { function() builtin.lsp_workspace_symbols() end, 'Find Symbols' },
-          },
-          r = { function() builtin.resume() end, 'Resume Search (Telescope)' },
-        },
-      })
+      vim.keymap.set('n', '<leader>bc', function() tb.grep_string() end, { desc = 'Find <cword>' })
+      vim.keymap.set('n', '<leader>bg', function() tb.current_buffer_fuzzy_find() end, { desc = 'Fuzzy Find' })
+      vim.keymap.set('n', '<leader>bl', function() tb.git_bcommits() end, { desc = 'Git Log' })
+      vim.keymap.set('n', '<leader>by', function() tb.lsp_document_symbols() end, { desc = 'Find Symbols' })
+
+      vim.keymap.set('n', '<leader>ff', function()
+        if not pcall(tb.git_files) then tb.find_files() end
+      end, { desc = 'Find Files' })
+      vim.keymap.set('n', '<leader>fr', function() tb.oldfiles({ cwd_only = true }) end, { desc = 'Recent Files' })
+
+      vim.keymap.set(
+        'n',
+        '<leader>gc',
+        function() tb.live_grep({ default_text = vim.fn.expand('<cword>') }) end,
+        { desc = 'Find <cword>' }
+      )
+      vim.keymap.set('n', '<leader>gg', function() tb.live_grep() end, { desc = 'Fuzzy Find' })
+      vim.keymap.set('n', '<leader>gh', function() tb.git_stash() end, { desc = 'Git Stashes' })
+      vim.keymap.set('n', '<leader>gl', function() tb.git_commits() end, { desc = 'Git Log' })
+      vim.keymap.set('n', '<leader>gm', function() tb.git_branches() end, { desc = 'Git Branches' })
+      vim.keymap.set('n', '<leader>gs', function() tb.git_status() end, { desc = 'Git Status' })
+      vim.keymap.set('n', '<leader>gy', function() tb.lsp_workspace_symbols() end, { desc = 'Find Symbols' })
+      vim.keymap.set('n', '<leader>r', function() tb.resume() end, { desc = 'Resume Search (Telescope)' })
     end,
   })
 

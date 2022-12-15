@@ -32,8 +32,27 @@
 [branch]
   autosetuprebase = always
 
+[color]
+  ui = true
+
+[color "diff-highlight"]
+  oldNormal = red
+  oldHighlight = red bold
+  newNormal = green
+  newHighlight = green bold
+
+[color "diff"]
+  meta = yellow
+  frag = magenta bold
+  func = cyan bold
+  commit = yellow bold
+  old = red
+  new = green
+  whitespace = red reverse
+
 [core]
   autocrlf = input
+  pager = diff-so-fancy | less --tabs=4 -RFX
 
 [diff]
   colorMoved = plain
@@ -45,17 +64,14 @@
   prompt = false
   trustExitCode = true
 
-[difftool "kitty"]
-  cmd = kitty +kitten diff $LOCAL $REMOTE
-
-[difftool "kitty.gui"]
-  cmd = kitty kitty +kitten diff $LOCAL $REMOTE
-
 [fetch]
   parallel = 0
 
 [init]
   defaultBranch = main
+
+[interactive]
+  diffFilter = diff-so-fancy --patch
 
 [pull]
   rebase = true
