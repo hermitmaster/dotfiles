@@ -261,7 +261,7 @@ return require('packer').startup(function(use)
           nls.builtins.formatting.goimports,
           nls.builtins.formatting.prettier,
           nls.builtins.formatting.rego,
-          nls.builtins.formatting.shfmt,
+          nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
           nls.builtins.formatting.stylua,
         },
       })
