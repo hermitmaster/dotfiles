@@ -48,6 +48,20 @@ end
 local packer_bootstrap = ensure_packer()
 
 LSP_ON_ATTACH = function(client, bufnr)
+  local go_org_imports = function(wait_ms)
+    local params = vim.lsp.util.make_range_params()
+    params.context = { only = { 'source.organizeImports' } }
+    local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, wait_ms)
+    for cid, res in pairs(result or {}) do
+      for _, r in pairs(res.result or {}) do
+        if r.edit then
+          local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or 'utf-16'
+          vim.lsp.util.apply_workspace_edit(r.edit, enc)
+        end
+      end
+    end
+  end
+
   vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, { desc = 'Go to Definition' })
   vim.keymap.set('n', 'gD', function() vim.lsp.buf.declaration() end, { desc = 'Go to Declaration' })
   vim.keymap.set('n', 'gI', function() vim.lsp.buf.implementation() end, { desc = 'Go to Implementation' })
@@ -65,14 +79,21 @@ LSP_ON_ATTACH = function(client, bufnr)
   vim.keymap.set('n', '[d', function() vim.diagnostic.goto_next() end, { desc = 'Previous Diagnostic' })
   vim.keymap.set('n', ']d', function() vim.diagnostic.goto_prev() end, { desc = 'Next Diagnostic' })
 
+  local augroup = vim.api.nvim_create_augroup('lsp_fmt', { clear = true })
+
   if client.server_capabilities.documentFormattingProvider then
-    local augroup = vim.api.nvim_create_augroup('lsp_fmt', { clear = true })
     vim.api.nvim_create_autocmd('BufWritePre', {
       group = augroup,
       buffer = bufnr,
       callback = function() vim.lsp.buf.format() end,
     })
   end
+
+  vim.api.nvim_create_autocmd('BufWritePre', {
+    group = augroup,
+    pattern = '*.go',
+    callback = function() go_org_imports(5000) end,
+  })
 end
 
 return require('packer').startup(function(use)
@@ -256,16 +277,19 @@ return require('packer').startup(function(use)
       nls.setup({
         on_attach = LSP_ON_ATTACH,
         sources = {
+          nls.builtins.diagnostics.checkmake,
+          nls.builtins.diagnostics.hadolint,
           nls.builtins.diagnostics.opacheck,
-          nls.builtins.diagnostics.yamllint,
-          nls.builtins.formatting.goimports,
           nls.builtins.formatting.prettier,
           nls.builtins.formatting.rego,
+          nls.builtins.formatting.shellharden,
           nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
           nls.builtins.formatting.stylua,
+          nls.builtins.hover.printenv,
         },
       })
 
+      require('mason').setup()
       require('mason-null-ls').setup({
         automatic_installation = true,
       })
@@ -438,6 +462,9 @@ return require('packer').startup(function(use)
             Lua = {
               diagnostics = {
                 globals = { 'vim' },
+              },
+              format = {
+                enable = false,
               },
               runtime = {
                 version = 'LuaJIT',
