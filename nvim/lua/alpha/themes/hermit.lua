@@ -22,25 +22,16 @@ local function button(sc, txt, keybind, keybind_opts)
     opts.keymap = { 'n', sc_, keybind, keybind_opts }
   end
 
-  local function on_press()
-    local key = vim.api.nvim_replace_termcodes(sc_ .. '<Ignore>', true, false, true)
-    vim.api.nvim_feedkeys(key, 't', false)
-  end
-
   return {
     type = 'button',
     val = txt,
-    on_press = on_press,
+    on_press = function()
+      local key = vim.api.nvim_replace_termcodes(sc_ .. '<Ignore>', true, false, true)
+      vim.api.nvim_feedkeys(key, 't', false)
+    end,
     opts = opts,
   }
 end
-
-local cdir = vim.fn.getcwd()
-
-local nvim_web_devicons = {
-  enabled = true,
-  highlight = true,
-}
 
 local function get_extension(fn)
   local match = fn:match('^.+(%..+)$')
@@ -51,25 +42,14 @@ local function get_extension(fn)
   return ext
 end
 
-local function icon(fn)
-  local ext = get_extension(fn)
-
-  return require('nvim-web-devicons').get_icon(fn, ext, { default = true })
-end
-
 local function file_button(fn, sc, short_fn)
   short_fn = short_fn or fn
   local ico_txt
   local fb_hl = {}
 
-  local ico, hl = icon(fn)
-  local hl_option_type = type(nvim_web_devicons.highlight)
+  local ico, hl = require('nvim-web-devicons').get_icon(fn, get_extension(fn), { default = true })
 
-  if hl_option_type == 'boolean' then
-    table.insert(fb_hl, { hl, 0, 3 })
-  elseif hl_option_type == 'string' then
-    table.insert(fb_hl, { nvim_web_devicons.highlight, 0, 3 })
-  end
+  table.insert(fb_hl, { hl, 0, 3 })
 
   ico_txt = ico .. '  '
 
@@ -139,7 +119,7 @@ local function mru(start, cwd, items_number, opts)
   }
 end
 
-local config = {
+return {
   layout = {
     { type = 'padding', val = 2 },
     {
@@ -173,7 +153,7 @@ local config = {
         { type = 'padding', val = 1 },
         {
           type = 'group',
-          val = function() return { mru(0, cdir) } end,
+          val = function() return { mru(0, vim.fn.getcwd()) } end,
           opts = { shrink_margin = false },
         },
       },
@@ -216,9 +196,4 @@ local config = {
       })
     end,
   },
-}
-
-return {
-  config = config,
-  nvim_web_devicons = nvim_web_devicons,
 }

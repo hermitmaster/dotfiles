@@ -17,7 +17,3 @@ configstore/
 # nvim
 nvim/plugin/packer_compiled.lua
 
-# zsh
-.zcomp*
-*.zwc
-

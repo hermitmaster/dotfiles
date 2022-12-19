@@ -1,12 +1,12 @@
 vim.opt.clipboard = 'unnamed,unnamedplus'
 vim.opt.colorcolumn = '+1'
-vim.opt.completeopt = 'menuone'
+vim.opt.completeopt = 'menu,menuone,noselect'
 vim.opt.cursorline = true
 vim.opt.diffopt:append('vertical')
-vim.opt.fillchars = 'eob: ,vert:│'
+vim.opt.fillchars = { eob = ' ', vert = '│' }
 vim.opt.ignorecase = true
 vim.opt.list = true
-vim.opt.listchars = 'tab:→ ,extends:↷,precedes:↶,eol:↵'
+vim.opt.listchars = { eol = '↵', extends = '↷', precedes = '↶', tab = '→ ' }
 vim.opt.mouse = 'a'
 vim.opt.number = true
 vim.opt.scrolloff = 1
@@ -17,7 +17,6 @@ vim.opt.sidescrolloff = 3
 vim.opt.signcolumn = 'yes'
 vim.opt.smartcase = true
 vim.opt.smartindent = true
-vim.opt.termguicolors = true
 vim.opt.undofile = true
 vim.opt.updatetime = 300
 vim.opt.wrap = false
@@ -48,59 +47,37 @@ end
 local packer_bootstrap = ensure_packer()
 
 LSP_ON_ATTACH = function(client, bufnr)
-  local go_org_imports = function(wait_ms)
-    local params = vim.lsp.util.make_range_params()
-    params.context = { only = { 'source.organizeImports' } }
-    local result = vim.lsp.buf_request_sync(0, 'textDocument/codeAction', params, wait_ms)
-    for cid, res in pairs(result or {}) do
-      for _, r in pairs(res.result or {}) do
-        if r.edit then
-          local enc = (vim.lsp.get_client_by_id(cid) or {}).offset_encoding or 'utf-16'
-          vim.lsp.util.apply_workspace_edit(r.edit, enc)
-        end
-      end
-    end
-  end
-
   vim.keymap.set('n', 'gd', function() vim.lsp.buf.definition() end, { desc = 'Go to Definition' })
   vim.keymap.set('n', 'gD', function() vim.lsp.buf.declaration() end, { desc = 'Go to Declaration' })
   vim.keymap.set('n', 'gI', function() vim.lsp.buf.implementation() end, { desc = 'Go to Implementation' })
   vim.keymap.set('n', 'gR', function() vim.lsp.buf.references() end, { desc = 'Show References' })
 
-  vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, { desc = 'Help Tags' })
+  vim.keymap.set('n', 'K', function() vim.lsp.buf.hover() end, { desc = 'Hover' })
 
-  vim.keymap.set('n', '<leader>ba', function() vim.lsp.buf.code_action() end, { desc = 'Code Action' })
-  vim.keymap.set('n', '<leader>bd', function() vim.diagnostic.setloclist() end, { desc = 'Diagnostics' })
+  vim.keymap.set('n', '<leader>la', function() vim.lsp.buf.code_action() end, { desc = 'Code Action' })
+  vim.keymap.set('n', '<leader>ld', function() vim.diagnostic.setloclist() end, { desc = 'Diagnostics' })
   vim.keymap.set('n', '<leader>bf', function() vim.lsp.buf.format() end, { desc = 'Format Buffer' })
-  vim.keymap.set('n', '<leader>bk', function() vim.lsp.buf.signature_help() end, { desc = 'Signature Help' })
-  vim.keymap.set('n', '<leader>br', function() vim.lsp.buf.rename() end, { desc = 'Rename Symbol' })
-  vim.keymap.set('n', '<leader>bt', function() vim.lsp.buf.type_definition() end, { desc = 'TypeDef' })
+  vim.keymap.set('n', '<leader>lk', function() vim.lsp.buf.signature_help() end, { desc = 'Signature Help' })
+  vim.keymap.set('n', '<leader>lr', function() vim.lsp.buf.rename() end, { desc = 'Rename Symbol' })
+  vim.keymap.set('n', '<leader>lt', function() vim.lsp.buf.type_definition() end, { desc = 'TypeDef' })
 
   vim.keymap.set('n', '[d', function() vim.diagnostic.goto_next() end, { desc = 'Previous Diagnostic' })
   vim.keymap.set('n', ']d', function() vim.diagnostic.goto_prev() end, { desc = 'Next Diagnostic' })
 
-  local augroup = vim.api.nvim_create_augroup('lsp_fmt', { clear = true })
-
   if client.server_capabilities.documentFormattingProvider then
     vim.api.nvim_create_autocmd('BufWritePre', {
-      group = augroup,
+      group = vim.api.nvim_create_augroup('lsp_fmt', { clear = true }),
       buffer = bufnr,
       callback = function() vim.lsp.buf.format() end,
     })
   end
-
-  vim.api.nvim_create_autocmd('BufWritePre', {
-    group = augroup,
-    pattern = '*.go',
-    callback = function() go_org_imports(5000) end,
-  })
 end
 
 return require('packer').startup(function(use)
   use({
     'gpanders/editorconfig.nvim',
-    'mfussenegger/nvim-dap',
-    'rcarriga/nvim-dap-ui',
+    'sitiom/nvim-numbertoggle',
+    'towolf/vim-helm',
     'wbthomason/packer.nvim',
   })
 
@@ -148,6 +125,9 @@ return require('packer').startup(function(use)
           h = {
             name = 'Hunk',
           },
+          l = {
+            name = 'LSP',
+          },
           n = { '<cmd>enew<cr>', 'New File' },
           q = { '<cmd>qall<cr>', 'Quit' },
         },
@@ -177,11 +157,9 @@ return require('packer').startup(function(use)
 
   use({
     'goolord/alpha-nvim',
-    requires = {
-      'nvim-tree/nvim-web-devicons',
-    },
+    requires = 'nvim-tree/nvim-web-devicons',
     config = function()
-      require('alpha').setup(require('alpha.themes.hermit').config)
+      require('alpha').setup(require('alpha.themes.hermit'))
 
       vim.keymap.set('n', '<leader>bh', '<cmd>Alpha<cr>', { desc = 'Dashboard' })
     end,
@@ -209,7 +187,7 @@ return require('packer').startup(function(use)
         return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
       end
 
-      local cmp = require('cmp') ---@cast cmp -?
+      local cmp = require('cmp')
       local luasnip = require('luasnip')
 
       cmp.setup({
@@ -266,99 +244,33 @@ return require('packer').startup(function(use)
 
   use({
     'jose-elias-alvarez/null-ls.nvim',
-    requires = {
-      'jayp0521/mason-null-ls.nvim',
-      'nvim-lua/plenary.nvim',
-      'williamboman/mason.nvim',
-    },
+    requires = 'nvim-lua/plenary.nvim',
     config = function()
       local nls = require('null-ls')
 
       nls.setup({
         on_attach = LSP_ON_ATTACH,
         sources = {
+          nls.builtins.code_actions.gitsigns,
+          nls.builtins.code_actions.gomodifytags,
+          nls.builtins.code_actions.shellcheck,
           nls.builtins.diagnostics.checkmake,
-          nls.builtins.diagnostics.hadolint,
           nls.builtins.diagnostics.opacheck,
+          nls.builtins.diagnostics.shellcheck,
+          nls.builtins.formatting.black,
+          nls.builtins.formatting.isort,
           nls.builtins.formatting.prettier,
           nls.builtins.formatting.rego,
-          nls.builtins.formatting.shellharden,
           nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
           nls.builtins.formatting.stylua,
-          nls.builtins.hover.printenv,
         },
       })
-
-      require('mason').setup()
-      require('mason-null-ls').setup({
-        automatic_installation = true,
-      })
-    end,
-  })
-
-  use({
-    'nvim-tree/nvim-tree.lua',
-    requires = {
-      'nvim-tree/nvim-web-devicons',
-    },
-    ft = 'alpha',
-    config = function()
-      require('nvim-tree').setup({
-        diagnostics = {
-          enable = true,
-          icons = {
-            error = vim.fn.sign_getdefined('DiagnosticSignError')[1].text,
-            hint = vim.fn.sign_getdefined('DiagnosticSignHint')[1].text,
-            info = vim.fn.sign_getdefined('DiagnosticSignInfo')[1].text,
-            warning = vim.fn.sign_getdefined('DiagnosticSignWarn')[1].text,
-          },
-          show_on_dirs = true,
-        },
-        disable_netrw = true,
-        filters = { custom = { '^.git$' } },
-        ignore_buffer_on_setup = true,
-        open_on_setup = true,
-        trash = {
-          cmd = 'trash',
-          require_confirm = true,
-        },
-        view = {
-          hide_root_folder = true,
-          mappings = {
-            custom_only = true,
-            list = {
-              { key = '<cr>', action = 'edit' },
-              { key = '<C-v>', action = 'vsplit' },
-              { key = '<C-x>', action = 'split' },
-              { key = 'h', action = 'toggle_dotfiles' },
-              { key = 'i', action = 'toggle_git_ignored' },
-              { key = 'R', action = 'refresh' },
-              { key = 'a', action = 'create' },
-              { key = 'd', action = 'trash' },
-              { key = 'q', action = 'close' },
-              { key = 'r', action = 'rename' },
-              { key = 'o', action = 'system_open' },
-              { key = 'x', action = 'cut' },
-              { key = 'c', action = 'copy' },
-              { key = 'p', action = 'paste' },
-              { key = 'y', action = 'copy_path' },
-              { key = 'Y', action = 'copy_absolute_path' },
-              { key = 'K', action = 'toggle_help' },
-            },
-          },
-        },
-      })
-
-      vim.keymap.set('n', '<leader>fj', '<cmd>NvimTreeFindFile<cr>', { desc = 'Jump to File' })
-      vim.keymap.set('n', '<leader>ft', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle File Tree' })
     end,
   })
 
   use({
     'lewis6991/gitsigns.nvim',
-    requires = {
-      'nvim-lua/plenary.nvim',
-    },
+    requires = 'nvim-lua/plenary.nvim',
     config = function()
       require('gitsigns').setup({
         on_attach = function(bufnr)
@@ -386,7 +298,7 @@ return require('packer').startup(function(use)
             'n',
             '<leader>hu',
             function() gs.undo_stage_hunk() end,
-            { desc = 'Undo Stage Hunk', buffer = bufnr }
+            { desc = 'Unstage Hunk', buffer = bufnr }
           )
           vim.keymap.set('n', '[c', function() gs.prev_hunk() end, { desc = 'Previous Hunk', buffer = bufnr })
           vim.keymap.set('n', ']c', function() gs.next_hunk() end, { desc = 'Next Hunk', buffer = bufnr })
@@ -411,12 +323,8 @@ return require('packer').startup(function(use)
     'neovim/nvim-lspconfig',
     requires = {
       'hrsh7th/cmp-nvim-lsp',
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
     },
     config = function()
-      local capabilities = require('cmp_nvim_lsp').default_capabilities()
-      local lspconfig = require('lspconfig')
       local servers = {
         'bashls',
         'cssls',
@@ -427,32 +335,22 @@ return require('packer').startup(function(use)
         'marksman',
         'pyright',
         'sumneko_lua',
-        'taplo',
         'terraformls',
         'tflint',
         'tsserver',
-        'vimls',
         'yamlls',
       }
 
-      require('mason').setup()
-      require('mason-lspconfig').setup({
-        ensure_installed = servers,
-        automatic_installation = true,
-      })
-
       for _, server in ipairs(servers) do
         local config = {
-          capabilities = capabilities,
+          capabilities = require('cmp_nvim_lsp').default_capabilities(),
           on_attach = LSP_ON_ATTACH,
         }
 
         if server == 'gopls' then
           config.settings = {
             gopls = {
-              analyses = {
-                unusedparams = true,
-              },
+              analyses = { unusedparams = true },
               staticcheck = true,
               gofumpt = true,
             },
@@ -479,26 +377,19 @@ return require('packer').startup(function(use)
             },
           }
         elseif server == 'terraformls' then
-          config.filetypes = {
-            'hcl',
-            'terraform',
-          }
+          config.filetypes = { 'hcl', 'terraform' }
         elseif server == 'yamlls' then
           config.settings = {
             redhat = {
-              telemetry = {
-                enabled = false,
-              },
+              telemetry = { enabled = false },
             },
             yaml = {
-              schemaStore = {
-                enable = true,
-              },
+              schemaStore = { enable = true },
             },
           }
         end
 
-        lspconfig[server].setup(config)
+        require('lspconfig')[server].setup(config)
       end
     end,
   })
@@ -528,7 +419,6 @@ return require('packer').startup(function(use)
   use({
     'nvim-lualine/lualine.nvim',
     requires = 'nvim-tree/nvim-web-devicons',
-    after = 'monokai.nvim',
     config = function()
       require('lualine').setup({
         options = {
@@ -623,7 +513,19 @@ return require('packer').startup(function(use)
           lualine_a = {
             {
               'buffers',
+              filetype_names = {
+                alpha = 'Alpha',
+                dashboard = 'Dashboard',
+                packer = 'Packer',
+                NvimTree = 'NvimTree',
+                TelescopePrompt = 'Telescope',
+              },
               show_filename_only = false,
+              symbols = {
+                modified = ' ●',
+                alternate_file = '',
+                directory = '',
+              },
             },
           },
           lualine_z = { 'tabs' },
@@ -691,21 +593,51 @@ return require('packer').startup(function(use)
   })
 
   use({
+    'nvim-tree/nvim-tree.lua',
+    requires = 'nvim-tree/nvim-web-devicons',
+    ft = 'alpha',
+    config = function()
+      require('nvim-tree').setup({
+        diagnostics = {
+          enable = true,
+          icons = {
+            error = vim.fn.sign_getdefined('DiagnosticSignError')[1].text,
+            hint = vim.fn.sign_getdefined('DiagnosticSignHint')[1].text,
+            info = vim.fn.sign_getdefined('DiagnosticSignInfo')[1].text,
+            warning = vim.fn.sign_getdefined('DiagnosticSignWarn')[1].text,
+          },
+          show_on_dirs = true,
+        },
+        disable_netrw = true,
+        filters = { custom = { '^.git$' } },
+        ignore_buffer_on_setup = true,
+        open_on_setup = true,
+        trash = {
+          cmd = 'trash',
+          require_confirm = true,
+        },
+        view = {
+          hide_root_folder = true,
+          mappings = {
+            list = {
+              { key = '<Tab>', action = '' },
+            },
+          },
+        },
+      })
+
+      vim.keymap.set('n', '<leader>fj', '<cmd>NvimTreeFindFile<cr>', { desc = 'Jump to File' })
+      vim.keymap.set('n', '<leader>ft', '<cmd>NvimTreeToggle<cr>', { desc = 'Toggle File Tree' })
+    end,
+  })
+
+  use({
     'nvim-treesitter/nvim-treesitter',
     run = ':TSUpdate',
     config = function()
       require('nvim-treesitter.configs').setup({
         ensure_installed = 'all',
         highlight = { enable = true },
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = 'gnn',
-            node_incremental = 'grn',
-            scope_incremental = 'grc',
-            node_decremental = 'grm',
-          },
-        },
         indent = { enable = true },
         matchup = { enable = true },
       })
@@ -713,14 +645,17 @@ return require('packer').startup(function(use)
   })
 
   use({
-    'sindrets/diffview.nvim',
-    requires = 'nvim-lua/plenary.nvim',
-    config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
+    'rcarriga/nvim-dap-ui',
+    requires = {
+      'mfussenegger/nvim-dap',
+    },
+    config = function() require('dapui').setup() end,
   })
 
   use({
-    'sitiom/nvim-numbertoggle',
-    config = function() require('numbertoggle').setup() end,
+    'sindrets/diffview.nvim',
+    requires = 'nvim-lua/plenary.nvim',
+    config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
   })
 
   use({

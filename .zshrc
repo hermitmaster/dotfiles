@@ -34,27 +34,13 @@ SAVEHIST=$HISTSIZE
 . "${HOMEBREW_PREFIX}/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 . "${HOMEBREW_PREFIX}/opt/fzf/shell/completion.zsh"
 . "${HOMEBREW_PREFIX}/opt/fzf/shell/key-bindings.zsh"
-# . "${HOMEBREW_PREFIX}/opt/powerlevel10k/powerlevel10k.zsh-theme"
-# . "${XDG_CONFIG_HOME}/.p10k.zsh"
+. "${HOMEBREW_PREFIX}/opt/powerlevel10k/powerlevel10k.zsh-theme"
+. "${XDG_CONFIG_HOME}/.p10k.zsh"
 . <(direnv hook zsh)
 
 fpath+="${HOMEBREW_PREFIX}/share/zsh/site-functions"
-autoload -Uz compinit bashcompinit promptinit
-compinit && bashcompinit && promptinit
-
-zstyle :prompt:pure:execution_time color 8
-zstyle :prompt:pure:git:action color 1
-zstyle :prompt:pure:git:branch color 2
-zstyle :prompt:pure:git:dirty color 5
-zstyle :prompt:pure:host color 8
-zstyle :prompt:pure:prompt:success color 2
-zstyle :prompt:pure:prompt:continuation color 8
-zstyle :prompt:pure:user color 8
-zstyle :prompt:pure:virtualenv color 8
-
-prompt pure
-prompt_newline='%666v'
-PROMPT=" $PROMPT"
+autoload -Uz compinit && compinit
+autoload -Uz bashcompinit && bashcompinit
 
 function _bs {
   ln -fs "${XDG_CONFIG_HOME}/.editorconfig" "${HOME}/.editorconfig"
@@ -63,9 +49,6 @@ function _bs {
   uatt
 }
 
-function _set_window_title {
-  print -Pn "\e]0;%~  ${1:-zsh}\a"
-}
-
-function precmd { _set_window_title }
-function preexec { _set_window_title }
+function _set_window_title { print -Pn "\e]0;%~  ${1:-zsh}\a" }
+function precmd { _set_window_title "$@"}
+function preexec { _set_window_title "$@"}

@@ -3,4 +3,9 @@
 
 # Jetbrains
 .idea/
+jgit/
+
+# zsh
+.zcomp*
+*.zwc
 
