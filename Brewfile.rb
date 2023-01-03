@@ -10,6 +10,7 @@ brew 'checkmake'
 brew 'delve'
 brew 'diff-so-fancy'
 brew 'direnv'
+brew 'dive'
 brew 'dockerfile-language-server-nodejs'
 brew 'exa'
 brew 'fd'
@@ -67,6 +68,7 @@ cask 'font-hack-nerd-font'
 cask 'goland'
 cask 'mouse-fix', args: { 'no-quarantine': true }
 cask 'rectangle'
+cask 'wezterm'
 
 mas 'AdGuard for Safari', id: 1440147259
 mas 'Vimari', id: 1480933944
