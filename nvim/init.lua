@@ -82,25 +82,8 @@ return require('packer').startup(function(use)
   })
 
   use({
-    'andymass/vim-matchup',
-    config = function() vim.g.matchup_surround_enabled = 1 end,
-  })
-
-  use({
     'ethanholz/nvim-lastplace',
     config = function() require('nvim-lastplace').setup({}) end,
-  })
-
-  use({
-    'folke/trouble.nvim',
-    requires = {
-      'nvim-tree/nvim-web-devicons',
-    },
-    config = function()
-      require('trouble').setup({
-        use_diagnostic_signs = true,
-      })
-    end,
   })
 
   use({
@@ -251,14 +234,12 @@ return require('packer').startup(function(use)
       nls.setup({
         on_attach = LSP_ON_ATTACH,
         sources = {
-          nls.builtins.code_actions.gitsigns,
           nls.builtins.code_actions.gomodifytags,
           nls.builtins.code_actions.shellcheck,
           nls.builtins.diagnostics.checkmake,
+          nls.builtins.diagnostics.hadolint,
           nls.builtins.diagnostics.opacheck,
           nls.builtins.diagnostics.shellcheck,
-          nls.builtins.formatting.black,
-          nls.builtins.formatting.isort,
           nls.builtins.formatting.prettier,
           nls.builtins.formatting.rego,
           nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
@@ -335,9 +316,11 @@ return require('packer').startup(function(use)
         'marksman',
         'pyright',
         'sumneko_lua',
+        'taplo',
         'terraformls',
         'tflint',
         'tsserver',
+        'vimls',
         'yamlls',
       }
 
@@ -378,15 +361,6 @@ return require('packer').startup(function(use)
           }
         elseif server == 'terraformls' then
           config.filetypes = { 'hcl', 'terraform' }
-        elseif server == 'yamlls' then
-          config.settings = {
-            redhat = {
-              telemetry = { enabled = false },
-            },
-            yaml = {
-              schemaStore = { enable = true },
-            },
-          }
         end
 
         require('lspconfig')[server].setup(config)
@@ -639,7 +613,6 @@ return require('packer').startup(function(use)
         ensure_installed = 'all',
         highlight = { enable = true },
         indent = { enable = true },
-        matchup = { enable = true },
       })
     end,
   })
