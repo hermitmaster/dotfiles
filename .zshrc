@@ -49,7 +49,7 @@ function _bs {
   uatt
 }
 
-function _set_window_title { print -Pn "\e]0;%~  ${1:-zsh}\a" }
+function _set_window_title { print -Pn "\e]0;%~  ${1[0,25]:-zsh}\a" }
 function precmd { _set_window_title "$@"}
 function preexec { _set_window_title "$@"}
 
