@@ -52,3 +52,16 @@ function _bs {
 function _set_window_title { print -Pn "\e]0;%~  ${1:-zsh}\a" }
 function precmd { _set_window_title "$@"}
 function preexec { _set_window_title "$@"}
+
+if [[ ${USER} != "hermitmaster" ]]; then
+  . "${HOME}/.pkops/env"
+
+  function namespace-creator {
+    docker run -it \
+      -v ${HOME}/.kube:/.kube \
+      -v ${HOME}/work/delivery/cloud15-infra/namespace.yaml:/namespace.yaml \
+      repocache.nonprod.ppops.net/dev-docker-local/cloud15callenv:1.63 \
+      --namespaces-file /namespace.yaml \
+      --sync "${@}"
+  }
+fi
