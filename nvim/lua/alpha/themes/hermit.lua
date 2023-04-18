@@ -1,5 +1,3 @@
-local plenary_path = require('plenary.path')
-
 --- @param sc string
 --- @param txt string
 --- @optional keybind string
@@ -12,7 +10,7 @@ local function button(sc, txt, keybind, keybind_opts)
     position = 'center',
     shortcut = sc,
     cursor = 5,
-    width = 50,
+    width = 70,
     align_shortcut = 'right',
     hl_shortcut = 'Keyword',
   }
@@ -91,7 +89,6 @@ local function mru(start, cwd, items_number, opts)
     local ignore = (opts.ignore and opts.ignore(v, get_extension(v))) or false
     if (vim.fn.filereadable(v) == 1) and cwd_cond and not ignore then oldfiles[#oldfiles + 1] = v end
   end
-  local target_width = 35
 
   local tbl = {}
   for i, fn in ipairs(oldfiles) do
@@ -100,11 +97,6 @@ local function mru(start, cwd, items_number, opts)
       short_fn = vim.fn.fnamemodify(fn, ':.')
     else
       short_fn = vim.fn.fnamemodify(fn, ':~')
-    end
-
-    if #short_fn > target_width then
-      short_fn = plenary_path.new(short_fn):shorten(1, { -2, -1 })
-      if #short_fn > target_width then short_fn = plenary_path.new(short_fn):shorten(1, { -1 }) end
     end
 
     local shortcut = tostring(i + start - 1)
