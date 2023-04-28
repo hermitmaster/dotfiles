@@ -1,92 +1,78 @@
 ---
 black: &black "#272822"
-red: &red "#f92672"
-green: &green "#a6e22e"
-yellow: &yellow "#e6db74"
 blue: &blue "#66d9ef"
-magenta: &magenta "#ae81ff"
-cyan: &cyan "#a1efe4"
-white: &white "#f8f8f2"
 brightBlack: &brightBlack "#75715e"
-xgray1: &xgray1 "#3c3d38"
-orange: &orange "#fd971f"
+cyan: &cyan "#a1efe4"
 darkBlue: &darkBlue "#3d828f"
+green: &green "#a6e22e"
+magenta: &magenta "#ae81ff"
+orange: &orange "#fd971f"
+red: &red "#f92672"
+white: &white "#f8f8f2"
+xgray1: &xgray1 "#3c3d38"
+yellow: &yellow "#e6db74"
 
-# Skin...
 k9s:
-  # General K9s styles
   body:
-    fgColor: *white
     bgColor: *black
+    fgColor: *white
     logoColor: *brightBlack
-  # Command prompt styles
-  prompt:
-    fgColor: *white
-    bgColor: default
-    suggestColor: *brightBlack
-  # ClusterInfoView styles.
-  info:
-    fgColor: *blue
-    sectionColor: *yellow
-  # Dialog styles.
   dialog:
-    fgColor: *white
     bgColor: default
-    buttonFgColor: *white
     buttonBgColor: *green
-    buttonFocusFgColor: *white
+    buttonFgColor: *white
     buttonFocusBgColor: *darkBlue
-    labelFgColor: *orange
+    buttonFocusFgColor: *white
+    fgColor: *white
     fieldFgColor: *blue
+    labelFgColor: *orange
   frame:
-    # Borders styles.
     border:
       fgColor: *blue
       focusColor: *darkBlue
+    crumbs:
+      activeColor: *blue
+      bgColor: *xgray1
+      fgColor: *white
     menu:
       fgColor: *cyan
       keyColor: *green
-      # Used for favorite namespaces
       numKeyColor: *green
-    # CrumbView attributes for history navigation.
-    crumbs:
-      fgColor: *white
-      bgColor: *xgray1
-      activeColor: *blue
-    # Resource status and update styles
     status:
-      newColor: *blue
-      modifyColor: *magenta
       addColor: *green
-      pendingColor: *yellow
+      completedColor: *green
       errorColor: *red
       highlightcolor: *blue
       killColor: *orange
-      completedColor: *green
-    # Border title styles.
+      modifyColor: *magenta
+      newColor: *blue
+      pendingColor: *yellow
     title:
-      fgColor: *white
       bgColor: default
-      highlightColor: *blue
       counterColor: *cyan
+      fgColor: *white
       filterColor: *orange
+      highlightColor: *blue
+  info:
+    fgColor: *blue
+    sectionColor: *yellow
+  prompt:
+    bgColor: default
+    fgColor: *white
+    suggestColor: *brightBlack
   views:
-    # Charts skins...
     charts:
       bgColor: default
-      dialBgColor: default
       chartBgColor: *xgray1
-      defaultDialColors:
-        - *blue
-        - *magenta
       defaultChartColors:
         - *blue
         - *magenta
+      defaultDialColors:
+        - *blue
+        - *magenta
+      dialBgColor: default
       resourceColors:
         batch/v1/jobs:
-          - *blue
-          - *magenta
-        v1/persistentvolumes:
           - *blue
           - *magenta
         cpu:
@@ -98,35 +84,33 @@ k9s:
         v1/events:
           - *blue
           - *magenta
+        v1/persistentvolumes:
+          - *blue
+          - *magenta
         v1/pods:
           - *blue
           - *magenta
-    # TableView attributes.
-    table:
+    logs:
+      bgColor: *xgray1
       fgColor: *white
-      bgColor: *black
-      markColor: *magenta
-      # Header row styles.
-      header:
+      indicator:
+        bgColor: *darkBlue
         fgColor: *white
-        bgColor: *xgray1
-        sorterColor: *blue
-    # Xray view attributes.
-    xray:
+    table:
+      bgColor: *black
       fgColor: *white
+      header:
+        bgColor: *xgray1
+        fgColor: *white
+        sorterColor: *blue
+      markColor: *magenta
+    xray:
       bgColor: default
       cursorColor: *blue
       cursorTextColor: *white
-      graphicColor: *blue
-    # YAML info styles.
-    yaml:
-      keyColor: *orange
-      colonColor: *orange
-      valueColor: *white
-    # Logs styles.
-    logs:
       fgColor: *white
-      bgColor: *xgray1
-      indicator:
-        fgColor: *white
-        bgColor: *darkBlue
+      graphicColor: *blue
+    yaml:
+      colonColor: *orange
+      keyColor: *orange
+      valueColor: *white

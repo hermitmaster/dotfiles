@@ -2,7 +2,7 @@ export XDG_CACHE_HOME="${HOME}/.cache"
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_DATA_HOME="${HOME}/.local/share"
 
-export HOMEBREW_BUNDLE_FILE="${XDG_CONFIG_HOME}/Brewfile.rb"
+export HOMEBREW_BUNDLE_FILE="${XDG_CONFIG_HOME}/brewfile.rb"
 
 test $(arch) = "arm64" && DEFAULT_HOMEBREW_PREFIX="/opt/homebrew"
 . <("${DEFAULT_HOMEBREW_PREFIX:-"/usr/local"}/bin/brew" shellenv)
@@ -11,7 +11,7 @@ test -e "${HOMEBREW_BUNDLE_FILE}.lock.json" || brew bundle install --clean
 export EDITOR="nvim"
 export MANPAGER="nvim +Man! +'set ch=0'"
 export NPM_CONFIG_PREFIX="${HOME}/.local"
-export PATH="${HOME}/.local/bin:${PATH}"
+export PATH="/opt/homebrew/opt/ruby/bin:${HOME}/.local/bin:${PATH}"
 
 alias bb="brew bundle install --clean"
 alias btm="btm --basic"
@@ -49,6 +49,13 @@ function _bs {
   uatt
 }
 
+function kubent {
+  docker run -it --rm \
+    -v "${HOME}/.kube/config:/.kubeconfig" \
+    ghcr.io/doitintl/kube-no-trouble:latest \
+    -k /.kubeconfig
+}
+
 function _set_window_title { print -Pn "\e]0;%~  ${1[0,25]:-zsh}\a" }
 function precmd { _set_window_title "$@"}
 function preexec { _set_window_title "$@"}
@@ -56,12 +63,14 @@ function preexec { _set_window_title "$@"}
 if [[ ${USER} != "hermitmaster" ]]; then
   . "${HOME}/.pkops/env"
 
-  function namespace-creator {
+  function callenv {
     docker run -it \
       -v ${HOME}/.kube:/.kube \
       -v ${HOME}/work/delivery/cloud15-infra/namespace.yaml:/namespace.yaml \
-      repocache.nonprod.ppops.net/dev-docker-local/cloud15callenv:1.63 \
-      --namespaces-file /namespace.yaml \
-      --sync "${@}"
+      repocache.nonprod.ppops.net/dev-docker-local/cloud15callenv:2.4
+  }
+
+  function namespace-creator {
+    callenv namespace-creator --namespaces-file /namespace.yaml --sync "${@}"
   }
 fi

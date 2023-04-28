@@ -5,6 +5,9 @@
 .idea/
 jgit/
 
+# lua
+.luarc.json
+
 # zsh
 .zcomp*
 *.zwc

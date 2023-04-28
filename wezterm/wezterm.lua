@@ -18,7 +18,7 @@ wezterm.on('ActivatePaneDirection-down', function(window, pane) vimAwareNavigate
 
 return {
   color_scheme = 'Monokai',
-  font = wezterm.font('Hack Nerd Font Mono'),
+  font = wezterm.font('JetbrainsMono Nerd Font Mono'),
   font_size = 13.0,
   keys = {
     { key = 'h', mods = 'CTRL', action = act.EmitEvent('ActivatePaneDirection-left') },

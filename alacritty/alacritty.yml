@@ -6,7 +6,7 @@ window:
 font:
   size: 13.0
   normal:
-    family: "Hack Nerd Font Mono"
+    family: "JetbrainsMono Nerd Font Mono"
 
 colors:
   primary:

@@ -26,11 +26,11 @@ vim.g.loaded_netrwPlugin = 1
 vim.g.mapleader = ' '
 
 vim.fn.sign_define({
-  { name = 'DiagnosticSignError', numhl = 'DiagnosticSignError', texthl = 'DiagnosticSignError', text = ' ' },
-  { name = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint', texthl = 'DiagnosticSignHint', text = ' ' },
-  { name = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo', texthl = 'DiagnosticSignInfo', text = ' ' },
-  { name = 'DiagnosticSignOther', numhl = 'DiagnosticSignOther', texthl = 'DiagnosticSignOther', text = '﫠' },
-  { name = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn', texthl = 'DiagnosticSignWarn', text = ' ' },
+  { name = 'DiagnosticSignError', numhl = 'DiagnosticSignError', texthl = 'DiagnosticSignError', text = ' ' },
+  { name = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint', texthl = 'DiagnosticSignHint', text = ' ' },
+  { name = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo', texthl = 'DiagnosticSignInfo', text = ' ' },
+  { name = 'DiagnosticSignOther', numhl = 'DiagnosticSignOther', texthl = 'DiagnosticSignOther', text = ' ' },
+  { name = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn', texthl = 'DiagnosticSignWarn', text = ' ' },
 })
 
 local ensure_packer = function()
@@ -71,12 +71,14 @@ LSP_ON_ATTACH = function(client, bufnr)
       callback = function() vim.lsp.buf.format() end,
     })
   end
+
+  if client.server_capabilities.documentSymbolProvider then require('nvim-navic').attach(client, bufnr) end
 end
 
 return require('packer').startup(function(use)
   use({
-    'gpanders/editorconfig.nvim',
     'sitiom/nvim-numbertoggle',
+    'terrastruct/d2-vim',
     'towolf/vim-helm',
     'wbthomason/packer.nvim',
   })
@@ -84,6 +86,12 @@ return require('packer').startup(function(use)
   use({
     'ethanholz/nvim-lastplace',
     config = function() require('nvim-lastplace').setup({}) end,
+  })
+
+  use({
+    'folke/trouble.nvim',
+    requires = 'nvim-tree/nvim-web-devicons',
+    config = function() require('trouble').setup({}) end,
   })
 
   use({
@@ -227,7 +235,11 @@ return require('packer').startup(function(use)
 
   use({
     'jose-elias-alvarez/null-ls.nvim',
-    requires = 'nvim-lua/plenary.nvim',
+    requires = {
+      'jayp0521/mason-null-ls.nvim',
+      'nvim-lua/plenary.nvim',
+      'williamboman/mason.nvim',
+    },
     config = function()
       local nls = require('null-ls')
 
@@ -239,12 +251,22 @@ return require('packer').startup(function(use)
           nls.builtins.diagnostics.checkmake,
           nls.builtins.diagnostics.hadolint,
           nls.builtins.diagnostics.opacheck,
+          nls.builtins.diagnostics.rubocop,
           nls.builtins.diagnostics.shellcheck,
+          nls.builtins.diagnostics.terraform_validate,
+          nls.builtins.diagnostics.tfsec,
+          nls.builtins.diagnostics.yamllint,
           nls.builtins.formatting.prettier,
           nls.builtins.formatting.rego,
+          nls.builtins.formatting.rubocop,
           nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
           nls.builtins.formatting.stylua,
         },
+      })
+
+      require('mason').setup()
+      require('mason-null-ls').setup({
+        automatic_installation = true,
       })
     end,
   })
@@ -304,6 +326,8 @@ return require('packer').startup(function(use)
     'neovim/nvim-lspconfig',
     requires = {
       'hrsh7th/cmp-nvim-lsp',
+      'williamboman/mason.nvim',
+      'williamboman/mason-lspconfig.nvim',
     },
     config = function()
       local servers = {
@@ -311,18 +335,26 @@ return require('packer').startup(function(use)
         'cssls',
         'dockerls',
         'gopls',
+        'helm_ls',
         'html',
         'jsonls',
         'lua_ls',
         'marksman',
         'pyright',
+        'solargraph',
         'taplo',
         'terraformls',
         'tflint',
         'tsserver',
         'vimls',
-        'yamlls',
+        -- 'yamlls',
       }
+
+      require('mason').setup()
+      require('mason-lspconfig').setup({
+        ensure_installed = servers,
+        automatic_installation = true,
+      })
 
       for _, server in ipairs(servers) do
         local config = {
@@ -360,7 +392,25 @@ return require('packer').startup(function(use)
             },
           }
         elseif server == 'terraformls' then
-          config.filetypes = { 'hcl', 'terraform', 'terraform-vars' }
+          config.filetypes = {
+            'hcl',
+            'terraform',
+            'terraform-vars',
+          }
+        elseif server == 'yamlls' then
+          config.settings = {
+            redhat = {
+              telemetry = {
+                enabled = false,
+              },
+            },
+            yaml = {
+              keyOrdering = false,
+              schemaStore = {
+                enable = true,
+              },
+            },
+          }
         end
 
         require('lspconfig')[server].setup(config)
@@ -396,6 +446,7 @@ return require('packer').startup(function(use)
     config = function()
       require('lualine').setup({
         options = {
+          globalstatus = true,
           component_separators = { left = '', right = '' },
           section_separators = { left = '', right = '' },
         },
@@ -418,7 +469,7 @@ return require('packer').startup(function(use)
               path = 1,
               symbols = {
                 modified = ' ●',
-                readonly = ' ',
+                readonly = ' ',
                 unnamed = ' [No Name]',
               },
             },
@@ -451,11 +502,10 @@ return require('packer').startup(function(use)
                   end
                 end,
               },
-
               symbols = {
-                added = ' ',
-                modified = '柳',
-                removed = ' ',
+                added = ' ',
+                modified = ' ',
+                removed = ' ',
               },
             },
           },
@@ -475,30 +525,15 @@ return require('packer').startup(function(use)
             'progress',
           },
         },
-        inactive_sections = {
-          lualine_a = {},
-          lualine_b = { 'filename' },
-          lualine_c = {},
-          lualine_x = {},
-          lualine_y = {},
-          lualine_z = { 'location' },
-        },
         tabline = {
           lualine_a = {
             {
               'buffers',
-              filetype_names = {
-                alpha = 'Alpha',
-                dashboard = 'Dashboard',
-                packer = 'Packer',
-                NvimTree = 'NvimTree',
-                TelescopePrompt = 'Telescope',
-              },
               show_filename_only = false,
               symbols = {
-                modified = ' ●',
-                alternate_file = '',
-                directory = '',
+                modified = ' ',
+                alternate_file = '',
+                directory = '',
               },
             },
           },
@@ -506,9 +541,11 @@ return require('packer').startup(function(use)
         },
         extensions = {
           'alpha',
+          'nvim-dap-ui',
           'nvim-tree',
           'packer',
           'pager',
+          'trouble',
         },
       })
     end,
@@ -586,10 +623,6 @@ return require('packer').startup(function(use)
         renderer = {
           root_folder_label = false,
         },
-        trash = {
-          cmd = 'trash',
-          require_confirm = true,
-        },
         view = {
           mappings = {
             list = {
@@ -604,9 +637,6 @@ return require('packer').startup(function(use)
             return { desc = 'nvim-tree: ' .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
           end
 
-          vim.keymap.set('n', '<C-]>', api.tree.change_root_to_node, opts('CD'))
-          vim.keymap.set('n', '<C-e>', api.node.open.replace_tree_buffer, opts('Open: In Place'))
-          vim.keymap.set('n', '<C-k>', api.node.show_info_popup, opts('Info'))
           vim.keymap.set('n', '<C-r>', api.fs.rename_sub, opts('Rename: Omit Filename'))
           vim.keymap.set('n', '<C-t>', api.node.open.tab, opts('Open: New Tab'))
           vim.keymap.set('n', '<C-v>', api.node.open.vertical, opts('Open: Vertical Split'))
@@ -618,10 +648,8 @@ return require('packer').startup(function(use)
           vim.keymap.set('n', '.', api.node.run.cmd, opts('Run Command'))
           vim.keymap.set('n', '-', api.tree.change_root_to_parent, opts('Up'))
           vim.keymap.set('n', 'a', api.fs.create, opts('Create'))
-          vim.keymap.set('n', 'bmv', api.marks.bulk.move, opts('Move Bookmarked'))
           vim.keymap.set('n', 'B', api.tree.toggle_no_buffer_filter, opts('Toggle No Buffer'))
           vim.keymap.set('n', 'c', api.fs.copy.node, opts('Copy'))
-          vim.keymap.set('n', 'C', api.tree.toggle_git_clean_filter, opts('Toggle Git Clean'))
           vim.keymap.set('n', '[c', api.node.navigate.git.prev, opts('Prev Git'))
           vim.keymap.set('n', ']c', api.node.navigate.git.next, opts('Next Git'))
           vim.keymap.set('n', 'd', api.fs.remove, opts('Delete'))
@@ -630,17 +658,13 @@ return require('packer').startup(function(use)
           vim.keymap.set('n', 'e', api.fs.rename_basename, opts('Rename: Basename'))
           vim.keymap.set('n', ']e', api.node.navigate.diagnostics.next, opts('Next Diagnostic'))
           vim.keymap.set('n', '[e', api.node.navigate.diagnostics.prev, opts('Prev Diagnostic'))
-          vim.keymap.set('n', 'F', api.live_filter.clear, opts('Clean Filter'))
-          vim.keymap.set('n', 'f', api.live_filter.start, opts('Filter'))
           vim.keymap.set('n', 'g?', api.tree.toggle_help, opts('Help'))
           vim.keymap.set('n', 'gy', api.fs.copy.absolute_path, opts('Copy Absolute Path'))
           vim.keymap.set('n', 'H', api.tree.toggle_hidden_filter, opts('Toggle Dotfiles'))
           vim.keymap.set('n', 'I', api.tree.toggle_gitignore_filter, opts('Toggle Git Ignore'))
           vim.keymap.set('n', 'J', api.node.navigate.sibling.last, opts('Last Sibling'))
           vim.keymap.set('n', 'K', api.node.navigate.sibling.first, opts('First Sibling'))
-          vim.keymap.set('n', 'm', api.marks.toggle, opts('Toggle Bookmark'))
           vim.keymap.set('n', 'o', api.node.open.edit, opts('Open'))
-          vim.keymap.set('n', 'O', api.node.open.no_window_picker, opts('Open: No Window Picker'))
           vim.keymap.set('n', 'p', api.fs.paste, opts('Paste'))
           vim.keymap.set('n', 'P', api.node.navigate.parent, opts('Parent Directory'))
           vim.keymap.set('n', 'q', api.tree.close, opts('Close'))
@@ -693,15 +717,44 @@ return require('packer').startup(function(use)
   use({
     'rcarriga/nvim-dap-ui',
     requires = {
+      'jay-babu/mason-nvim-dap.nvim',
       'mfussenegger/nvim-dap',
+      'williamboman/mason.nvim',
     },
-    config = function() require('dapui').setup() end,
+    config = function()
+      require('dapui').setup()
+
+      require('mason').setup()
+      require('mason-nvim-dap').setup({
+        automatic_installation = true,
+        ensure_installed = {
+          'bash',
+          'delve',
+          'js',
+          'python',
+        },
+      })
+    end,
   })
 
   use({
     'sindrets/diffview.nvim',
     requires = 'nvim-lua/plenary.nvim',
     config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
+  })
+
+  use({
+    'utilyre/barbecue.nvim',
+    tag = '*',
+    requires = {
+      'SmiteshP/nvim-navic',
+      'nvim-tree/nvim-web-devicons',
+    },
+    config = function()
+      require('barbecue').setup({
+        attach_navic = false,
+      })
+    end,
   })
 
   use({
