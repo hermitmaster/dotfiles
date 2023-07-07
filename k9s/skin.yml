@@ -1,16 +1,16 @@
 ---
-black: &black "#272822"
-blue: &blue "#66d9ef"
-brightBlack: &brightBlack "#75715e"
-cyan: &cyan "#a1efe4"
-darkBlue: &darkBlue "#3d828f"
-green: &green "#a6e22e"
-magenta: &magenta "#ae81ff"
-orange: &orange "#fd971f"
-red: &red "#f92672"
-white: &white "#f8f8f2"
-xgray1: &xgray1 "#3c3d38"
-yellow: &yellow "#e6db74"
+black: &black "#24283b"
+blue: &blue "#7aa2f7"
+brightBlack: &brightBlack "#1d202f"
+cyan: &cyan "#7dcfff"
+darkBlue: &darkBlue "#2ac3de"
+green: &green "#93c36a"
+magenta: &magenta "#bb9af7"
+orange: &orange "#ff9e64"
+red: &red "#f7768e"
+white: &white "#a9b1d6"
+xgray1: &xgray1 "#414868"
+yellow: &yellow "#e0af68"
 
 k9s:
   body:

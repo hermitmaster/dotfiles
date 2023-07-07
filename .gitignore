@@ -1,6 +1,10 @@
 # homebrew
 Brewfile.rb.lock.json
 
+# copilot
+github-copilot/hosts.json
+github-copilot/versions.json
+
 # kitty
 kitty/neighboring_window.py
 kitty/pass_keys.py
@@ -16,4 +20,3 @@ configstore/
 
 # nvim
 nvim/plugin/packer_compiled.lua
-

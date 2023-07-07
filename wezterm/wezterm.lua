@@ -1,5 +1,6 @@
 local wezterm = require('wezterm')
 local act = wezterm.action
+local theme_name = 'Tokyo Night Moon'
 
 local function isVim(pane) return pane:get_foreground_process_name():find('n?vim') ~= nil end
 
@@ -17,7 +18,8 @@ wezterm.on('ActivatePaneDirection-up', function(window, pane) vimAwareNavigate(w
 wezterm.on('ActivatePaneDirection-down', function(window, pane) vimAwareNavigate(window, pane, 'Down', 'j') end)
 
 return {
-  color_scheme = 'Monokai',
+  colors = wezterm.get_builtin_color_schemes()[theme_name],
+  color_scheme = theme_name,
   font = wezterm.font('JetbrainsMono Nerd Font Mono'),
   font_size = 13.0,
   keys = {
@@ -35,35 +37,6 @@ return {
     font_size = 11.0,
     active_titlebar_bg = '#1f201b',
     inactive_titlebar_bg = '#1a1b26',
-  },
-
-  colors = {
-    tab_bar = {
-      active_tab = {
-        bg_color = '#fd971f',
-        fg_color = '#1f201b',
-      },
-
-      inactive_tab = {
-        bg_color = '#1f201b',
-        fg_color = '#fd971f',
-      },
-      inactive_tab_edge = '#3c3d38',
-      inactive_tab_hover = {
-        bg_color = '#3c3d38',
-        fg_color = '#fd971f',
-        italic = true,
-      },
-      new_tab = {
-        bg_color = '#1b1032',
-        fg_color = '#fd971f',
-      },
-
-      new_tab_hover = {
-        bg_color = '#fd971f',
-        fg_color = '#1b1032',
-      },
-    },
   },
   window_padding = {
     left = 0,

@@ -164,7 +164,7 @@ return {
         button('SPC f f', '  Find file'),
         button('SPC g g', '  Live grep'),
         button('c', '  Configuration', '<cmd>edit ~/.config/nvim/init.lua <CR>'),
-        button('u', '  Update plugins', '<cmd>PackerSync<CR>'),
+        button('u', '  Update plugins', '<cmd>Lazy sync<CR>'),
         button('q', '  Quit', '<cmd>qa<CR>'),
       },
       position = 'center',
