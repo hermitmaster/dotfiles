@@ -35,24 +35,9 @@
 [color]
   ui = true
 
-[color "diff-highlight"]
-  oldNormal = red
-  oldHighlight = red bold
-  newNormal = green
-  newHighlight = green bold
-
-[color "diff"]
-  meta = yellow
-  frag = magenta bold
-  func = cyan bold
-  commit = yellow bold
-  old = red
-  new = green
-  whitespace = red reverse
-
 [core]
   autocrlf = input
-  pager = diff-so-fancy | less --tabs=4 -RFX
+  pager = delta
 
 [diff]
   colorMoved = plain
@@ -71,7 +56,7 @@
   defaultBranch = main
 
 [interactive]
-  diffFilter = diff-so-fancy --patch
+  diffFilter = delta --color-only
 
 [merge]
   conflictstyle = diff3
@@ -92,3 +77,6 @@
 
 [includeIf "gitdir:~/work/"]
   path = ~/work/.gitconfig
+
+[include]
+  path = ~/.local/share/nvim/lazy/tokyonight.nvim/extras/delta/tokyonight_moon.gitconfig
