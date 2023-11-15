@@ -65,8 +65,9 @@
   rebase = true
 
 [push]
-  default = upstream
   autoSetupRemote = true
+  default = upstream
+  followTags = true
 
 [rebase]
   autostash = true
