@@ -1,7 +1,7 @@
 ---
 black: &black "#24283b"
 blue: &blue "#7aa2f7"
-brightBlack: &brightBlack "#1d202f"
+brightBlack: &brightBlack "#414868"
 cyan: &cyan "#7dcfff"
 darkBlue: &darkBlue "#2ac3de"
 green: &green "#93c36a"
@@ -9,14 +9,14 @@ magenta: &magenta "#bb9af7"
 orange: &orange "#ff9e64"
 red: &red "#f7768e"
 white: &white "#a9b1d6"
-xgray1: &xgray1 "#414868"
+xgray1: &xgray1 "#1d202f"
 yellow: &yellow "#e0af68"
 
 k9s:
   body:
-    bgColor: *black
+    bgColor: default
     fgColor: *white
-    logoColor: *brightBlack
+    logoColor: default
   dialog:
     bgColor: default
     buttonBgColor: *green
@@ -33,7 +33,7 @@ k9s:
     crumbs:
       activeColor: *blue
       bgColor: *xgray1
-      fgColor: *white
+      fgColor: *black
     menu:
       fgColor: *cyan
       keyColor: *green

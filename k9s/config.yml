@@ -1,4 +1,5 @@
 k9s:
+  liveViewAutoRefresh: false
   refreshRate: 2
   maxConnRetry: 5
   enableMouse: true
@@ -16,29 +17,6 @@ k9s:
     fullScreenLogs: false
     textWrap: true
     showTime: true
-  currentContext: docker-desktop
-  currentCluster: docker-desktop
-  clusters:
-    docker-desktop:
-      namespace:
-        active: all
-        lockFavorites: true
-        favorites:
-          - all
-          - default
-      view:
-        active: po
-      featureGates:
-        nodeShell: false
-      shellPod:
-        image: alpine:edge
-        command: []
-        args: []
-        namespace: default
-        limits:
-          cpu: 500m
-          memory: 256Mi
-      portForwardAddress: localhost
   thresholds:
     cpu:
       critical: 90

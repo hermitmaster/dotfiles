@@ -6,6 +6,7 @@ tap 'homebrew/cask-fonts'
 
 brew 'awscli'
 brew 'aws-iam-authenticator'
+brew 'aws-sso-cli'
 brew 'bat'
 brew 'bottom'
 brew 'checkmake'
@@ -15,6 +16,7 @@ brew 'direnv'
 brew 'docker'
 brew 'exa'
 brew 'fd'
+brew 'fluxcd/tap/flux'
 brew 'fzf'
 brew 'git'
 brew 'gitui'
@@ -31,6 +33,7 @@ brew 'kubectx'
 brew 'kubent'
 brew 'kubernetes-cli'
 brew 'kustomize'
+brew 'lima'
 brew 'mas'
 brew 'neovim'
 brew 'node@18'
@@ -70,15 +73,12 @@ if ENV['USER'] == 'hermitmaster'
   cask 'openemu', args: { 'no-quarantine': true }
   cask 'steam'
 else
-  tap 'synfinatic/aws-sso-cli'
   tap 'del/cloud15', 'ssh://git@hq-stash.corp.proofpoint.com:7999/del/homebrew-cloud15.git'
   tap 'del/cloud15-internal', 'ssh://git@hq-stash.corp.proofpoint.com:7999/del/homebrew-cloud15-internal.git'
 
   mas 'OneLogin for Safari', id: 1_475_824_389
   mas 'Xcode', id: 497_799_835
 
-  brew 'aws-sso-cli'
   brew 'del/cloud15/c15-onelogin-client'
   brew 'del/cloud15-internal/namespace-creator'
-  brew 'fluxcd/tap/flux'
 end

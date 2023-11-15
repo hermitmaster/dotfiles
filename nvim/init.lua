@@ -65,6 +65,8 @@ LSP_ON_ATTACH = function(client, bufnr)
       callback = function() vim.lsp.buf.format() end,
     })
   end
+
+  if client.server_capabilities.documentSymbolProvider then require('nvim-navic').attach(client, bufnr) end
 end
 
 return require('lazy').setup({
@@ -372,11 +374,9 @@ return require('lazy').setup({
   },
   {
     'numToStr/Comment.nvim',
-    config = function()
-      require('Comment').setup({
-        ignore = '^$',
-      })
-    end,
+    opts = {
+      ignore = '^$',
+    },
   },
   {
     'numToStr/Navigator.nvim',
@@ -509,6 +509,7 @@ return require('lazy').setup({
         build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
       },
     },
+    version = '*',
     config = function()
       local tb = require('telescope.builtin')
 
@@ -557,6 +558,8 @@ return require('lazy').setup({
   {
     'nvim-tree/nvim-tree.lua',
     dependencies = 'nvim-tree/nvim-web-devicons',
+    lazy = false,
+    version = '*',
     config = function()
       require('nvim-tree').setup({
         diagnostics = {
@@ -653,13 +656,11 @@ return require('lazy').setup({
   {
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
-    config = function()
-      require('nvim-treesitter.configs').setup({
-        ensure_installed = 'all',
-        highlight = { enable = true },
-        indent = { enable = true },
-      })
-    end,
+    opts = {
+      ensure_installed = 'all',
+      highlight = { enable = true },
+      indent = { enable = true },
+    },
   },
   {
     'rcarriga/nvim-dap-ui',
@@ -684,11 +685,25 @@ return require('lazy').setup({
     end,
   },
   {
+    'sindrets/diffview.nvim',
+    dependencies = 'nvim-lua/plenary.nvim',
+    config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
+  },
+  {
+    'utilyre/barbecue.nvim',
+    version = '*',
+    dependencies = {
+      'SmiteshP/nvim-navic',
+      'nvim-tree/nvim-web-devicons',
+    },
+    opts = {
+      attach_navic = false,
+    },
+  },
+  {
     'windwp/nvim-autopairs',
-    config = function()
-      require('nvim-autopairs').setup({
-        check_ts = true,
-      })
-    end,
+    opts = {
+      check_ts = true,
+    },
   },
 })
