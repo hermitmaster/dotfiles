@@ -9,7 +9,6 @@ magenta: &magenta "#bb9af7"
 orange: &orange "#ff9e64"
 red: &red "#f7768e"
 white: &white "#a9b1d6"
-xgray1: &xgray1 "#1d202f"
 yellow: &yellow "#e0af68"
 
 k9s:
@@ -32,8 +31,8 @@ k9s:
       focusColor: *darkBlue
     crumbs:
       activeColor: *blue
-      bgColor: *xgray1
-      fgColor: *black
+      bgColor: default
+      fgColor: *white
     menu:
       fgColor: *cyan
       keyColor: *green
@@ -63,7 +62,7 @@ k9s:
   views:
     charts:
       bgColor: default
-      chartBgColor: *xgray1
+      chartBgColor: *brightBlack
       defaultChartColors:
         - *blue
         - *magenta
@@ -91,16 +90,16 @@ k9s:
           - *blue
           - *magenta
     logs:
-      bgColor: *xgray1
+      bgColor: default
       fgColor: *white
       indicator:
         bgColor: *darkBlue
         fgColor: *white
     table:
-      bgColor: *black
+      bgColor: default
       fgColor: *white
       header:
-        bgColor: *xgray1
+        bgColor: default
         fgColor: *white
         sorterColor: *blue
       markColor: *magenta
