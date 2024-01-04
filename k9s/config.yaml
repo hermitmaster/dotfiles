@@ -1,4 +1,3 @@
----
 k9s:
   liveViewAutoRefresh: false
   screenDumpDir: /Users/drausch/Library/Application Support/k9s/screen-dumps

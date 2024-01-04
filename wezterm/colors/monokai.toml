@@ -1,0 +1,42 @@
+[colors]
+background = '#272822'
+foreground = '#f8f8f2'
+
+cursor_bg = '#f8f8f2'
+cursor_border = '#f8f8f2'
+cursor_fg = '#272822'
+selection_bg = '#f8f8f2'
+selection_fg = '#272822'
+
+ansi = [
+  '#1f201b',
+  '#f92672',
+  '#a6e22e',
+  'e6db74',
+  '#66d9ef',
+  '#ae81ff',
+  '#a1efe4',
+  '#f8f8f2',
+]
+brights = [
+  '#75715e',
+  '#f92672',
+  '#a6e22e',
+  '#e6db74',
+  '#66d9ef',
+  '#ae81ff',
+  '#a1efe4',
+  '#f8f8f2',
+]
+
+[colors.indexed]
+ 202 = "#fd971f"
+ 208 = "#fda135"
+ 235 = "#272822"
+ 236 = "#3c3d38"
+ 238 = "#52524e"
+ 240 = "#676864"
+ 242 = "#7d7e7a"
+
+[metadata]
+name = 'Monokai'

@@ -33,6 +33,12 @@ vim.fn.sign_define({
   { name = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn', texthl = 'DiagnosticSignWarn', text = ' ' },
 })
 
+vim.filetype.add({
+  extension = {
+    tfvars = 'terraform',
+  },
+})
+
 local lazypath = vim.fn.stdpath('data') .. '/lazy/lazy.nvim'
 if not io.open(lazypath) then
   os.execute('git clone --filter=blob:none https://github.com/folke/lazy.nvim.git --branch=stable ' .. lazypath)
@@ -80,6 +86,13 @@ return require('lazy').setup({
   {
     'folke/tokyonight.nvim',
     config = function() vim.cmd('colorscheme tokyonight-moon') end,
+  },
+  {
+    'folke/trouble.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = {
+      use_diagnostic_signs = true,
+    },
   },
   {
     'folke/which-key.nvim',
@@ -148,24 +161,23 @@ return require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp-signature-help',
       'hrsh7th/cmp-path',
       'onsails/lspkind-nvim',
-      'rafamadriz/friendly-snippets',
-      'saadparwaiz1/cmp_luasnip',
-      'L3MON4D3/LuaSnip',
     },
+    event = { 'InsertEnter', 'CmdlineEnter' },
     config = function()
       local has_words_before = function()
+        if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then return false end
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match('%s') == nil
+        return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match('^%s*$') == nil
       end
 
       local cmp = require('cmp')
-      local luasnip = require('luasnip')
 
       cmp.setup({
         formatting = {
           format = require('lspkind').cmp_format({
             mode = 'symbol',
             maxwidth = 50,
+            symbol_map = { Copilot = '' },
           }),
         },
         mapping = {
@@ -179,8 +191,6 @@ return require('lazy').setup({
           ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
             elseif has_words_before() then
               cmp.complete()
             else
@@ -190,60 +200,18 @@ return require('lazy').setup({
           ['<S-Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-              luasnip.jump(-1)
             else
               fallback()
             end
           end, { 'i', 's' }),
         },
-        snippet = {
-          expand = function(args) luasnip.lsp_expand(args.body) end,
-        },
         sources = {
-          { name = 'nvim_lsp' },
-          { name = 'nvim_lsp_signature_help' },
-          { name = 'luasnip' },
-          { name = 'buffer' },
-          { name = 'path' },
+          { name = 'copilot', group_index = 2 },
+          { name = 'nvim_lsp', group_index = 2 },
+          { name = 'nvim_lsp_signature_help', group_index = 3 },
+          { name = 'buffer', group_index = 3 },
+          { name = 'path', group_index = 3 },
         },
-      })
-
-      require('luasnip.loaders.from_vscode').lazy_load()
-    end,
-  },
-  {
-    'jose-elias-alvarez/null-ls.nvim',
-    dependencies = {
-      'jayp0521/mason-null-ls.nvim',
-      'nvim-lua/plenary.nvim',
-      'williamboman/mason.nvim',
-    },
-    config = function()
-      local nls = require('null-ls')
-
-      nls.setup({
-        on_attach = LSP_ON_ATTACH,
-        sources = {
-          nls.builtins.code_actions.gomodifytags,
-          nls.builtins.code_actions.shellcheck,
-          nls.builtins.diagnostics.checkmake,
-          nls.builtins.diagnostics.opacheck,
-          nls.builtins.diagnostics.rubocop,
-          nls.builtins.diagnostics.shellcheck,
-          nls.builtins.diagnostics.terraform_validate,
-          nls.builtins.diagnostics.tfsec,
-          nls.builtins.formatting.prettier,
-          nls.builtins.formatting.rego,
-          nls.builtins.formatting.rubocop,
-          nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
-          nls.builtins.formatting.stylua,
-        },
-      })
-
-      require('mason').setup()
-      require('mason-null-ls').setup({
-        automatic_installation = true,
       })
     end,
   },
@@ -491,10 +459,11 @@ return require('lazy').setup({
         },
         extensions = {
           'alpha',
-          'nvim-dap-ui',
+          'help',
+          'lazy',
+          'man',
+          'mason',
           'nvim-tree',
-          'packer',
-          'pager',
           'trouble',
         },
       })
@@ -506,7 +475,7 @@ return require('lazy').setup({
       'nvim-lua/plenary.nvim',
       {
         'nvim-telescope/telescope-fzf-native.nvim',
-        build = 'cmake -S. -Bbuild -DCMAKE_BUILD_TYPE=Release && cmake --build build --config Release && cmake --install build --prefix build',
+        build = 'make',
       },
     },
     version = '*',
@@ -553,6 +522,46 @@ return require('lazy').setup({
       vim.keymap.set('n', '<leader>gs', function() tb.git_status() end, { desc = 'Git Status' })
       vim.keymap.set('n', '<leader>gy', function() tb.lsp_workspace_symbols() end, { desc = 'Find Symbols' })
       vim.keymap.set('n', '<leader>r', function() tb.resume() end, { desc = 'Resume Search (Telescope)' })
+    end,
+  },
+  {
+    'nvimtools/none-ls.nvim',
+    dependencies = {
+      'jay-babu/mason-null-ls.nvim',
+      'williamboman/mason.nvim',
+    },
+    event = { 'BufReadPre', 'BufNewFile' },
+    config = function()
+      local nls = require('null-ls')
+
+      nls.setup({
+        on_attach = LSP_ON_ATTACH,
+        sources = {
+          nls.builtins.code_actions.gomodifytags,
+          nls.builtins.code_actions.shellcheck,
+          nls.builtins.diagnostics.mdl,
+          nls.builtins.diagnostics.opacheck,
+          nls.builtins.diagnostics.shellcheck,
+          nls.builtins.diagnostics.staticcheck,
+          nls.builtins.diagnostics.terraform_validate,
+          nls.builtins.diagnostics.tfsec,
+          nls.builtins.diagnostics.yamllint,
+          nls.builtins.formatting.gofumpt,
+          nls.builtins.formatting.goimports,
+          nls.builtins.formatting.hclfmt,
+          nls.builtins.formatting.jq,
+          nls.builtins.formatting.prettier,
+          nls.builtins.formatting.rego,
+          nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
+          nls.builtins.formatting.stylua,
+          nls.builtins.formatting.terraform_fmt,
+        },
+      })
+
+      require('mason').setup()
+      require('mason-null-ls').setup({
+        automatic_installation = true,
+      })
     end,
   },
   {
@@ -663,33 +672,6 @@ return require('lazy').setup({
     },
   },
   {
-    'rcarriga/nvim-dap-ui',
-    dependencies = {
-      'jay-babu/mason-nvim-dap.nvim',
-      'mfussenegger/nvim-dap',
-      'williamboman/mason.nvim',
-    },
-    config = function()
-      require('dapui').setup()
-
-      require('mason').setup()
-      require('mason-nvim-dap').setup({
-        automatic_installation = true,
-        ensure_installed = {
-          'bash',
-          'delve',
-          'js',
-          'python',
-        },
-      })
-    end,
-  },
-  {
-    'sindrets/diffview.nvim',
-    dependencies = 'nvim-lua/plenary.nvim',
-    config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
-  },
-  {
     'utilyre/barbecue.nvim',
     version = '*',
     dependencies = {
@@ -705,5 +687,21 @@ return require('lazy').setup({
     opts = {
       check_ts = true,
     },
+  },
+  {
+    'zbirenbaum/copilot.lua',
+    dependencies = {
+      'zbirenbaum/copilot-cmp',
+    },
+    cmd = 'Copilot',
+    event = 'InsertEnter',
+    opts = {
+      suggestion = { enabled = false },
+      panel = { enabled = false },
+    },
+  },
+  {
+    'zbirenbaum/copilot-cmp',
+    config = function() require('copilot_cmp').setup() end,
   },
 })
