@@ -44,6 +44,8 @@ fpath+="${HOMEBREW_PREFIX}/share/zsh/site-functions"
 autoload -Uz compinit && compinit
 autoload -Uz bashcompinit && bashcompinit
 
+test ${USER} = "hermitmaster" || source "${HOME}/.pkops/env"
+
 function _bs {
   ln -fs "${XDG_CONFIG_HOME}/.editorconfig" "${HOME}/.editorconfig"
   ln -fs "${XDG_CONFIG_HOME}/.zshrc" "${HOME}/.zshrc"
@@ -53,8 +55,13 @@ function _bs {
   podman machine inspect podman-machine-default || podman machine init --rootful --now --cpus=2 --memory=8192 podman-machine-default
 }
 
+function viewcert () {
+  BASE_URL=$(basename ${1})
+  nslookup ${BASE_URL}
+  (openssl s_client -showcerts -servername ${BASE_URL} -connect ${BASE_URL}:443 <<< "Q" | openssl x509 -text | grep -iA2 "Validity")
+}
+
 function _set_window_title { print -Pn "\e]0;%~  ${1[0,25]:-zsh}\a" }
 function precmd { _set_window_title "$@"}
 function preexec { _set_window_title "$@"}
 
-(test ${USER} != "hermitmaster" && . "${HOME}/.pkops/env") || return 0

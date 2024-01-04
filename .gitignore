@@ -5,16 +5,6 @@ Brewfile.rb.lock.json
 github-copilot/hosts.json
 github-copilot/versions.json
 
-# kitty
-kitty/neighboring_window.py
-kitty/pass_keys.py
-
-# lazydocker
-lazydocker/state.yml
-
-# lazygit
-lazygit/state.yml
-
 # npm
 configstore/
 
