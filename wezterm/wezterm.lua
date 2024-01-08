@@ -1,5 +1,6 @@
 local wezterm = require('wezterm')
 local act = wezterm.action
+local config = wezterm.config_builder()
 local theme_name = 'Tokyo Night Moon'
 
 local function isVim(pane) return pane:get_foreground_process_name():find('n?vim') ~= nil end
@@ -17,31 +18,32 @@ wezterm.on('ActivatePaneDirection-left', function(window, pane) vimAwareNavigate
 wezterm.on('ActivatePaneDirection-up', function(window, pane) vimAwareNavigate(window, pane, 'Up', 'k') end)
 wezterm.on('ActivatePaneDirection-down', function(window, pane) vimAwareNavigate(window, pane, 'Down', 'j') end)
 
-return {
-  colors = wezterm.get_builtin_color_schemes()[theme_name],
-  color_scheme = theme_name,
-  font = wezterm.font('JetbrainsMono NFM'),
-  font_size = 13.0,
-  keys = {
-    { key = 'h', mods = 'CTRL', action = act.EmitEvent('ActivatePaneDirection-left') },
-    { key = 'j', mods = 'CTRL', action = act.EmitEvent('ActivatePaneDirection-down') },
-    { key = 'k', mods = 'CTRL', action = act.EmitEvent('ActivatePaneDirection-up') },
-    { key = 'l', mods = 'CTRL', action = act.EmitEvent('ActivatePaneDirection-right') },
-    { key = '/', mods = 'CTRL', action = wezterm.action.SplitPane({ direction = 'Down', size = { Percent = 20 } }) },
-    { key = '{', mods = 'SUPER', action = act.ActivateTabRelative(-1) },
-    { key = '}', mods = 'SUPER', action = act.ActivateTabRelative(1) },
-  },
-  tab_bar_at_bottom = true,
-  window_decorations = 'RESIZE',
-  window_frame = {
-    font_size = 11.0,
-    active_titlebar_bg = '#1f201b',
-    inactive_titlebar_bg = '#1a1b26',
-  },
-  window_padding = {
-    left = 0,
-    right = 0,
-    top = 0,
-    bottom = 0,
-  },
+config.colors = wezterm.get_builtin_color_schemes()[theme_name]
+config.color_scheme = theme_name
+config.font = wezterm.font('JetbrainsMono NFM')
+config.font_size = 13.0
+config.keys = {
+  { key = 'h', mods = 'CTRL', action = act.EmitEvent('ActivatePaneDirection-left') },
+  { key = 'j', mods = 'CTRL', action = act.EmitEvent('ActivatePaneDirection-down') },
+  { key = 'k', mods = 'CTRL', action = act.EmitEvent('ActivatePaneDirection-up') },
+  { key = 'l', mods = 'CTRL', action = act.EmitEvent('ActivatePaneDirection-right') },
+  { key = '/', mods = 'CTRL', action = act.SplitPane({ direction = 'Down', size = { Percent = 20 } }) },
+  { key = '{', mods = 'SUPER', action = act.ActivateTabRelative(-1) },
+  { key = '}', mods = 'SUPER', action = act.ActivateTabRelative(1) },
 }
+config.tab_bar_at_bottom = true
+config.window_decorations = 'RESIZE'
+config.window_frame = {
+  font_size = 11.0,
+  active_titlebar_bg = config.colors.background,
+  inactive_titlebar_bg = config.colors.foreground,
+}
+config.window_padding = {
+  left = 0,
+  right = 0,
+  top = 0,
+  bottom = 0,
+}
+-- keys.set_keymap(config)
+
+return config
