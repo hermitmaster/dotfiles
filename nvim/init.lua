@@ -27,10 +27,10 @@ vim.g.mapleader = ' '
 
 vim.fn.sign_define({
   { name = 'DiagnosticSignError', numhl = 'DiagnosticSignError', texthl = 'DiagnosticSignError', text = ' ' },
-  { name = 'DiagnosticSignHint', numhl = 'DiagnosticSignHint', texthl = 'DiagnosticSignHint', text = ' ' },
-  { name = 'DiagnosticSignInfo', numhl = 'DiagnosticSignInfo', texthl = 'DiagnosticSignInfo', text = ' ' },
+  { name = 'DiagnosticSignHint',  numhl = 'DiagnosticSignHint',  texthl = 'DiagnosticSignHint',  text = ' ' },
+  { name = 'DiagnosticSignInfo',  numhl = 'DiagnosticSignInfo',  texthl = 'DiagnosticSignInfo',  text = ' ' },
   { name = 'DiagnosticSignOther', numhl = 'DiagnosticSignOther', texthl = 'DiagnosticSignOther', text = ' ' },
-  { name = 'DiagnosticSignWarn', numhl = 'DiagnosticSignWarn', texthl = 'DiagnosticSignWarn', text = ' ' },
+  { name = 'DiagnosticSignWarn',  numhl = 'DiagnosticSignWarn',  texthl = 'DiagnosticSignWarn',  text = ' ' },
 })
 
 vim.filetype.add({
@@ -206,11 +206,11 @@ return require('lazy').setup({
           end, { 'i', 's' }),
         },
         sources = {
-          { name = 'copilot', group_index = 2 },
-          { name = 'nvim_lsp', group_index = 2 },
+          { name = 'copilot',                 group_index = 2 },
+          { name = 'nvim_lsp',                group_index = 2 },
           { name = 'nvim_lsp_signature_help', group_index = 3 },
-          { name = 'buffer', group_index = 3 },
-          { name = 'path', group_index = 3 },
+          { name = 'buffer',                  group_index = 3 },
+          { name = 'path',                    group_index = 3 },
         },
       })
     end,
@@ -280,8 +280,6 @@ return require('lazy').setup({
         'html',
         'jsonls',
         'lua_ls',
-        'marksman',
-        'solargraph',
         'terraformls',
         'tflint',
         'tsserver',
@@ -313,9 +311,6 @@ return require('lazy').setup({
               diagnostics = {
                 globals = { 'vim' },
               },
-              format = {
-                enable = false,
-              },
               runtime = {
                 version = 'LuaJIT',
               },
@@ -324,7 +319,7 @@ return require('lazy').setup({
               },
               workspace = {
                 checkThirdParty = false,
-                library = vim.api.nvim_get_runtime_file('*.lua', true),
+                library = vim.env.VIMRUNTIME,
               },
             },
           }
@@ -393,32 +388,14 @@ return require('lazy').setup({
             },
           },
           lualine_c = {
-            {
-              'diagnostics',
-              sources = { 'nvim_diagnostic' },
-              symbols = {
-                error = vim.fn.sign_getdefined('DiagnosticSignError')[1].text,
-                hint = vim.fn.sign_getdefined('DiagnosticSignHint')[1].text,
-                info = vim.fn.sign_getdefined('DiagnosticSignInfo')[1].text,
-                warn = vim.fn.sign_getdefined('DiagnosticSignWarn')[1].text,
-              },
-            },
+            'diagnostics',
           },
           lualine_x = {
             { 'b:gitsigns_head', icon = '' },
             {
               'diff',
               source = {
-                function()
-                  local gitsigns = vim.b.gitsigns_status_dict
-                  if gitsigns then
-                    return {
-                      added = gitsigns.added,
-                      modified = gitsigns.changed,
-                      removed = gitsigns.removed,
-                    }
-                  end
-                end,
+                function() return vim.b.gitsigns_status_dict end,
               },
               symbols = {
                 added = ' ',
@@ -539,7 +516,6 @@ return require('lazy').setup({
         sources = {
           nls.builtins.code_actions.gomodifytags,
           nls.builtins.code_actions.shellcheck,
-          nls.builtins.diagnostics.mdl,
           nls.builtins.diagnostics.opacheck,
           nls.builtins.diagnostics.shellcheck,
           nls.builtins.diagnostics.staticcheck,
@@ -553,7 +529,6 @@ return require('lazy').setup({
           nls.builtins.formatting.prettier,
           nls.builtins.formatting.rego,
           nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
-          nls.builtins.formatting.stylua,
           nls.builtins.formatting.terraform_fmt,
         },
       })
