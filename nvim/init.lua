@@ -71,14 +71,15 @@ LSP_ON_ATTACH = function(client, bufnr)
       callback = function() vim.lsp.buf.format() end,
     })
   end
-
-  if client.server_capabilities.documentSymbolProvider then require('nvim-navic').attach(client, bufnr) end
 end
 
 return require('lazy').setup({
-  'sitiom/nvim-numbertoggle',
-  'terrastruct/d2-vim',
-  'towolf/vim-helm',
+  {
+    'Bekaboo/dropbar.nvim',
+    dependencies = {
+      'nvim-telescope/telescope-fzf-native.nvim'
+    }
+  },
   {
     'ethanholz/nvim-lastplace',
     config = function() require('nvim-lastplace').setup({}) end,
@@ -96,6 +97,7 @@ return require('lazy').setup({
   },
   {
     'folke/which-key.nvim',
+    tag = 'v2.1.0', -- The mapping api is changed in 3.x.
     config = function()
       local wk = require('which-key')
 
@@ -206,11 +208,11 @@ return require('lazy').setup({
           end, { 'i', 's' }),
         },
         sources = {
-          { name = 'copilot', group_index = 2 },
-          { name = 'nvim_lsp', group_index = 2 },
+          { name = 'copilot',                 group_index = 2 },
+          { name = 'nvim_lsp',                group_index = 2 },
           { name = 'nvim_lsp_signature_help', group_index = 3 },
-          { name = 'buffer', group_index = 3 },
-          { name = 'path', group_index = 3 },
+          { name = 'buffer',                  group_index = 3 },
+          { name = 'path',                    group_index = 3 },
         },
       })
     end,
@@ -241,12 +243,8 @@ return require('lazy').setup({
           vim.keymap.set('n', '<leader>hR', function() gs.reset_buffer() end, { desc = 'Reset Buffer', buffer = bufnr })
           vim.keymap.set('n', '<leader>hs', function() gs.stage_hunk() end, { desc = 'Stage Hunk', buffer = bufnr })
           vim.keymap.set('n', '<leader>hS', function() gs.stage_buffer() end, { desc = 'Stage Buffer', buffer = bufnr })
-          vim.keymap.set(
-            'n',
-            '<leader>hu',
-            function() gs.undo_stage_hunk() end,
-            { desc = 'Unstage Hunk', buffer = bufnr }
-          )
+          vim.keymap.set('n', '<leader>hu', function() gs.undo_stage_hunk() end,
+            { desc = 'Unstage Hunk', buffer = bufnr })
           vim.keymap.set('n', '[c', function() gs.prev_hunk() end, { desc = 'Previous Hunk', buffer = bufnr })
           vim.keymap.set('n', ']c', function() gs.next_hunk() end, { desc = 'Next Hunk', buffer = bufnr })
         end,
@@ -257,8 +255,14 @@ return require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     config = function()
       require('ibl').setup({
+        indent = {
+          char = "│",
+          tab_char = "│",
+        },
         scope = {
           highlight = { 'CursorLineNr' },
+          show_end = false,
+          show_start = false,
         },
       })
     end,
@@ -267,8 +271,6 @@ return require('lazy').setup({
     'neovim/nvim-lspconfig',
     dependencies = {
       'hrsh7th/cmp-nvim-lsp',
-      'williamboman/mason.nvim',
-      'williamboman/mason-lspconfig.nvim',
     },
     config = function()
       local servers = {
@@ -280,18 +282,11 @@ return require('lazy').setup({
         'html',
         'jsonls',
         'lua_ls',
-        'marksman',
-        'solargraph',
+        'regols',
         'terraformls',
-        'tflint',
-        'tsserver',
+        'ts_ls',
+        'yamlls',
       }
-
-      require('mason').setup()
-      require('mason-lspconfig').setup({
-        ensure_installed = servers,
-        automatic_installation = true,
-      })
 
       for _, server in ipairs(servers) do
         local config = {
@@ -307,14 +302,17 @@ return require('lazy').setup({
               gofumpt = true,
             },
           }
+        elseif server == 'helm_ls' then
+          config.settings = {
+            yamlls = {
+              path = 'yaml-language-server',
+            },
+          }
         elseif server == 'lua_ls' then
           config.settings = {
             Lua = {
               diagnostics = {
                 globals = { 'vim' },
-              },
-              format = {
-                enable = false,
               },
               runtime = {
                 version = 'LuaJIT',
@@ -324,7 +322,7 @@ return require('lazy').setup({
               },
               workspace = {
                 checkThirdParty = false,
-                library = vim.api.nvim_get_runtime_file('*.lua', true),
+                library = vim.env.VIMRUNTIME,
               },
             },
           }
@@ -393,32 +391,14 @@ return require('lazy').setup({
             },
           },
           lualine_c = {
-            {
-              'diagnostics',
-              sources = { 'nvim_diagnostic' },
-              symbols = {
-                error = vim.fn.sign_getdefined('DiagnosticSignError')[1].text,
-                hint = vim.fn.sign_getdefined('DiagnosticSignHint')[1].text,
-                info = vim.fn.sign_getdefined('DiagnosticSignInfo')[1].text,
-                warn = vim.fn.sign_getdefined('DiagnosticSignWarn')[1].text,
-              },
-            },
+            'diagnostics',
           },
           lualine_x = {
             { 'b:gitsigns_head', icon = '' },
             {
               'diff',
               source = {
-                function()
-                  local gitsigns = vim.b.gitsigns_status_dict
-                  if gitsigns then
-                    return {
-                      added = gitsigns.added,
-                      modified = gitsigns.changed,
-                      removed = gitsigns.removed,
-                    }
-                  end
-                end,
+                function() return vim.b.gitsigns_status_dict end,
               },
               symbols = {
                 added = ' ',
@@ -462,7 +442,6 @@ return require('lazy').setup({
           'help',
           'lazy',
           'man',
-          'mason',
           'nvim-tree',
           'trouble',
         },
@@ -526,10 +505,6 @@ return require('lazy').setup({
   },
   {
     'nvimtools/none-ls.nvim',
-    dependencies = {
-      'jay-babu/mason-null-ls.nvim',
-      'williamboman/mason.nvim',
-    },
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
       local nls = require('null-ls')
@@ -538,29 +513,10 @@ return require('lazy').setup({
         on_attach = LSP_ON_ATTACH,
         sources = {
           nls.builtins.code_actions.gomodifytags,
-          nls.builtins.code_actions.shellcheck,
-          nls.builtins.diagnostics.mdl,
           nls.builtins.diagnostics.opacheck,
-          nls.builtins.diagnostics.shellcheck,
-          nls.builtins.diagnostics.staticcheck,
-          nls.builtins.diagnostics.terraform_validate,
-          nls.builtins.diagnostics.tfsec,
-          nls.builtins.diagnostics.yamllint,
-          nls.builtins.formatting.gofumpt,
-          nls.builtins.formatting.goimports,
-          nls.builtins.formatting.hclfmt,
-          nls.builtins.formatting.jq,
-          nls.builtins.formatting.prettier,
           nls.builtins.formatting.rego,
           nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
-          nls.builtins.formatting.stylua,
-          nls.builtins.formatting.terraform_fmt,
         },
-      })
-
-      require('mason').setup()
-      require('mason-null-ls').setup({
-        automatic_installation = true,
       })
     end,
   },
@@ -672,15 +628,22 @@ return require('lazy').setup({
     },
   },
   {
-    'utilyre/barbecue.nvim',
-    version = '*',
+    'rcarriga/nvim-dap-ui',
     dependencies = {
-      'SmiteshP/nvim-navic',
-      'nvim-tree/nvim-web-devicons',
-    },
-    opts = {
-      attach_navic = false,
-    },
+      'mfussenegger/nvim-dap',
+      'nvim-neotest/nvim-nio'
+    }
+  },
+  {
+    'sindrets/diffview.nvim',
+    dependencies = 'nvim-lua/plenary.nvim',
+    config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
+  },
+  { 'sitiom/nvim-numbertoggle' },
+  { 'terrastruct/d2-vim' },
+  {
+    'towolf/vim-helm',
+    ft = 'helm',
   },
   {
     'windwp/nvim-autopairs',
@@ -696,8 +659,13 @@ return require('lazy').setup({
     cmd = 'Copilot',
     event = 'InsertEnter',
     opts = {
-      suggestion = { enabled = false },
+      filetypes = {
+        gitcommit = true,
+        markdown = true,
+        yaml = true,
+      },
       panel = { enabled = false },
+      suggestion = { enabled = false },
     },
   },
   {

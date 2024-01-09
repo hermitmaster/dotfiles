@@ -1,5 +1,5 @@
 k9s:
-  liveViewAutoRefresh: false
+  liveViewAutoRefresh: true
   screenDumpDir: /Users/drausch/Library/Application Support/k9s/screen-dumps
   refreshRate: 2
   maxConnRetry: 5
@@ -8,8 +8,8 @@ k9s:
   ui:
     enableMouse: true
     headless: false
-    logoless: false
-    crumbsless: false
+    logoless: true
+    crumbsless: true
     noIcons: false
     skin: tokyonight_moon
   skipLatestRevCheck: false
@@ -29,7 +29,6 @@ k9s:
     tail: 500
     buffer: 5000
     sinceSeconds: -1
-    fullScreenLogs: false
     textWrap: true
     showTime: true
   thresholds:

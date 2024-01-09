@@ -35,11 +35,30 @@
 [color]
   ui = true
 
+[color "diff-highlight"]
+  oldNormal = red
+  oldHighlight = red bold
+  newNormal = green
+  newHighlight = green bold
+
+[color "diff"]
+  meta = yellow
+  frag = magenta bold
+  func = cyan bold
+  commit = yellow bold
+  old = red
+  new = green
+  whitespace = red reverse
+
+[commit]
+  verbose = true
+
 [core]
   autocrlf = input
-  pager = delta
+  pager = diff-so-fancy | less --tabs=4 -RFX
 
 [diff]
+  algorithm = histogram
   colorMoved = plain
   renames = true
   renameLimit = 2000
@@ -56,10 +75,10 @@
   defaultBranch = main
 
 [interactive]
-  diffFilter = delta --color-only
+  diffFilter = diff-so-fancy --patch
 
 [merge]
-  conflictstyle = diff3
+  conflictstyle = zdiff3
 
 [pull]
   rebase = true
@@ -72,12 +91,12 @@
 [rebase]
   autostash = true
 
+[rerere]
+  enabled = true
+
 [user]
   email = hermitmaster@icloud.com
   name = Dennis Rausch
 
 [includeIf "gitdir:~/work/"]
   path = ~/work/.gitconfig
-
-[include]
-  path = ~/.local/share/nvim/lazy/tokyonight.nvim/extras/delta/tokyonight_moon.gitconfig

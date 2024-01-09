@@ -1,12 +1,13 @@
-# homebrew
+# brew
 Brewfile.rb.lock.json
 
-# copilot
-github-copilot/hosts.json
-github-copilot/versions.json
+# GitHub
+gh/
+gh-copilot/
+github-copilot/
 
 # npm
 configstore/
 
 # nvim
-nvim/plugin/packer_compiled.lua
+nvim/lazy-lock.json
