@@ -29,7 +29,6 @@ k9s:
     tail: 500
     buffer: 5000
     sinceSeconds: -1
-    fullScreenLogs: false
     textWrap: true
     showTime: true
   thresholds:
