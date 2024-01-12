@@ -51,8 +51,6 @@ function _bs {
   ln -fs "${XDG_CONFIG_HOME}/.zshrc" "${HOME}/.zshrc"
 
   uatt
-
-  podman machine inspect podman-machine-default || podman machine init --rootful --now --cpus=2 --memory=8192 podman-machine-default
 }
 
 function viewcert () {
