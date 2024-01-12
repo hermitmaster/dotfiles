@@ -17,6 +17,7 @@ export PATH="${HOMEBREW_PREFIX}/opt/node@18/bin:${HOMEBREW_PREFIX}/opt/ruby/bin:
 
 alias bb="brew bundle install --clean"
 alias cat="bat"
+alias gd="git diff --name-only --relative --diff-filter=d | xargs bat --diff"
 alias kctx="kubectx"
 alias kns="kubens"
 alias ls="exa --git --group-directories-first --time-style long-iso"
