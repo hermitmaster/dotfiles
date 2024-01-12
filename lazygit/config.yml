@@ -1,0 +1,10 @@
+disableStartupPopups: true
+git:
+  paging:
+    colorArg: always
+    pager: diff-so-fancy
+gui:
+  showCommandLog: false
+  showRandomTip: false
+update:
+  method: never
