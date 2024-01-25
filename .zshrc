@@ -13,7 +13,7 @@ export EDITOR="nvim"
 export KUBECONFIG="${HOME}/.kube/config"
 export MANPAGER="nvim +Man! +'set ch=0'"
 export NPM_CONFIG_PREFIX="${HOME}/.local"
-export PATH="${HOMEBREW_PREFIX}/opt/node@18/bin:${HOMEBREW_PREFIX}/opt/ruby/bin:${HOME}/.local/bin:${PATH}"
+export PATH="${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin:${HOMEBREW_PREFIX}/opt/node@18/bin:${HOMEBREW_PREFIX}/opt/ruby/bin:${HOME}/.local/bin:${PATH}"
 
 alias bb="brew bundle install --clean"
 alias cat="bat"
