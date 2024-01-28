@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 tap 'fluxcd/tap'
-tap 'homebrew/cask'
 tap 'homebrew/cask-fonts'
 
 brew 'awscli'
