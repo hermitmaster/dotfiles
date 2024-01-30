@@ -505,7 +505,6 @@ return require('lazy').setup({
     'nvimtools/none-ls.nvim',
     dependencies = {
       'jay-babu/mason-null-ls.nvim',
-      'williamboman/mason.nvim',
     },
     event = { 'BufReadPre', 'BufNewFile' },
     config = function()
@@ -531,11 +530,6 @@ return require('lazy').setup({
           nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
           nls.builtins.formatting.terraform_fmt,
         },
-      })
-
-      require('mason').setup()
-      require('mason-null-ls').setup({
-        automatic_installation = true,
       })
     end,
   },
