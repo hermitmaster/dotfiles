@@ -35,11 +35,15 @@
 [color]
   ui = true
 
+[commit]
+  verbose = true
+
 [core]
   autocrlf = input
   pager = delta
 
 [diff]
+  algorithm = histogram
   colorMoved = plain
   renames = true
   renameLimit = 2000
@@ -59,7 +63,7 @@
   diffFilter = delta --color-only
 
 [merge]
-  conflictstyle = diff3
+  conflictstyle = zdiff3
 
 [pull]
   rebase = true
@@ -71,6 +75,9 @@
 
 [rebase]
   autostash = true
+
+[rerere]
+  enabled = true
 
 [user]
   email = hermitmaster@icloud.com
