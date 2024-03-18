@@ -631,6 +631,11 @@ return require('lazy').setup({
     },
   },
   {
+    'sindrets/diffview.nvim',
+    dependencies = 'nvim-lua/plenary.nvim',
+    config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
+  },
+  {
     'utilyre/barbecue.nvim',
     version = '*',
     dependencies = {
