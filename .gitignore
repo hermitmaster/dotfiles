@@ -2,8 +2,7 @@
 Brewfile.rb.lock.json
 
 # copilot
-github-copilot/hosts.json
-github-copilot/versions.json
+github-copilot/
 
 # npm
 configstore/
