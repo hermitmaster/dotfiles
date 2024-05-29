@@ -2,7 +2,6 @@
 
 tap 'fluxcd/tap'
 tap 'homebrew/cask'
-tap 'homebrew/cask-fonts'
 tap 'kitagry/tap'
 
 brew 'awscli'
@@ -86,6 +85,7 @@ cask 'font-jetbrains-mono-nerd-font'
 cask 'goland'
 cask 'mac-mouse-fix', args: { 'no-quarantine': true }
 cask 'rectangle'
+cask 'visual-studio-code'
 cask 'wezterm'
 
 mas 'AdGuard for Safari', id: 1_440_147_259
@@ -100,8 +100,6 @@ else
 
   brew 'del/cloud15/c15-onelogin-client'
   brew 'del/cloud15-internal/namespace-creator'
-
-  cask 'amazon-chime'
 
   mas 'OneLogin for Safari', id: 1_475_824_389
 end
