@@ -158,9 +158,6 @@ return require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp-signature-help',
       'hrsh7th/cmp-path',
       'onsails/lspkind-nvim',
-      'rafamadriz/friendly-snippets',
-      'saadparwaiz1/cmp_luasnip',
-      'L3MON4D3/LuaSnip',
     },
     event = { 'InsertEnter', 'CmdlineEnter' },
     config = function()
@@ -171,7 +168,6 @@ return require('lazy').setup({
       end
 
       local cmp = require('cmp')
-      local luasnip = require('luasnip')
 
       cmp.setup({
         formatting = {
@@ -192,8 +188,6 @@ return require('lazy').setup({
           ['<Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
-            elseif luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
             elseif has_words_before() then
               cmp.complete()
             else
@@ -203,8 +197,6 @@ return require('lazy').setup({
           ['<S-Tab>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_prev_item()
-            elseif luasnip.jumpable(-1) then
-              luasnip.jump(-1)
             else
               fallback()
             end
@@ -214,7 +206,6 @@ return require('lazy').setup({
           { name = 'copilot',                 group_index = 2 },
           { name = 'nvim_lsp',                group_index = 2 },
           { name = 'nvim_lsp_signature_help', group_index = 3 },
-          { name = 'luasnip',                 group_index = 3 },
           { name = 'buffer',                  group_index = 3 },
           { name = 'path',                    group_index = 3 },
         },
@@ -273,11 +264,9 @@ return require('lazy').setup({
     config = function()
       local servers = {
         'bashls',
-        'cssls',
         'dockerls',
         'gopls',
         'helm_ls',
-        'html',
         'jsonls',
         'lua_ls',
         'regols',
