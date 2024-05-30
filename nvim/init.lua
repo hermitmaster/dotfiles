@@ -71,8 +71,6 @@ LSP_ON_ATTACH = function(client, bufnr)
       callback = function() vim.lsp.buf.format() end,
     })
   end
-
-  if client.server_capabilities.documentSymbolProvider then require('nvim-navic').attach(client, bufnr) end
 end
 
 return require('lazy').setup({
@@ -635,23 +633,11 @@ return require('lazy').setup({
     config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
   },
   {
-    'utilyre/barbecue.nvim',
-    version = '*',
+    'Bekaboo/dropbar.nvim',
     dependencies = {
-      'SmiteshP/nvim-navic',
-      'nvim-tree/nvim-web-devicons',
-    },
-    opts = {
-      attach_navic = false,
-    },
+      'nvim-telescope/telescope-fzf-native.nvim'
+    }
   },
-  -- TODO: Requires nvim >= 0.10.0, not yet released
-  --   {
-  --   'Bekaboo/dropbar.nvim',
-  --   dependencies = {
-  --     'nvim-telescope/telescope-fzf-native.nvim'
-  --   }
-  -- },
   {
     'towolf/vim-helm',
     ft = 'helm',
