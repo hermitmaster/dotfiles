@@ -12,14 +12,14 @@ local function vimAwareNavigate(window, pane, pane_direction, key)
   end
 end
 
-wezterm.on('ActivatePaneDirection-right', function(window, pane) vimAwareNavigate(window, pane, 'Right', 'l') end)
-wezterm.on('ActivatePaneDirection-left', function(window, pane) vimAwareNavigate(window, pane, 'Left', 'h') end)
-wezterm.on('ActivatePaneDirection-up', function(window, pane) vimAwareNavigate(window, pane, 'Up', 'k') end)
-wezterm.on('ActivatePaneDirection-down', function(window, pane) vimAwareNavigate(window, pane, 'Down', 'j') end)
+wezterm.on('ActivatePaneDirection-right', function (window, pane) vimAwareNavigate(window, pane, 'Right', 'l') end)
+wezterm.on('ActivatePaneDirection-left', function (window, pane) vimAwareNavigate(window, pane, 'Left', 'h') end)
+wezterm.on('ActivatePaneDirection-up', function (window, pane) vimAwareNavigate(window, pane, 'Up', 'k') end)
+wezterm.on('ActivatePaneDirection-down', function (window, pane) vimAwareNavigate(window, pane, 'Down', 'j') end)
 
 config.colors = wezterm.get_builtin_color_schemes()[theme_name]
 config.color_scheme = theme_name
-config.font = wezterm.font('JetbrainsMono NFM')
+config.font = wezterm.font('Hack Nerd Font Mono')
 config.font_size = 13.0
 config.keys = {
   { key = 'h', mods = 'CTRL',  action = wezterm.action.EmitEvent('ActivatePaneDirection-left') },

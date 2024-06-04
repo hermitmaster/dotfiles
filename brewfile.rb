@@ -81,8 +81,7 @@ brew 'zsh-autosuggestions'
 brew 'zsh-syntax-highlighting'
 
 cask 'docker'
-cask 'font-jetbrains-mono-nerd-font'
-cask 'goland'
+cask 'font-hack-nerd-font'
 cask 'mac-mouse-fix', args: { 'no-quarantine': true }
 cask 'rectangle'
 cask 'visual-studio-code'
