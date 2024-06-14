@@ -250,8 +250,14 @@ return require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     config = function()
       require('ibl').setup({
+        indent = {
+          char = "│",
+          tab_char = "│",
+        },
         scope = {
           highlight = { 'CursorLineNr' },
+          show_end = false,
+          show_start = false,
         },
       })
     end,
