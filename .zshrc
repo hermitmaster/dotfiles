@@ -17,7 +17,7 @@ export NPM_CONFIG_PREFIX="${HOME}/.local"
 export NPM_CONFIG_PYTHON=""
 export PATH="${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin:${HOMEBREW_PREFIX}/opt/node@18/bin:${HOMEBREW_PREFIX}/opt/ruby/bin:${HOME}/.local/bin:${PATH}"
 
-alias bb="brew bundle install --clean"
+alias bb="brew bundle install --clean && mas upgrade"
 alias cat="bat"
 alias gd="git diff --name-only --relative --diff-filter=d | xargs bat --diff"
 alias kctx="kubectx"
@@ -55,6 +55,13 @@ function _bs {
   ln -fs "${XDG_CONFIG_HOME}/.zshrc" "${HOME}/.zshrc"
 
   uatt
+}
+
+function update_deps {
+  brew upgrade
+  brew cleanup
+  brew bundle install --clean
+  mas upgrade
 }
 
 function viewcert () {

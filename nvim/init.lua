@@ -74,8 +74,12 @@ LSP_ON_ATTACH = function(client, bufnr)
 end
 
 return require('lazy').setup({
-  'sitiom/nvim-numbertoggle',
-  'terrastruct/d2-vim',
+  {
+    'Bekaboo/dropbar.nvim',
+    dependencies = {
+      'nvim-telescope/telescope-fzf-native.nvim'
+    }
+  },
   {
     'ethanholz/nvim-lastplace',
     config = function() require('nvim-lastplace').setup({}) end,
@@ -623,16 +627,19 @@ return require('lazy').setup({
     },
   },
   {
+    'rcarriga/nvim-dap-ui',
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'nvim-neotest/nvim-nio'
+    }
+  },
+  {
     'sindrets/diffview.nvim',
     dependencies = 'nvim-lua/plenary.nvim',
     config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
   },
-  {
-    'Bekaboo/dropbar.nvim',
-    dependencies = {
-      'nvim-telescope/telescope-fzf-native.nvim'
-    }
-  },
+  { 'sitiom/nvim-numbertoggle' },
+  { 'terrastruct/d2-vim' },
   {
     'towolf/vim-helm',
     ft = 'helm',
