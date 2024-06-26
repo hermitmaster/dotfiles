@@ -73,10 +73,13 @@ brew 'zsh-syntax-highlighting'
 
 cask 'docker'
 cask 'font-hack-nerd-font'
+cask 'goland'
 cask 'mac-mouse-fix', args: { 'no-quarantine': true }
 cask 'rectangle'
 cask 'visual-studio-code'
 cask 'wezterm'
+cask 'yubico-authenticator'
+cask 'yubico-yubikey-manager'
 
 mas 'AdGuard for Safari', id: 1_440_147_259
 mas 'Vimari', id: 1_480_933_944
