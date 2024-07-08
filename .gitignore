@@ -8,4 +8,4 @@ github-copilot/
 configstore/
 
 # nvim
-nvim/plugin/packer_compiled.lua
+nvim/lazy-lock.json
