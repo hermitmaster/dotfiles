@@ -97,6 +97,7 @@ return require('lazy').setup({
   },
   {
     'folke/which-key.nvim',
+    tag = 'v2.1.0', -- The mapping api is changed in 3.x.
     config = function()
       local wk = require('which-key')
 
