@@ -275,9 +275,11 @@ return require('lazy').setup({
     config = function()
       local servers = {
         'bashls',
+        'cssls',
         'dockerls',
         'gopls',
         'helm_ls',
+        'html',
         'jsonls',
         'lua_ls',
         'regols',

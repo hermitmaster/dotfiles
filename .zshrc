@@ -19,18 +19,17 @@ export PATH="${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin:${HOMEBREW_PREFIX}/
 
 alias bb="brew bundle install --clean && mas upgrade"
 alias cat="bat"
-alias gd="git diff --name-only --relative --diff-filter=d | xargs bat --diff"
 alias kctx="kubectx"
 alias kns="kubens"
-alias ls="exa --git --group-directories-first --time-style long-iso"
+alias ls="eza --git --group-directories-first --time-style long-iso"
 alias ll="ls -al"
 alias la="ls -abghilmu"
 alias nps="nvim --headless +'Lazy! sync' +qa"
 alias python="${HOMEBREW_PREFIX}/bin/python3"
 alias tf="terraform"
 alias tg="terragrunt"
-alias tree="exa --tree"
-alias uatt="bb && nps"
+alias tree="eza --tree"
+alias uatt="update_deps && nps"
 
 setopt hist_ignore_all_dups inc_append_history share_history
 HISTSIZE=100000
@@ -64,7 +63,7 @@ function update_deps {
   mas upgrade
 }
 
-function viewcert () {
+function viewcert {
   BASE_URL=$(basename ${1})
   nslookup ${BASE_URL}
   (openssl s_client -showcerts -servername ${BASE_URL} -connect ${BASE_URL}:443 <<< "Q" | openssl x509 -text | grep -iA2 "Validity")
