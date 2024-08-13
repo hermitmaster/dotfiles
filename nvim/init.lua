@@ -284,7 +284,6 @@ return require('lazy').setup({
         'lua_ls',
         'regols',
         'terraformls',
-        'tflint',
         'tsserver',
         'yamlls',
       }
