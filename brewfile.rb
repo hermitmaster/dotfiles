@@ -25,6 +25,7 @@ brew 'eza'
 brew 'fd'
 brew 'fluxcd/tap/flux'
 brew 'fzf'
+brew 'gh'
 brew 'git'
 brew 'gitui'
 brew 'go'
@@ -69,12 +70,11 @@ brew 'yq'
 brew 'zsh-autosuggestions'
 brew 'zsh-syntax-highlighting'
 
+cask 'docker'
 cask 'font-hack-nerd-font'
-cask 'intellij-idea'
+cask 'goland'
 cask 'mac-mouse-fix', args: { 'no-quarantine': true }
-cask 'podman-desktop'
 cask 'rectangle'
-cask 'visual-studio-code'
 cask 'wezterm'
 
 mas 'AdGuard for Safari', id: 1_440_147_259
