@@ -10,6 +10,7 @@ test -e "${HOMEBREW_BUNDLE_FILE}.lock.json" || brew bundle install --clean
 
 export BAT_THEME="ansi"
 export CXXFLAGS="-stdlib=libc++"
+export DOCKER_HOST="unix://$(podman machine inspect --format '{{.ConnectionInfo.PodmanSocket.Path}}')"
 export EDITOR="nvim"
 export KUBECONFIG="${HOME}/.kube/config"
 export MANPAGER="nvim +Man! +'set ch=0'"

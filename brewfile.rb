@@ -20,6 +20,7 @@ brew 'd2'
 brew 'dasel'
 brew 'diff-so-fancy'
 brew 'direnv'
+brew 'docker'
 brew 'dockerfile-language-server'
 brew 'eza'
 brew 'fd'
@@ -41,6 +42,7 @@ brew 'jq'
 brew 'k9s'
 brew 'kitagry/tap/regols'
 brew 'kubectx'
+brew 'kubent'
 brew 'kubernetes-cli'
 brew 'kustomize'
 brew 'lua-language-server'
@@ -48,7 +50,8 @@ brew 'mas'
 brew 'neovim'
 brew 'node@18'
 brew 'opa'
-brew 'pluto'
+brew 'podman'
+brew 'podman-compose'
 brew 'powerlevel10k'
 brew 'prettier'
 brew 'python'
@@ -70,12 +73,14 @@ brew 'yq'
 brew 'zsh-autosuggestions'
 brew 'zsh-syntax-highlighting'
 
-cask 'docker'
 cask 'font-hack-nerd-font'
 cask 'goland'
 cask 'mac-mouse-fix', args: { 'no-quarantine': true }
+cask 'podman-desktop'
 cask 'rectangle'
 cask 'wezterm'
+cask 'yubico-authenticator'
+cask 'yubico-yubikey-manager'
 
 mas 'AdGuard for Safari', id: 1_440_147_259
 mas 'Vimari', id: 1_480_933_944
@@ -90,11 +95,7 @@ else
   brew 'del/cloud15/c15-onelogin-client'
   brew 'del/cloud15-internal/namespace-creator'
   brew 'git-remote-codecommit'
-  brew 'kubent'
   brew 'prometheus'
-
-  cask 'yubico-authenticator'
-  cask 'yubico-yubikey-manager'
 
   mas 'OneLogin for Safari', id: 1_475_824_389
 end
