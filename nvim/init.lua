@@ -514,7 +514,6 @@ return require('lazy').setup({
         sources = {
           nls.builtins.code_actions.gomodifytags,
           nls.builtins.diagnostics.opacheck,
-          nls.builtins.formatting.prettier,
           nls.builtins.formatting.rego,
           nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
         },
@@ -660,8 +659,13 @@ return require('lazy').setup({
     cmd = 'Copilot',
     event = 'InsertEnter',
     opts = {
-      suggestion = { enabled = false },
+      filetypes = {
+        gitcommit = true,
+        markdown = true,
+        yaml = true,
+      },
       panel = { enabled = false },
+      suggestion = { enabled = false },
     },
   },
   {

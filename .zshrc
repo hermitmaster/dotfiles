@@ -58,6 +58,7 @@ function _bs {
 }
 
 function update_deps {
+  brew update -v
   brew upgrade
   brew cleanup
   brew bundle install --clean
