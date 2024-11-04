@@ -74,8 +74,12 @@ LSP_ON_ATTACH = function(client, bufnr)
 end
 
 return require('lazy').setup({
-  'sitiom/nvim-numbertoggle',
-  'terrastruct/d2-vim',
+  {
+    'Bekaboo/dropbar.nvim',
+    dependencies = {
+      'nvim-telescope/telescope-fzf-native.nvim'
+    }
+  },
   {
     'ethanholz/nvim-lastplace',
     config = function() require('nvim-lastplace').setup({}) end,
@@ -93,6 +97,7 @@ return require('lazy').setup({
   },
   {
     'folke/which-key.nvim',
+    tag = 'v2.1.0', -- The mapping api is changed in 3.x.
     config = function()
       local wk = require('which-key')
 
@@ -250,8 +255,14 @@ return require('lazy').setup({
     'lukas-reineke/indent-blankline.nvim',
     config = function()
       require('ibl').setup({
+        indent = {
+          char = "│",
+          tab_char = "│",
+        },
         scope = {
           highlight = { 'CursorLineNr' },
+          show_end = false,
+          show_start = false,
         },
       })
     end,
@@ -264,15 +275,16 @@ return require('lazy').setup({
     config = function()
       local servers = {
         'bashls',
+        'cssls',
         'dockerls',
         'gopls',
         'helm_ls',
+        'html',
         'jsonls',
         'lua_ls',
         'regols',
         'terraformls',
-        'tflint',
-        'tsserver',
+        'ts_ls',
         'yamlls',
       }
 
@@ -502,7 +514,6 @@ return require('lazy').setup({
         sources = {
           nls.builtins.code_actions.gomodifytags,
           nls.builtins.diagnostics.opacheck,
-          nls.builtins.formatting.prettier,
           nls.builtins.formatting.rego,
           nls.builtins.formatting.shfmt.with({ extra_args = { '-bn', '-ci', '-i', '2', '-s' } }),
         },
@@ -617,16 +628,19 @@ return require('lazy').setup({
     },
   },
   {
+    'rcarriga/nvim-dap-ui',
+    dependencies = {
+      'mfussenegger/nvim-dap',
+      'nvim-neotest/nvim-nio'
+    }
+  },
+  {
     'sindrets/diffview.nvim',
     dependencies = 'nvim-lua/plenary.nvim',
     config = function() vim.keymap.set('n', '<leader>d', '<cmd>DiffviewOpen<cr>', { desc = 'Diffview Open' }) end,
   },
-  {
-    'Bekaboo/dropbar.nvim',
-    dependencies = {
-      'nvim-telescope/telescope-fzf-native.nvim'
-    }
-  },
+  { 'sitiom/nvim-numbertoggle' },
+  { 'terrastruct/d2-vim' },
   {
     'towolf/vim-helm',
     ft = 'helm',
@@ -645,8 +659,13 @@ return require('lazy').setup({
     cmd = 'Copilot',
     event = 'InsertEnter',
     opts = {
-      suggestion = { enabled = false },
+      filetypes = {
+        gitcommit = true,
+        markdown = true,
+        yaml = true,
+      },
       panel = { enabled = false },
+      suggestion = { enabled = false },
     },
   },
   {
