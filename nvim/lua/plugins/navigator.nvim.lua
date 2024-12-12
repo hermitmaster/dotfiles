@@ -1,14 +1,19 @@
 return {
   {
     "numToStr/Navigator.nvim",
-    config = function()
-      require("Navigator").setup()
-
-      vim.keymap.set("n", "<C-h>", "<cmd>NavigatorLeft<cr>")
-      vim.keymap.set("n", "<C-l>", "<cmd>NavigatorRight<cr>")
-      vim.keymap.set("n", "<C-k>", "<cmd>NavigatorUp<cr>")
-      vim.keymap.set("n", "<C-j>", "<cmd>NavigatorDown<cr>")
-      vim.keymap.set("n", "<C-\\>", "<cmd>NavigatorPrevious<cr>")
-    end,
+    opts = {
+      {
+        auto_save = nil,
+        disable_on_zoom = false,
+        mux = "auto",
+      },
+    },
+    keys = {
+      { "<C-h>", "<cmd>NavigatorLeft<cr>" },
+      { "<C-l>", "<cmd>NavigatorRight<cr>" },
+      { "<C-k>", "<cmd>NavigatorUp<cr>" },
+      { "<C-j>", "<cmd>NavigatorDown<cr>" },
+      { "<C-\\>", "<cmd>NavigatorPrevious<cr>" },
+    },
   },
 }
