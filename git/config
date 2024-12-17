@@ -27,7 +27,6 @@
   pf = push --force
   rb = rebase
   st = status
-  vd = "!nvim +DiffviewOpen"
 
 [branch]
   autosetuprebase = always
@@ -45,9 +44,6 @@
 [diff]
   algorithm = histogram
   colorMoved = plain
-  renames = true
-  renameLimit = 2000
-  tool = nvimdiff
 
 [difftool]
   prompt = false
@@ -55,6 +51,10 @@
 
 [fetch]
   parallel = 0
+
+[index]
+  # https://github.com/romkatv/powerlevel10k/issues/2232
+	skipHash = false
 
 [init]
   defaultBranch = main
