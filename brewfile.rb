@@ -2,7 +2,6 @@
 
 tap 'fluxcd/tap'
 tap 'homebrew/cask'
-tap 'kitagry/tap'
 
 brew 'awscli'
 brew 'aws-iam-authenticator'
@@ -17,7 +16,6 @@ brew 'csvkit'
 brew 'd2'
 brew 'dasel'
 brew 'direnv'
-brew 'dive'
 brew 'docker'
 brew 'eza'
 brew 'fd'
@@ -44,12 +42,11 @@ brew 'node@18'
 brew 'opa'
 brew 'podman'
 brew 'podman-compose'
-brew 'powerlevel10k'
 brew 'prettier'
+brew 'pure'
 brew 'python'
 brew 'ripgrep'
 brew 'ruby'
-brew 'shfmt'
 brew 'terraform'
 brew 'terraform-docs'
 brew 'terraformer'
@@ -67,8 +64,6 @@ cask 'podman-desktop'
 cask 'rectangle'
 cask 'visual-studio-code'
 cask 'wezterm'
-cask 'yubico-authenticator'
-cask 'yubico-yubikey-manager'
 
 mas 'AdGuard for Safari', id: 1_440_147_259
 mas 'Vimari', id: 1_480_933_944
@@ -84,4 +79,7 @@ else
   brew 'del/cloud15-internal/namespace-creator'
   brew 'git-remote-codecommit'
   brew 'prometheus'
+
+  cask 'yubico-authenticator'
+  cask 'yubico-yubikey-manager'
 end

@@ -9,5 +9,4 @@ github-copilot/
 # npm
 configstore/
 
-# nvim
-nvim/lazy-lock.json
+.ruby-lsp
