@@ -27,7 +27,6 @@ wezterm.on("ActivatePaneDirection-down", function(window, pane)
 end)
 
 config.colors = wezterm.get_builtin_color_schemes()["Tokyo Night Moon"]
-config.color_scheme = config.colors.name
 config.font_size = 13.0
 config.keys = {
   { key = "h", mods = "CTRL", action = wezterm.action.EmitEvent("ActivatePaneDirection-left") },

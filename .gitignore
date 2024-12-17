@@ -1,13 +1,12 @@
-# brew
-Brewfile.rb.lock.json
-
 # GitHub
 gh/
 gh-copilot/
 github-copilot/
 
+# helm
+helm/
+
 # npm
 configstore/
 
-# nvim
-nvim/lazy-lock.json
+.ruby-lsp/
