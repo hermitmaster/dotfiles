@@ -27,7 +27,6 @@
   pf = push --force
   rb = rebase
   st = status
-  vd = "!nvim +DiffviewOpen"
 
 [branch]
   autosetuprebase = always
