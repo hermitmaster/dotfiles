@@ -91,6 +91,37 @@ function viewcert {
   (openssl s_client -showcerts -servername ${BASE_URL} -connect ${BASE_URL}:443 <<< "Q" | openssl x509 -text | grep -iA2 "Validity")
 }
 
+function thanos_compact_status {
+  kubecontext=$(kubectx -c)
+
+  if [ ! kubecontext ]; then
+    print "No cluster selected. Please set your kubecontext with 'kubectx CLUSTER_NAME' and try again.\n"
+    return
+  else
+    printf "Checking thanos-compact status in %s\n" "$kubecontext"
+  fi
+
+  halt_logs="$(kubectl -n prometheus-operator logs thanos-compact-0 | grep halt)"
+
+  if [[ $halt_logs ]]; then
+    halt_error=""
+
+    if [[ $(grep "no space left on device" <<< "$halt_logs") ]]; then
+      halt_error="Disk is full. Please increase storage."
+    elif [[ $(grep "block with not healthy index found" <<< "$halt_logs") ]]; then
+      halt_error="Bad block found. Please delete the bad block and restart thanos-compact. The block id should be listed in the error below."
+    elif [[ $(grep "compact command failed" <<< "$halt_logs") ]]; then
+      halt_error="Compaction failed. Please check the error below. Most likely a bad block."
+    else
+      halt_error="Unknown error. Please check the logs below."
+    fi
+
+    printf "Thanos compact is halted. %s\n\nRelevant logs:\n%s\n" "$halt_error" "$halt_logs"
+  else
+    print "Thanos compact is healthy.\n"
+  fi
+}
+
 # Set the window title; this should be the last thing in the file
 function _set_window_title { print -Pn "\e]0;%~  ${1[0,25]:-zsh}\a" }
 function precmd { _set_window_title "$@"}
