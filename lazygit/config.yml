@@ -1,9 +1,9 @@
 disableStartupPopups: true
 git:
   paging:
-    colorArg: always
-    pager: delta --dark --paging=never
+    useConfig: true
 gui:
+  nerdFontsVersion: "3"
   showCommandLog: false
   showRandomTip: false
 update:

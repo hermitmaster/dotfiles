@@ -34,12 +34,27 @@
 [color]
   ui = true
 
+[color "diff-highlight"]
+  oldNormal = red
+  oldHighlight = red bold
+  newNormal = green
+  newHighlight = green bold
+
+[color "diff"]
+  meta = yellow
+  frag = magenta bold
+  func = cyan bold
+  commit = yellow bold
+  old = red
+  new = green
+  whitespace = red reverse
+
 [commit]
   verbose = true
 
 [core]
   autocrlf = input
-  pager = delta
+  pager = diff-so-fancy | less --tabs=4 -RFX
 
 [diff]
   algorithm = histogram
@@ -60,7 +75,7 @@
   defaultBranch = main
 
 [interactive]
-  diffFilter = delta --color-only
+  diffFilter = diff-so-fancy --patch
 
 [merge]
   conflictstyle = zdiff3
