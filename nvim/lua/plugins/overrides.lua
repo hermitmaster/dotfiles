@@ -1,7 +1,6 @@
 return {
   {
-    -- Add golangci_lint_ls to the enabled LSP servers.
-    "neovim/nvim-lspconfig",
+    "mfussenegger/nvim-lint",
     dependencies = {
       {
         "williamboman/mason.nvim",
@@ -11,13 +10,12 @@ return {
       },
     },
     opts = {
-      servers = {
-        golangci_lint_ls = {},
+      linters_by_ft = {
+        go = { "golangcilint" },
       },
     },
   },
   {
-    -- Unhide filtered items in the filesystem tree.
     "nvim-neo-tree/neo-tree.nvim",
     opts = {
       filesystem = {
@@ -29,7 +27,6 @@ return {
     },
   },
   {
-    -- Use super-tab keymap preset for blink.cmp.
     "saghen/blink.cmp",
     opts = {
       keymap = {
@@ -38,27 +35,23 @@ return {
     },
   },
   {
-    {
-      -- Override the default Copilot source with the native blink copilot source.
-      -- The default source is a translation layer for a nvim-cmp source.
-      "saghen/blink.cmp",
-      dependencies = {
-        "fang2hou/blink-copilot",
-        {
-          -- Disable the default copilot source
-          "giuxtaposition/blink-cmp-copilot",
-          enabled = false,
-        },
+    -- Override the default Copilot source with the native blink copilot source.
+    "saghen/blink.cmp",
+    dependencies = {
+      "fang2hou/blink-copilot",
+      {
+        "giuxtaposition/blink-cmp-copilot",
+        enabled = false,
       },
-      opts = {
-        sources = {
-          providers = {
-            copilot = {
-              module = "blink-copilot",
-              opts = {
-                max_completions = 3,
-                max_attempts = 4,
-              },
+    },
+    opts = {
+      sources = {
+        providers = {
+          copilot = {
+            module = "blink-copilot",
+            opts = {
+              max_completions = 3,
+              max_attempts = 4,
             },
           },
         },

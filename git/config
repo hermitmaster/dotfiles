@@ -28,6 +28,9 @@
   rb = rebase
   st = status
 
+[advice]
+  detachedHead = false
+
 [branch]
   autosetuprebase = always
 

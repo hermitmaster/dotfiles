@@ -63,9 +63,10 @@ if ENV['USER'] == 'hermitmaster'
   cask 'openemu', args: { 'no-quarantine': true }
   cask 'steam'
 else
-  tap 'fluxcd/tap'
   tap 'del/cloud15', 'ssh://git@hq-stash.corp.proofpoint.com:7999/del/homebrew-cloud15.git'
   tap 'del/cloud15-internal', 'ssh://git@hq-stash.corp.proofpoint.com:7999/del/homebrew-cloud15-internal.git'
+  tap 'fluxcd/tap'
+  tap 'omissis/go-jsonschema'
 
   brew 'aws-iam-authenticator'
   brew 'azure-cli'
@@ -78,6 +79,7 @@ else
   brew 'fluxcd/tap/flux'
   brew 'gh'
   brew 'git-remote-codecommit'
+  brew 'go-jsonschema'
   brew 'gradle'
   brew 'groovy'
   brew 'kubeconform'
