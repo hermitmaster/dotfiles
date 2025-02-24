@@ -60,6 +60,7 @@ mas 'AdGuard for Safari', id: 1_440_147_259
 mas 'Vimari', id: 1_480_933_944
 
 if ENV['USER'] == 'hermitmaster'
+  cask 'chatgpt'
   cask 'openemu', args: { 'no-quarantine': true }
   cask 'steam'
 else
