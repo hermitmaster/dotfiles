@@ -80,11 +80,18 @@ return {
             "standard",
             "-s",
             "default",
+            "-s",
+            "prefix(hq-stash.corp.proofpoint.com)",
+            "-s",
+            "prefix(github.com/PFPT)",
+            "-s",
+            "dot",
+            "-s",
+            "alias",
+            "-s",
+            "localmodule",
           },
         }
-        for entry in string.gmatch(goprivate, "([^,]+)") do
-          vim.list_extend(opts.formatters.gci.append_args, { "-s", "prefix(" .. entry .. ")" })
-        end
       end
     end,
   },

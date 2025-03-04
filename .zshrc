@@ -14,6 +14,7 @@ export XDG_CACHE_HOME="${HOME}/.cache"
 export XDG_CONFIG_HOME="${HOME}/.config"
 export XDG_STATE_HOME="${HOME}/.local/state"
 # The following variables depend on the ones above
+export GOPATH="${XDG_DATA_HOME}/go"
 export HOMEBREW_BUNDLE_FILE_GLOBAL="${XDG_CONFIG_HOME}/brewfile.rb"
 export HOMEBREW_CELLAR="${HOMEBREW_PREFIX}"
 export HOMEBREW_REPOSITORY="${HOMEBREW_PREFIX}"
@@ -29,6 +30,8 @@ PATH="${HOMEBREW_PREFIX}/opt/coreutils/libexec/gnubin:${PATH}"
 PATH="${HOMEBREW_PREFIX}/opt/findutils/libexec/gnubin:${PATH}"
 # mason; add binaries installed by mason to path
 PATH="${XDG_DATA_HOME}/nvim/mason/bin:${PATH}"
+# go; add go binaries to path
+PATH="${GOPATH}/bin:${PATH}"
 # Locally built binaries
 PATH="${HOME}/.local/bin:${PATH}"
 
