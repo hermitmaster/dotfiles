@@ -1,0 +1,8 @@
+#!/usr/bin/env zsh
+
+function pkopsenv {
+    # shellcheck source=${PKOPS_ENV}
+    source "${PKOPS_ENV}" && pkopsenv
+}
+
+autoload -Uz pkopsenv

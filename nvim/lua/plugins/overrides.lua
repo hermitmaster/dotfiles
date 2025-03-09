@@ -1,14 +1,6 @@
 return {
   {
     "mfussenegger/nvim-lint",
-    dependencies = {
-      {
-        "williamboman/mason.nvim",
-        opts = {
-          ensure_installed = { "golangci-lint" },
-        },
-      },
-    },
     opts = {
       linters_by_ft = {
         go = { "golangcilint" },
@@ -28,15 +20,6 @@ return {
   },
   {
     "saghen/blink.cmp",
-    opts = {
-      keymap = {
-        preset = "super-tab",
-      },
-    },
-  },
-  {
-    -- Override the default Copilot source with the native blink copilot source.
-    "saghen/blink.cmp",
     dependencies = {
       "fang2hou/blink-copilot",
       {
@@ -45,6 +28,9 @@ return {
       },
     },
     opts = {
+      keymap = {
+        preset = "super-tab",
+      },
       sources = {
         providers = {
           copilot = {
@@ -61,12 +47,6 @@ return {
   {
     -- Add the gci formatter to the formatters list for Go files.
     "stevearc/conform.nvim",
-    dependencies = {
-      "williamboman/mason.nvim",
-      opts = {
-        ensure_installed = { "gci" },
-      },
-    },
     opts = function(_, opts)
       table.insert(opts.formatters_by_ft.go, "gci")
 

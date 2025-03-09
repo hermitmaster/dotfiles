@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+
+function viewcert {
+  local baseURL=$(basename "${1}")
+
+  nslookup "${baseURL}"
+  (openssl s_client -showcerts -servername "${baseURL}" -connect "${baseURL}":443 <<<"Q" | openssl x509 -text | grep -iA2 "Validity")
+}
+
+autoload -Uz viewcert

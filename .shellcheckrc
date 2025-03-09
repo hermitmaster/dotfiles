@@ -1,0 +1,7 @@
+disable=SC1091
+external-sources=true
+source-path=SCRIPTDIR
+source-path=${HOME}
+source-path=${HOMEBREW_PREFIX}
+source-path=${XDG_CACHE_HOME}
+source-path=${XDG_CONFIG_HOME}

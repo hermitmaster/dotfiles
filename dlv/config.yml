@@ -52,4 +52,5 @@ substitute-path:
 # disassemble-flavor: intel
 
 # List of directories to use when searching for separate debug info files.
-debug-info-directories: ["/usr/lib/debug/.build-id"]
+debug-info-directories:
+  - "/usr/lib/debug/.build-id"
