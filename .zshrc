@@ -37,9 +37,6 @@ FPATH="${HOMEBREW_PREFIX}/share/zsh-completions:${FPATH}"
 FPATH="${XDG_CONFIG_HOME}/zsh/functions:${FPATH}"
 FPATH="${HOME}/work/zsh/functions:${FPATH}"
 
-# shellcheck source="${XDG_CACHE_HOME}/p10k-instant-prompt-${USER}.zsh"
-test -f "${P10K_INSTANT_PROMPT_CACHE}" && . "${P10K_INSTANT_PROMPT_CACHE}"
-
 # Aliases
 alias bb="brew bundle install --global"
 alias bbm="bb && mas upgrade"
@@ -90,15 +87,10 @@ function _bs {
   uatt
 }
 
-function _set_window_title {
+function set_window_title {
     local title="${1:0:25}"
     print -Pn "\e]0;%~  ${title:-zsh}\a"
 }
 
-function precmd {
-  _set_window_title "$@"
-}
-
-function preexec {
-  _set_window_title "$@"
-}
+precmd_functions+=set_window_title
+preexec_functions+=set_window_title
