@@ -1,7 +1,38 @@
 return {
   {
-    -- Override the default Copilot source with the native blink copilot source.
-    -- The default source is a translation layer for a nvim-cmp source.
+    "mfussenegger/nvim-lint",
+    opts = {
+      linters_by_ft = {
+        go = { "golangcilint" },
+      },
+    },
+  },
+  {
+    -- Navigation between Neovim and Wezterm panes.
+    "numToStr/Navigator.nvim",
+    opts = {},
+  },
+  {
+    "nvim-neo-tree/neo-tree.nvim",
+    opts = {
+      filesystem = {
+        filtered_items = {
+          hide_dotfiles = false,
+          visible = true,
+        },
+      },
+    },
+  },
+  {
+    -- Use super-tab keymap preset for blink.cmp.
+    "saghen/blink.cmp",
+    opts = {
+      keymap = {
+        preset = "super-tab",
+      },
+    },
+  },
+  {
     "saghen/blink.cmp",
     dependencies = {
       "fang2hou/blink-copilot",
@@ -26,37 +57,16 @@ return {
     },
   },
   {
-    -- Add the golangci-lint to the enabled LSP servers.
-    "neovim/nvim-lspconfig",
-    requires = {
-      "williamboman/mason.nvim",
-      opts = {
-        ensure_installed = { "golangci-lint" },
-      },
-    },
-    opts = {
-      servers = {
-        golangci_lint_ls = {},
-      },
-    },
-  },
-  {
     -- Add the gci formatter to the formatters list for Go files.
     "stevearc/conform.nvim",
-    requires = {
-      "williamboman/mason.nvim",
-      opts = {
-        ensure_installed = { "gci" },
-      },
-    },
     opts = function(_, opts)
-      local goprivate = os.getenv("GOPRIVATE")
-      if goprivate == "hq-stash.corp.proofpoint.com" then
+      table.insert(opts.formatters_by_ft.go, "gci")
+
+      local goprivate = os.getenv("GOPRIVATE") or ""
+
+      if goprivate then
         opts.formatters.gci = {
-          args = {
-            "write",
-            "--skip-generated",
-            "--skip-vendor",
+          append_args = {
             "--custom-order",
             "-s",
             "standard",
@@ -66,32 +76,15 @@ return {
             "prefix(hq-stash.corp.proofpoint.com)",
             "-s",
             "prefix(github.com/PFPT)",
-            "$FILENAME",
+            "-s",
+            "dot",
+            "-s",
+            "alias",
+            "-s",
+            "localmodule",
           },
         }
       end
-      table.insert(opts.formatters_by_ft.go, "gci")
     end,
-  },
-  {
-    -- Unhide filtered items in the filesystem tree.
-    "nvim-neo-tree/neo-tree.nvim",
-    opts = {
-      filesystem = {
-        filtered_items = {
-          hide_dotfiles = false,
-          visible = true,
-        },
-      },
-    },
-  },
-  {
-    -- Use super-tab keymap preset for blink.cmp.
-    "saghen/blink.cmp",
-    opts = {
-      keymap = {
-        preset = "super-tab",
-      },
-    },
   },
 }
