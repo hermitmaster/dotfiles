@@ -1,7 +1,6 @@
 ---
 black: &black "#24283b"
 blue: &blue "#7aa2f7"
-brightBlack: &brightBlack "#414868"
 cyan: &cyan "#7dcfff"
 darkBlue: &darkBlue "#2ac3de"
 green: &green "#93c36a"
@@ -42,7 +41,7 @@ k9s:
       completedColor: *green
       errorColor: *red
       highlightcolor: *blue
-      killColor: *orange
+      killColor: *red
       modifyColor: *magenta
       newColor: *blue
       pendingColor: *yellow
@@ -58,57 +57,22 @@ k9s:
   prompt:
     bgColor: default
     fgColor: *white
-    suggestColor: *brightBlack
+    suggestColor: *black
   views:
-    charts:
-      bgColor: default
-      chartBgColor: *brightBlack
-      defaultChartColors:
-        - *blue
-        - *magenta
-      defaultDialColors:
-        - *blue
-        - *magenta
-      dialBgColor: default
-      resourceColors:
-        batch/v1/jobs:
-          - *blue
-          - *magenta
-        cpu:
-          - *blue
-          - *magenta
-        mem:
-          - *blue
-          - *magenta
-        v1/events:
-          - *blue
-          - *magenta
-        v1/persistentvolumes:
-          - *blue
-          - *magenta
-        v1/pods:
-          - *blue
-          - *magenta
-    logs:
-      bgColor: default
-      fgColor: *white
-      indicator:
-        bgColor: *darkBlue
-        fgColor: *white
     table:
       bgColor: default
       fgColor: *white
+      border:
+        fgColor: *blue
+        focusColor: *darkBlue
       header:
         bgColor: default
         fgColor: *white
         sorterColor: *blue
       markColor: *magenta
-    xray:
+    logs:
       bgColor: default
-      cursorColor: *blue
-      cursorTextColor: *white
       fgColor: *white
-      graphicColor: *blue
     yaml:
       colonColor: *orange
       keyColor: *orange
