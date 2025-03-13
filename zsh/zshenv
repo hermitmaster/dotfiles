@@ -1,0 +1,57 @@
+#!/usr/bin/env zsh
+
+# XDG Base Directory Specification
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+# bat
+export BAT_THEME="ansi"
+
+# go
+export GOPATH="$XDG_DATA_HOME/go"
+
+# Homebrew
+export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile.rb"
+export HOMEBREW_BUNDLE_INSTALL_CLEANUP=1
+export HOMEBREW_PREFIX="/opt/homebrew"
+export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
+export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
+
+# kubernetes
+export KUBECONFIG="$HOME/.kube/config"
+
+# npm
+export NPM_CONFIG_PREFIX="$HOME/.local"
+export NPM_CONFIG_PYTHON=""
+
+# zsh
+export SHELL_SESSIONS_DISABLE=1
+export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
+export ZSH_STATE_DIR="$XDG_STATE_HOME/zsh"
+
+# Set up the PATH and FPATH
+typeset -gU path
+path=(
+  $GOPATH/bin(N)
+  $HOME/.local/bin(N)
+  $XDG_DATA_HOME/nvim/mason/bin(N)
+  $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin(N)
+  $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin(N)
+  $HOMEBREW_PREFIX/opt/ruby/bin(N)
+  $HOMEBREW_PREFIX/bin(N)
+  $HOMEBREW_PREFIX/sbin(N)
+  $path
+)
+
+typeset -gU fpath
+fpath=(
+  $ZDOTDIR/functions(N)
+  $HOMEBREW_PREFIX/share/zsh/site-functions(N)
+  $HOMEBREW_PREFIX/share/zsh-completions}(N)
+  $fpath
+)
+
+# Load the functions
+autoload -Uz $ZDOTDIR/functions/*(:t)

@@ -1,0 +1,15 @@
+#!/usr/bin/env zsh
+
+function bootstrap {
+  if [[ ! -x "$HOMEBREW_PREFIX/bin/brew" ]]; then
+    echo "Homebrew not found. Installing..."
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
+
+  brew bundle install --global
+  nvim --headless +'Lazy! sync' +qa
+
+  test -L "${HOME}/.editorconfig" || ln -fs "${XDG_CONFIG_HOME}/.editorconfig" "${HOME}/.editorconfig"
+  test -L "${HOME}/.prettierrc" || ln -fs "${XDG_CONFIG_HOME}/.prettierrc" "${HOME}/.prettierrc"
+  test -L "${HOME}/.zshenv" || ln -fs "${XDG_CONFIG_HOME}/zsh/zshenv" "${HOME}/.zshenv"
+}
