@@ -11,7 +11,12 @@ jgit/
 # podman
 containers/
 
+# vscode
+.vscode/
+*.code-workspace
+
 # zsh
 .zcomp*
+.zsh_history
+.zsh_sessions
 *.zwc
-

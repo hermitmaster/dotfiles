@@ -1,0 +1,12 @@
+#!/usr/bin/env zsh
+
+function bootstrap {
+  if [[ ! -x "$HOMEBREW_PREFIX/bin/brew" ]]; then
+    echo "Homebrew not found. Installing..."
+    bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  fi
+
+  brew bundle install --global
+  nvim --headless +'Lazy! sync' +qa
+  link_configs
+}

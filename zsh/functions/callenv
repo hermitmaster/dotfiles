@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+function callenv {
+  docker run -it \
+    -v "$HOME/work/github/cloud15-infra/namespace.yaml:/namespace.yaml" \
+    "repocache.nonprod.ppops.net/dev-docker-local/cloud15callenv:2.4"
+}

@@ -1,0 +1,37 @@
+#!/usr/bin/env zsh
+
+function thanos_compact_status {
+  kubecontext=$(kubectl config current-context)
+
+  if [ ! "$kubecontext" ]; then
+    print "No cluster selected. Please set your kubernetes context with 'kubectx CLUSTER_NAME' and try again.\n"
+    return
+  else
+    printf "Checking thanos-compact status in %s\n" "$kubecontext"
+  fi
+
+  halt_logs="$(kubectl -n prometheus-operator logs thanos-compact-0 | grep halt)"
+
+  if [[ $halt_logs ]]; then
+    halt_error=""
+
+    case "$halt_logs" in
+      *"no space left on device"*)
+        halt_error="Disk is full. Please increase storage."
+        ;;
+      *"block with not healthy index found"*)
+        halt_error="Bad block found. Please delete the bad block and restart thanos-compact. The block id should be listed in the error below."
+        ;;
+      *"compact command failed"*)
+        halt_error="Compaction failed. Please check the error below. Most likely a bad block."
+        ;;
+      *)
+        halt_error="Unknown error. Please check the logs below."
+        ;;
+    esac
+
+    printf "Thanos compact is halted. %s\n\nRelevant logs:\n%s\n" "$halt_error" "$halt_logs"
+  else
+    print "Thanos compact is healthy.\n"
+  fi
+}
