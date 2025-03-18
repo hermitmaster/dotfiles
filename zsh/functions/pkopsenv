@@ -1,0 +1,44 @@
+#!/usr/bin/env zsh
+
+function pkopsenv {
+  if [ ! -d "kubernetes" ]; then
+    echo "'kubernetes' folder not found. Please run this from your cloud15-infra repo"
+    return 1
+  fi
+
+  mkdir -p "$HOME/.pkops"
+  mkdir -p "$HOME/.aws"
+  touch "$HOME/.bash_history"
+
+  local registry_url=${PKOPS_ARTIFACTORY:-"repocache.nonprod.ppops.net"}
+  local image_tag=${PKOPS_VERSION:-"1.282"}
+
+  local user_id=$(id -u)
+  local group_id=$(id -g)
+  local user_option="-u $user_id:$group_id"
+  local docker_entrypoint="-it --entrypoint /bin/bash"
+  local docker_image="$registry_url/pkops:$image_tag"
+
+  local volume_mappings=(
+    "-v $HOME/.ssh/:/home/xbuild/.ssh"
+    "-v $PWD/kubernetes:/home/xbuild/kubernetes"
+    "-v $HOME/.aws:/home/xbuild/.aws/"
+    "-v $HOME/.pkops:/home/xbuild/.pkops"
+    "-v $HOME/.bash_history:/home/xbuild/.bash_history"
+    "-v $HOME/.kube:/home/xbuild/.kube"
+  )
+
+  local environment_vars=(
+    "-e HOME=/home/xbuild"
+    "-e USER=$(whoami)"
+  )
+
+  test -z "$AWS_PROFILE" || environment_vars+=("-e AWS_PROFILE=$AWS_PROFILE")
+  test -z "$region" || environment_vars+=("-e region=$region")
+
+  eval "docker run ${environment_vars[@]} $user_option $docker_entrypoint ${volume_mappings[@]} $docker_image"
+  if [ $? -ne 0 ]; then
+    echo "Docker command failed"
+    return 1
+  fi
+}

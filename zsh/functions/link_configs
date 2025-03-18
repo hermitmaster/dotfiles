@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+function link_configs {
+  test -f "${HOME}/.editorconfig" || ln -fs "${XDG_CONFIG_HOME}/.editorconfig" "${HOME}/.editorconfig"
+  test -f "${HOME}/.prettierrc" || ln -fs "${XDG_CONFIG_HOME}/.prettierrc" "${HOME}/.prettierrc"
+  test -f "${HOME}/.zshrc" || ln -fs "${XDG_CONFIG_HOME}/zsh/.zshrc" "${HOME}/.zshrc"
+}
