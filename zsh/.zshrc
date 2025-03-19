@@ -70,6 +70,7 @@ alias uatt="bb && nps"
 . "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
 . "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
 
+. <(ssh-agent -s) >/dev/null
 . <(zoxide init zsh --cmd cd)
 . <(direnv hook zsh)
 
@@ -95,5 +96,3 @@ prompt pure
 prompt_newline='%666v'
 PROMPT=" $PROMPT"
 
-precmd_functions+=set_window_title
-preexec_functions+=set_window_title
