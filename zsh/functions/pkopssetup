@@ -1,12 +1,8 @@
 #!/usr/bin/env zsh
 
 function pkopssetup {
-  local registry=$PKOPS_ARTIFACTORY
-  local tag=$PKOPS_VERSION
+  local registry_url=${ARTIFACTORY_URL:-"repocache.nonprod.ppops.net"}
+  local image_tag=${PKOPS_VERSION:-"1.282"}
 
-  mkdir -p "$HOME/.pkops"
-  mkdir -p "$HOME/.aws"
-  touch "$HOME/.bash_history"
-
-  docker run -v "$HOME:/home/xbuild $registry/pkops:$tag setup --yes"
+  docker run -v "$HOME:/home/xbuild $registry_url/pkops:$image_tag setup --yes"
 }

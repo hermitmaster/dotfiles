@@ -6,7 +6,7 @@ function bootstrap {
     bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
 
-  brew bundle install --global
-  nvim --headless +'Lazy! sync' +qa
+  auotload -Uz link_configs uatt
   link_configs
+  uatt
 }

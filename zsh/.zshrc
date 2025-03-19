@@ -13,11 +13,9 @@ export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile.rb"
 export HOMEBREW_BUNDLE_INSTALL_CLEANUP=1
 export HOMEBREW_PREFIX="/opt/homebrew"
 export KUBECONFIG="$HOME/.kube/config"
-export LANG="en_US.UTF-8"
 export MANPAGER="nvim +Man! +'set ch=0'"
 export NPM_CONFIG_PREFIX="$HOME/.local"
 export NPM_CONFIG_PYTHON=""
-export VISUAL="code"
 
 export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
@@ -47,8 +45,6 @@ if (( ! $+commands[brew] )); then
 fi
 
 # Aliases
-alias bb="brew bundle install --global"
-alias bbm="bb && mas upgrade"
 alias btm="btm --basic"
 alias cat="bat"
 alias kctx="kubectx"
@@ -56,14 +52,12 @@ alias kns="kubens"
 alias ls="eza --git --group-directories-first --time-style long-iso"
 alias ll="ls -al"
 alias la="ls -abghilmu"
-alias nps="nvim --headless +'Lazy! sync' +qa"
 alias pip="pip3"
 alias python="python3"
 alias tf="terraform"
 alias tg="terragrunt"
 alias tree="eza -aT"
 alias treed="tree -D"
-alias uatt="bb && nps"
 
 . "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 . "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
@@ -95,4 +89,3 @@ zstyle :prompt:pure:virtualenv color 8
 prompt pure
 prompt_newline='%666v'
 PROMPT=" $PROMPT"
-
