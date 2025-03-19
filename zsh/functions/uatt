@@ -1,0 +1,7 @@
+#!/usr/bin/env zsh
+
+function uatt {
+  brew bundle install --global
+  nvim --headless +'Lazy! sync' +qa
+}
+

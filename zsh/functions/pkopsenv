@@ -10,7 +10,7 @@ function pkopsenv {
   mkdir -p "$HOME/.aws"
   touch "$HOME/.bash_history"
 
-  local registry_url=${PKOPS_ARTIFACTORY:-"repocache.nonprod.ppops.net"}
+  local registry_url=${ARTIFACTORY_URL:-"repocache.nonprod.ppops.net"}
   local image_tag=${PKOPS_VERSION:-"1.282"}
 
   local user_id=$(id -u)
