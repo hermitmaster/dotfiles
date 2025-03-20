@@ -1,0 +1,6 @@
+#!/usr/bin/env zsh
+
+function set_window_title {
+  local title="${1:0:25}"
+  print -Pn "\e]0;%~  ${title:-zsh}\a"
+}

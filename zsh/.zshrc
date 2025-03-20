@@ -1,91 +1,108 @@
-#!/usr/bin/env zsh
-
-export XDG_DATA_HOME="$HOME/.local/share"
-export XDG_CACHE_HOME="$HOME/.cache"
-export XDG_CONFIG_HOME="$HOME/.config"
-export XDG_STATE_HOME="$HOME/.local/state"
-
-export BAT_THEME="ansi"
-export CXXFLAGS="-stdlib=libc++"
-export EDITOR="nvim"
-export GOPATH="$XDG_DATA_HOME/go"
-export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile.rb"
-export HOMEBREW_BUNDLE_INSTALL_CLEANUP=1
-export HOMEBREW_PREFIX="/opt/homebrew"
-export KUBECONFIG="$HOME/.kube/config"
-export MANPAGER="nvim +Man! +'set ch=0'"
-export NPM_CONFIG_PREFIX="$HOME/.local"
-export NPM_CONFIG_PYTHON=""
-
-export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
-export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
-
-typeset -gU fpath path
-path=(
-  $GOPATH/bin(N)
-  $HOME/.local/bin(N)
-  $XDG_DATA_HOME/nvim/mason/bin(N)
-  $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin(N)
-  $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin(N)
-  $HOMEBREW_PREFIX/opt/ruby/bin(N)
-  $HOMEBREW_PREFIX/bin(N)
-  $HOMEBREW_PREFIX/sbin(N)
-  $path
-)
-
-fpath=(
-  $XDG_CONFIG_HOME/zsh/functions(N)
-  $HOMEBREW_PREFIX/share/zsh/site-functions(N)
-  $HOMEBREW_PREFIX/share/zsh-completions}(N)
-  $fpath
-)
-
 if (( ! $+commands[brew] )); then
   autoload -Uz bootstrap && bootstrap
 fi
 
+if (( $+commands[bat] )); then
+  export BAT_THEME="ansi"
+  alias cat="bat"
+fi
+
+if (( $+commands[btm] )); then
+  alias btm="btm --basic"
+fi
+
+if (( $+commands[eza] )); then
+  alias ls="eza --git --group-directories-first --time-style long-iso"
+  alias tree="eza -aT"
+fi
+
+if (( $+commands[go] )); then
+  export GOPATH="$XDG_DATA_HOME/go"
+  path=(
+    $GOPATH/bin(N)
+    $path
+  )
+fi
+
+if (( $+commands[node] )); then
+  export NPM_CONFIG_PREFIX="$HOME/.local"
+  export NPM_CONFIG_PYTHON=""
+fi
+
+if (( $+commands[nvim] )); then
+  export EDITOR="nvim"
+  export MANPAGER="nvim +Man! +'set ch=0'"
+  path=(
+    $XDG_DATA_HOME/nvim/mason/bin(N)
+    $path
+  )
+fi
+
+if (( $+commands[pip3] )); then
+  alias pip="pip3"
+  alias python="python3"
+fi
+
 # Aliases
-alias btm="btm --basic"
-alias cat="bat"
-alias kctx="kubectx"
-alias kns="kubens"
-alias ls="eza --git --group-directories-first --time-style long-iso"
 alias ll="ls -al"
 alias la="ls -abghilmu"
-alias pip="pip3"
-alias python="python3"
-alias tf="terraform"
-alias tg="terragrunt"
-alias tree="eza -aT"
 alias treed="tree -D"
 
-. "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-. "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-. "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
-. "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
+# Load plugins
+if [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+  source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+  ZSH_AUTOSUGGEST_USE_ASYNC=1
+fi
 
-. <(ssh-agent -s) >/dev/null
-. <(zoxide init zsh --cmd cd)
-. <(direnv hook zsh)
+if [[ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+  source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi
+
+if [[ -f "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" ]]; then
+  source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
+  source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
+fi
+
+if [[ -f "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+  source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
+  [[ -f "$XDG_CONFIG_HOME/zsh/.p10k.zsh" ]] && source "$XDG_CONFIG_HOME/zsh/.p10k.zsh"
+fi
+
+# Load external tools
+eval "$(ssh-agent -s)" >/dev/null
+eval "$(zoxide init zsh --cmd cd)"
+eval "$(direnv hook zsh)"
 
 # Shell options
-setopt hist_ignore_all_dups inc_append_history share_history
-setopt auto_pushd cd_silent pushd_ignore_dups pushd_silent
-HISTSIZE=100000
+## History
+setopt append_history
+setopt extended_history
+setopt hist_expire_dups_first
+setopt hist_find_no_dups
+setopt hist_ignore_all_dups
+setopt hist_ignore_space
+setopt hist_reduce_blanks
+setopt hist_save_no_dups
+setopt hist_verify
+setopt inc_append_history
+setopt share_history
+## Completion
+setopt always_to_end
+setopt correct
+setopt complete_in_word
+## Other
+setopt auto_pushd
+setopt cd_silent
+setopt pushd_ignore_dups
+setopt pushd_silent
+setopt auto_list
+setopt auto_menu
 
-autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit promptinit
-compinit && promptinit
+HISTSIZE=$SAVEHIST
 
-zstyle :prompt:pure:execution_time color 8
-zstyle :prompt:pure:git:action color 1
-zstyle :prompt:pure:git:branch color 2
-zstyle :prompt:pure:git:dirty color 5
-zstyle :prompt:pure:host color 8
-zstyle :prompt:pure:prompt:success color 2
-zstyle :prompt:pure:prompt:continuation color 8
-zstyle :prompt:pure:user color 8
-zstyle :prompt:pure:virtualenv color 8
+autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit
+compinit
 
-prompt pure
-prompt_newline='%666v'
-PROMPT=" $PROMPT"
+precmd_functions+=set_window_title
+preexec_functions+=set_window_title
