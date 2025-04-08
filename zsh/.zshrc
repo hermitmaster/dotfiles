@@ -16,6 +16,7 @@ export KUBECONFIG="$HOME/.kube/config"
 export MANPAGER="nvim +Man! +'set ch=0'"
 export NPM_CONFIG_PREFIX="$HOME/.local"
 export NPM_CONFIG_PYTHON=""
+export SAVEHIST="100000"
 
 export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
@@ -63,6 +64,8 @@ alias treed="tree -D"
 . "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 . "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
 . "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
+. "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
+. "$XDG_CONFIG_HOME/zsh/.p10k.zsh"
 
 . <(ssh-agent -s) >/dev/null
 . <(zoxide init zsh --cmd cd)
@@ -71,21 +74,7 @@ alias treed="tree -D"
 # Shell options
 setopt hist_ignore_all_dups inc_append_history share_history
 setopt auto_pushd cd_silent pushd_ignore_dups pushd_silent
-HISTSIZE=100000
+HISTSIZE=$SAVEHIST
 
-autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit promptinit
-compinit && promptinit
-
-zstyle :prompt:pure:execution_time color 8
-zstyle :prompt:pure:git:action color 1
-zstyle :prompt:pure:git:branch color 2
-zstyle :prompt:pure:git:dirty color 5
-zstyle :prompt:pure:host color 8
-zstyle :prompt:pure:prompt:success color 2
-zstyle :prompt:pure:prompt:continuation color 8
-zstyle :prompt:pure:user color 8
-zstyle :prompt:pure:virtualenv color 8
-
-prompt pure
-prompt_newline='%666v'
-PROMPT=" $PROMPT"
+autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit
+compinit

@@ -1,6 +1,7 @@
 ---
 black: &black "#24283b"
 blue: &blue "#7aa2f7"
+brightBlack: &brightBlack "#414868"
 cyan: &cyan "#7dcfff"
 darkBlue: &darkBlue "#2ac3de"
 green: &green "#93c36a"
@@ -41,7 +42,7 @@ k9s:
       completedColor: *green
       errorColor: *red
       highlightcolor: *blue
-      killColor: *red
+      killColor: *orange
       modifyColor: *magenta
       newColor: *blue
       pendingColor: *yellow
@@ -57,8 +58,14 @@ k9s:
   prompt:
     bgColor: default
     fgColor: *white
-    suggestColor: *black
+    suggestColor: *brightBlack
   views:
+    logs:
+      bgColor: default
+      fgColor: *white
+      indicator:
+        bgColor: *darkBlue
+        fgColor: *white
     table:
       bgColor: default
       fgColor: *white
@@ -70,9 +77,6 @@ k9s:
         fgColor: *white
         sorterColor: *blue
       markColor: *magenta
-    logs:
-      bgColor: default
-      fgColor: *white
     yaml:
       colonColor: *orange
       keyColor: *orange
