@@ -58,6 +58,7 @@ brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
 
 cask 'chatgpt'
+cask 'cursor'
 cask 'font-jetbrains-mono-nerd-font'
 cask 'keymapp'
 cask 'podman-desktop'

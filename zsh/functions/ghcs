@@ -1,88 +1,89 @@
 #!/usr/bin/env zsh
 
 function ghcs {
-  FUNCNAME="$funcstack[1]"
-  TARGET="shell"
-  local GH_DEBUG="$GH_DEBUG"
-  local GH_HOST="$GH_HOST"
+  local -r FUNCNAME="${funcstack[1]}"
+  local -r TARGET="shell"
+  local GH_DEBUG="${GH_DEBUG:-}"
+  local GH_HOST="${GH_HOST:-}"
+  local TMPFILE
 
-  read -r -d '' __USAGE <<-EOF
-		Wrapper around \`gh copilot suggest\` to suggest a command based on a natural language description of the desired output effort.
-		Supports executing suggested commands if applicable.
+  # Define usage message
+  local -r __USAGE="Wrapper around \`gh copilot suggest\` to suggest a command based on a natural language description of the desired output effort.
+Supports executing suggested commands if applicable.
 
-		USAGE
-		  $FUNCNAME [flags] <prompt>
+USAGE
+  $FUNCNAME [flags] <prompt>
 
-		FLAGS
-		  -d, --debug           Enable debugging
-		  -h, --help            Display help usage
-		      --hostname        The GitHub host to use for authentication
-		  -t, --target target   Target for suggestion; must be shell, gh, git
-		                        default: "$TARGET"
+FLAGS
+  -d, --debug           Enable debugging
+  -h, --help            Display help usage
+      --hostname        The GitHub host to use for authentication
+  -t, --target target   Target for suggestion; must be shell, gh, git
+                        default: \"$TARGET\"
 
-		EXAMPLES
+EXAMPLES
 
-		- Guided experience
-		  $ $FUNCNAME
+- Guided experience
+  $ $FUNCNAME
 
-		- Git use cases
-		  $ $FUNCNAME -t git "Undo the most recent local commits"
-		  $ $FUNCNAME -t git "Clean up local branches"
-		  $ $FUNCNAME -t git "Setup LFS for images"
+- Git use cases
+  $ $FUNCNAME -t git \"Undo the most recent local commits\"
+  $ $FUNCNAME -t git \"Clean up local branches\"
+  $ $FUNCNAME -t git \"Setup LFS for images\"
 
-		- Working with the GitHub CLI in the terminal
-		  $ $FUNCNAME -t gh "Create pull request"
-		  $ $FUNCNAME -t gh "List pull requests waiting for my review"
-		  $ $FUNCNAME -t gh "Summarize work I have done in issues and pull requests for promotion"
+- Working with the GitHub CLI in the terminal
+  $ $FUNCNAME -t gh \"Create pull request\"
+  $ $FUNCNAME -t gh \"List pull requests waiting for my review\"
+  $ $FUNCNAME -t gh \"Summarize work I have done in issues and pull requests for promotion\"
 
-		- General use cases
-		  $ $FUNCNAME "Kill processes holding onto deleted files"
-		  $ $FUNCNAME "Test whether there are SSL/TLS issues with github.com"
-		  $ $FUNCNAME "Convert SVG to PNG and resize"
-		  $ $FUNCNAME "Convert MOV to animated PNG"
-	EOF
+- General use cases
+  $ $FUNCNAME \"Kill processes holding onto deleted files\"
+  $ $FUNCNAME \"Test whether there are SSL/TLS issues with github.com\"
+  $ $FUNCNAME \"Convert SVG to PNG and resize\"
+  $ $FUNCNAME \"Convert MOV to animated PNG\""
 
+  # Parse options
   local OPT OPTARG OPTIND
   while getopts "dht:-:" OPT; do
-    if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
-      OPT="${OPTARG%%=*}"       # extract long option name
-      OPTARG="${OPTARG#"$OPT"}" # extract long option argument (may be empty)
-      OPTARG="${OPTARG#=}"      # if long option argument, remove assigning `=`
+    if [[ "$OPT" = "-" ]]; then
+      OPT="${OPTARG%%=*}"
+      OPTARG="${OPTARG#"$OPT"}"
+      OPTARG="${OPTARG#=}"
     fi
 
     case "$OPT" in
-      debug | d)
-        GH_DEBUG=api
-        ;;
-
+      debug | d) GH_DEBUG=api ;;
       help | h)
         echo "$__USAGE"
         return 0
         ;;
-
-      hostname)
-        GH_HOST="$OPTARG"
-        ;;
-
-      target | t)
-        TARGET="$OPTARG"
-        ;;
+      hostname) GH_HOST="$OPTARG" ;;
+      target | t) TARGET="$OPTARG" ;;
+      *) return 1 ;;
     esac
   done
-
-  # shift so that $@, $1, etc. refer to the non-option arguments
   shift "$((OPTIND - 1))"
 
-  TMPFILE="$(mktemp -t gh-copilotXXXXXX)"
-  trap 'rm -f "$TMPFILE"' EXIT
-  if GH_DEBUG="$GH_DEBUG" GH_HOST="$GH_HOST" gh copilot suggest -t "$TARGET" "$@" --shell-out "$TMPFILE"; then
-    if [ -s "$TMPFILE" ]; then
-      FIXED_CMD="$(cat $TMPFILE)"
-      print -s -- "$FIXED_CMD"
-      echo
-      eval -- "$FIXED_CMD"
-    fi
-  else
+  # Create temporary file
+  TMPFILE="$(mktemp -t gh-copilotXXXXXX)" || {
+    echo "Error: Failed to create temporary file"
     return 1
+  }
+  trap 'rm -f "$TMPFILE"' EXIT
+
+  # Get suggestion and execute if successful
+  if ! GH_DEBUG="$GH_DEBUG" GH_HOST="$GH_HOST" gh copilot suggest -t "$TARGET" "$@" --shell-out "$TMPFILE"; then
+    return 1
+  fi
+
+  if [[ -s "$TMPFILE" ]]; then
+    local FIXED_CMD
+    FIXED_CMD="$(<"$TMPFILE")" || {
+      echo "Error: Failed to read command from temporary file"
+      return 1
+    }
+    print -s -- "$FIXED_CMD"
+    echo
+    eval -- "$FIXED_CMD"
   fi
 }
