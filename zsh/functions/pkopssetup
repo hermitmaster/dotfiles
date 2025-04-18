@@ -1,8 +1,6 @@
 #!/usr/bin/env zsh
 
 function pkopssetup {
-  local registry_url=${ARTIFACTORY_URL:-"repocache.nonprod.ppops.net"}
-  local image_tag=${PKOPS_VERSION:-"1.282"}
-
-  docker run -v "$HOME:/home/xbuild $registry_url/pkops:$image_tag setup --yes"
+  export VERSION=1.282
+  docker run -v $HOME:/home/xbuild repocache.nonprod.ppops.net/docker/pkops:$VERSION setup --yes
 }

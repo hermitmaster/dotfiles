@@ -3,6 +3,7 @@ if (( ! $+commands[brew] )); then
 fi
 
 if (( $+commands[bat] )); then
+  export BAT_THEME="ansi"
   alias cat="bat"
 fi
 
@@ -15,9 +16,26 @@ if (( $+commands[eza] )); then
   alias tree="eza -aT"
 fi
 
+if (( $+commands[go] )); then
+  export GOPATH="$XDG_DATA_HOME/go"
+  path=(
+    $GOPATH/bin(N)
+    $path
+  )
+fi
+
+if (( $+commands[node] )); then
+  export NPM_CONFIG_PREFIX="$HOME/.local"
+  export NPM_CONFIG_PYTHON=""
+fi
+
 if (( $+commands[nvim] )); then
   export EDITOR="nvim"
   export MANPAGER="nvim +Man! +'set ch=0'"
+  path=(
+    $XDG_DATA_HOME/nvim/mason/bin(N)
+    $path
+  )
 fi
 
 if (( $+commands[pip3] )); then
@@ -44,12 +62,11 @@ fi
 if [[ -f "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" ]]; then
   source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
   source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
-  export FZF_DEFAULT_OPTS='--height 40% --layout=reverse --border'
 fi
 
 if [[ -f "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
   source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
-  [[ ! -f "$XDG_CONFIG_HOME/zsh/.p10k.zsh" ]] || source "$XDG_CONFIG_HOME/zsh/.p10k.zsh"
+  [[ -f "$XDG_CONFIG_HOME/zsh/.p10k.zsh" ]] && source "$XDG_CONFIG_HOME/zsh/.p10k.zsh"
 fi
 
 # Load external tools
@@ -74,10 +91,6 @@ setopt share_history
 setopt always_to_end
 setopt correct
 setopt complete_in_word
-## Globbing
-setopt extended_glob
-setopt glob_dots
-setopt no_case_glob
 ## Other
 setopt auto_pushd
 setopt cd_silent
