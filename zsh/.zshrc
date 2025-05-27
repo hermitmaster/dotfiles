@@ -16,6 +16,13 @@ if (( $+commands[eza] )); then
   alias tree="eza -aT"
 fi
 
+if [[ -d $HOME/.rd/bin/ ]]; then
+  path=(
+    $HOME/.rd/bin(N)
+    $path
+  )
+fi
+
 if (( $+commands[go] )); then
   export GOPATH="$XDG_DATA_HOME/go"
   path=(
