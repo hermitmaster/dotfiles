@@ -1,9 +1,10 @@
 aliases:
-  dp: deployments
-  sec: v1/secrets
-  jo: jobs
+  cert: certificates
   cr: clusterroles
   crb: clusterrolebindings
-  ro: roles
-  rb: rolebindings
+  dp: deployments
+  jo: jobs
   np: networkpolicies
+  rb: rolebindings
+  ro: roles
+  sec: v1/secrets

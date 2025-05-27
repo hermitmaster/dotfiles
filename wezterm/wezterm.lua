@@ -1,5 +1,11 @@
 local wezterm = require("wezterm")
 local config = wezterm.config_builder()
+local directions = {
+  right = "l",
+  left = "h",
+  up = "k",
+  down = "j",
+}
 
 local function isVim(pane)
   return pane:get_foreground_process_name():find("n?vim") ~= nil
@@ -13,30 +19,29 @@ local function vimAwareNavigate(window, pane, pane_direction, key)
   end
 end
 
-wezterm.on("ActivatePaneDirection-right", function(window, pane)
-  vimAwareNavigate(window, pane, "Right", "l")
-end)
-wezterm.on("ActivatePaneDirection-left", function(window, pane)
-  vimAwareNavigate(window, pane, "Left", "h")
-end)
-wezterm.on("ActivatePaneDirection-up", function(window, pane)
-  vimAwareNavigate(window, pane, "Up", "k")
-end)
-wezterm.on("ActivatePaneDirection-down", function(window, pane)
-  vimAwareNavigate(window, pane, "Down", "j")
-end)
+config.keys = config.keys or {}
+for direction, key in pairs(directions) do
+  wezterm.on("ActivatePaneDirection-" .. direction, function(window, pane)
+    vimAwareNavigate(window, pane, direction:gsub("^%l", string.upper), key)
+  end)
+  table.insert(config.keys, {
+    key = key,
+    mods = "CTRL",
+    action = wezterm.action.EmitEvent("ActivatePaneDirection-" .. direction),
+  })
+end
 
-config.colors = wezterm.get_builtin_color_schemes()["Tokyo Night Moon"]
-config.font_size = 13.0
-config.keys = {
-  { key = "h", mods = "CTRL", action = wezterm.action.EmitEvent("ActivatePaneDirection-left") },
-  { key = "j", mods = "CTRL", action = wezterm.action.EmitEvent("ActivatePaneDirection-down") },
-  { key = "k", mods = "CTRL", action = wezterm.action.EmitEvent("ActivatePaneDirection-up") },
-  { key = "l", mods = "CTRL", action = wezterm.action.EmitEvent("ActivatePaneDirection-right") },
+-- Add other static keybindings
+for _, k in ipairs({
   { key = "/", mods = "CTRL", action = wezterm.action.SplitPane({ direction = "Down", size = { Percent = 20 } }) },
   { key = "{", mods = "SUPER", action = wezterm.action.ActivateTabRelative(-1) },
   { key = "}", mods = "SUPER", action = wezterm.action.ActivateTabRelative(1) },
-}
+}) do
+  table.insert(config.keys, k)
+end
+
+config.colors = wezterm.get_builtin_color_schemes()["Tokyo Night Moon"]
+config.font_size = 13.0
 config.tab_bar_at_bottom = true
 config.window_decorations = "RESIZE"
 config.window_frame = {

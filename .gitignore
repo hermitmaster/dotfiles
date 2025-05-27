@@ -1,11 +1,31 @@
-# GitHub
+# Global gitignore file managed by Cascade
+
+# General
+.DS_Store
+*.log
+*.tmp
+*.bak
+*.swp
+
+# GitHub CLI
+# Stores authentication data for GitHub CLI
 gh/hosts.yml
+
+# GitHub Copilot
+# Caches and logs for GitHub Copilot
 github-copilot/
 
-# helm
+# Helm
+# Helm configuration and cache
 helm/
 
 # npm
+# Configuration files for npm
 configstore/
 
+# Ruby LSP
 .ruby-lsp/
+
+# Snyk
+# Snyk configuration and data
+snyk/

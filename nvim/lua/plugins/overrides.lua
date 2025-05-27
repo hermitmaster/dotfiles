@@ -29,29 +29,11 @@ return {
     opts = {
       keymap = {
         preset = "super-tab",
-      },
-    },
-  },
-  {
-    "saghen/blink.cmp",
-    dependencies = {
-      "fang2hou/blink-copilot",
-      {
-        -- Disable the default copilot source
-        "giuxtaposition/blink-cmp-copilot",
-        enabled = false,
-      },
-    },
-    opts = {
-      sources = {
-        providers = {
-          copilot = {
-            module = "blink-copilot",
-            opts = {
-              max_completions = 3,
-              max_attempts = 4,
-            },
-          },
+        -- https://github.com/LazyVim/LazyVim/issues/6185#issuecomment-2978701551
+        ["<Tab>"] = {
+          require("blink.cmp.keymap.presets").get("super-tab")["<Tab>"][1],
+          LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
+          "fallback",
         },
       },
     },
@@ -86,5 +68,9 @@ return {
         }
       end
     end,
+  },
+  {
+    "Exafunction/codeium.nvim",
+    enabled = os.getenv("USER") == "drausch",
   },
 }
