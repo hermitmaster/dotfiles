@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 
 function pkopssetup {
-  export VERSION=1.282
-  docker run -v $HOME:/home/xbuild repocache.nonprod.ppops.net/docker/pkops:$VERSION setup --yes
+  docker run -v $HOME:/home/xbuild repocache.nonprod.ppops.net/docker/pkops:$PKOPS_VERSION setup --yes
 }
