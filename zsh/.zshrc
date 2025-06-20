@@ -71,11 +71,6 @@ if [[ -f "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" ]]; then
   source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
 fi
 
-if [[ -f "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
-  source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
-  [[ -f "$XDG_CONFIG_HOME/zsh/.p10k.zsh" ]] && source "$XDG_CONFIG_HOME/zsh/.p10k.zsh"
-fi
-
 # Load external tools
 eval "$(ssh-agent -s)" >/dev/null
 eval "$(zoxide init zsh --cmd cd)"
@@ -108,8 +103,22 @@ setopt auto_menu
 
 HISTSIZE=$SAVEHIST
 
-autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit
-compinit
+autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit promptinit
+compinit && promptinit
+
+zstyle :prompt:pure:execution_time color 8
+zstyle :prompt:pure:git:action color 1
+zstyle :prompt:pure:git:branch color 2
+zstyle :prompt:pure:git:dirty color 5
+zstyle :prompt:pure:host color 8
+zstyle :prompt:pure:prompt:success color 2
+zstyle :prompt:pure:prompt:continuation color 8
+zstyle :prompt:pure:user color 8
+zstyle :prompt:pure:virtualenv color 8
+
+prompt pure
+prompt_newline='%666v'
+PROMPT=" $PROMPT"
 
 precmd_functions+=set_window_title
 preexec_functions+=set_window_title

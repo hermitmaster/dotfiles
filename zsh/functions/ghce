@@ -1,5 +1,31 @@
 #!/usr/bin/env zsh
 
+# Shared option parsing helper
+function _gh_parse_options() {
+  local -n _options=$1
+  local -n _gh_debug=$2
+  local -n _gh_host=$3
+  local _usage=$4
+  local _opt _optarg _optind
+
+  while getopts "${_options[opts]}" _opt; do
+    if [[ "$_opt" = "-" ]]; then
+      _opt="${OPTARG%%=*}"
+      _optarg="${OPTARG#"$_opt"}"
+      _optarg="${_optarg#=}"
+    fi
+    case "$_opt" in
+      debug | d) _gh_debug=api ;;
+      help | h)
+        echo "$_usage"
+        return 1 ;;
+      hostname) _gh_host="$_optarg" ;;
+      ${_options[extra_opt]}) _options[extra_var]="$_optarg" ;;
+    esac
+  done
+  return 0
+}
+
 function ghce {
   FUNCNAME="$funcstack[1]"
   local GH_DEBUG="$GH_DEBUG"
@@ -28,29 +54,9 @@ function ghce {
 		$ $FUNCNAME 'bfg --strip-blobs-bigger-than 50M'
 	EOF
 
-  local OPT OPTARG OPTIND
-  while getopts "dh-:" OPT; do
-    if [ "$OPT" = "-" ]; then   # long option: reformulate OPT and OPTARG
-      OPT="${OPTARG%%=*}"       # extract long option name
-      OPTARG="${OPTARG#"$OPT"}" # extract long option argument (may be empty)
-      OPTARG="${OPTARG#=}"      # if long option argument, remove assigning `=`
-    fi
-
-    case "$OPT" in
-      debug | d)
-        GH_DEBUG=api
-        ;;
-
-      help | h)
-        echo "$__USAGE"
-        return 0
-        ;;
-
-      hostname)
-        GH_HOST="$OPTARG"
-        ;;
-    esac
-  done
+  local -A _options=(opts="dh-:" extra_opt="" extra_var="")
+  _gh_parse_options _options GH_DEBUG GH_HOST "$__USAGE"
+  (( $? )) && return 0
 
   # shift so that $@, $1, etc. refer to the non-option arguments
   shift "$((OPTIND - 1))"

@@ -1,8 +1,9 @@
 #!/usr/bin/env zsh
 
+# Use shared option parsing helper
 function ghcs {
   local -r FUNCNAME="${funcstack[1]}"
-  local -r TARGET="shell"
+  local TARGET="shell"
   local GH_DEBUG="${GH_DEBUG:-}"
   local GH_HOST="${GH_HOST:-}"
   local TMPFILE
@@ -42,26 +43,10 @@ EXAMPLES
   $ $FUNCNAME \"Convert SVG to PNG and resize\"
   $ $FUNCNAME \"Convert MOV to animated PNG\""
 
-  # Parse options
-  local OPT OPTARG OPTIND
-  while getopts "dht:-:" OPT; do
-    if [[ "$OPT" = "-" ]]; then
-      OPT="${OPTARG%%=*}"
-      OPTARG="${OPTARG#"$OPT"}"
-      OPTARG="${OPTARG#=}"
-    fi
+  local -A _options=(opts="dht-:" extra_opt="t" extra_var="TARGET")
+  _gh_parse_options _options GH_DEBUG GH_HOST "$__USAGE"
+  (( $? )) && return 0
 
-    case "$OPT" in
-      debug | d) GH_DEBUG=api ;;
-      help | h)
-        echo "$__USAGE"
-        return 0
-        ;;
-      hostname) GH_HOST="$OPTARG" ;;
-      target | t) TARGET="$OPTARG" ;;
-      *) return 1 ;;
-    esac
-  done
   shift "$((OPTIND - 1))"
 
   # Create temporary file

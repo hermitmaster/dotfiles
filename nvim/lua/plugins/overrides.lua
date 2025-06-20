@@ -29,6 +29,12 @@ return {
     opts = {
       keymap = {
         preset = "super-tab",
+        -- https://github.com/LazyVim/LazyVim/issues/6185#issuecomment-2978701551
+        ["<Tab>"] = {
+          require("blink.cmp.keymap.presets").get("super-tab")["<Tab>"][1],
+          LazyVim.cmp.map({ "snippet_forward", "ai_accept" }),
+          "fallback",
+        },
       },
     },
   },
