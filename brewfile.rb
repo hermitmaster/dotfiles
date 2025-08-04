@@ -2,6 +2,7 @@
 
 tap 'homebrew/services'
 tap 'fluxcd/tap'
+tap 'hashicorp/tap'
 tap 'omissis/go-jsonschema'
 
 brew 'aws-iam-authenticator'
@@ -35,6 +36,7 @@ brew 'go'
 brew 'golangci-lint'
 brew 'gomodifytags'
 brew 'gotests'
+brew 'hashicorp/tap/terraform'
 brew 'httpie'
 brew 'jq'
 brew 'k9s'
@@ -63,7 +65,6 @@ brew 'ripgrep'
 brew 'ruby'
 brew 'shfmt'
 brew 'shellcheck'
-brew 'terraform'
 brew 'terraform-docs'
 brew 'typescript'
 brew 'watch'
@@ -95,6 +96,7 @@ else
 
   brew 'del/cloud15-internal/namespace-creator'
   brew 'del/cloud15/c15-onelogin-client'
+  brew 'del/cloud15/quartermaster'
 
   cask 'yubico-authenticator'
   cask 'yubico-yubikey-manager'
