@@ -16,7 +16,6 @@ export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
 typeset -gU fpath path
 path=(
   $HOME/.local/bin(N)
-  $HOME/.rd/bin(N)
   $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin(N)
   $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin(N)
   $HOMEBREW_PREFIX/opt/ruby/bin(N)
@@ -31,4 +30,3 @@ fpath=(
   $HOMEBREW_PREFIX/share/zsh-completions(N)
   $fpath
 )
-
