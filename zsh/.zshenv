@@ -5,7 +5,6 @@ export XDG_STATE_HOME="$HOME/.local/state"
 
 export CXXFLAGS="-stdlib=libc++"
 export EDITOR="vim"
-export HOMEBREW_BUNDLE_FILE_GLOBAL="$XDG_CONFIG_HOME/brewfile.rb"
 export HOMEBREW_BUNDLE_INSTALL_CLEANUP=1
 export HOMEBREW_PREFIX="/opt/homebrew"
 export KUBECONFIG="$HOME/.kube/config"
@@ -17,6 +16,7 @@ export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
 typeset -gU fpath path
 path=(
   $HOME/.local/bin(N)
+  $HOME/.rd/bin(N)
   $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin(N)
   $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin(N)
   $HOMEBREW_PREFIX/opt/ruby/bin(N)

@@ -10,8 +10,8 @@ function link_configs {
   files=(
     "zsh/.zshenv"
     "zsh/.zshrc"
-    ".editorconfig"
-    ".prettierrc"
+    "editorconfig/.editorconfig"
+    "prettier/.prettierrc"
   )
 
   for file in "${files[@]}"; do
