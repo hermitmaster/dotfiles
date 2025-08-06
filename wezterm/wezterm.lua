@@ -4,7 +4,7 @@ local directions = {
   right = "l",
   left = "h",
   up = "k",
-  down = "j"
+  down = "j",
 }
 
 local function isVim(pane)

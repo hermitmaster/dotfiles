@@ -1,16 +1,16 @@
 # frozen_string_literal: true
 
 tap 'homebrew/services'
-tap 'hashicorp/tap'
 
 brew 'bat'
 brew 'bottom'
-brew 'cdk8s'
 brew 'cobra-cli'
 brew 'coreutils'
 brew 'd2'
-brew 'diff-so-fancy'
+brew 'delta'
 brew 'direnv'
+brew 'doggo'
+brew 'dyff'
 brew 'eza'
 brew 'fd'
 brew 'findutils'
@@ -18,7 +18,6 @@ brew 'fzf'
 brew 'gci'
 brew 'gh'
 brew 'git'
-brew 'gnupg'
 brew 'go'
 brew 'golangci-lint'
 brew 'gomodifytags'
@@ -26,21 +25,17 @@ brew 'gotests'
 brew 'hashicorp/tap/terraform'
 brew 'jq'
 brew 'k9s'
-brew 'kubectx'
 brew 'lazygit'
 brew 'mas'
 brew 'neovim'
 brew 'node'
 brew 'ollama'
 brew 'powerlevel10k'
+brew 'pre-commit'
 brew 'python'
 brew 'ripgrep'
-brew 'ruby'
-brew 'shfmt'
-brew 'shellcheck'
 brew 'terraform-docs'
 brew 'typescript'
-brew 'watch'
 brew 'wget'
 brew 'yq'
 brew 'zoxide'
@@ -49,7 +44,6 @@ brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
 
 cask 'chatgpt'
-cask 'font-jetbrains-mono-nerd-font'
 cask 'keymapp'
 cask 'rancher'
 cask 'rectangle'
@@ -63,29 +57,36 @@ if ENV['USER'] == 'hermitmaster'
   cask 'openemu', args: { 'no-quarantine': true }
   cask 'steam'
 else
-  tap 'del/cloud15', 'ssh://git@hq-stash.corp.proofpoint.com:7999/del/homebrew-cloud15.git'
-  tap 'del/cloud15-internal', 'ssh://git@hq-stash.corp.proofpoint.com:7999/del/homebrew-cloud15-internal.git'
+  tap 'hashicorp/tap'
   tap 'fluxcd/tap'
-  tap 'omissis/go-jsonschema'
 
   brew 'awscli'
   brew 'aws-iam-authenticator'
   brew 'aws-sso-cli'
   brew 'azure-cli'
+  brew 'cdk8s'
   brew 'cmctl'
   brew 'csvkit'
   brew 'dasel'
-  brew 'del/cloud15-internal/namespace-creator'
-  brew 'del/cloud15/c15-onelogin-client'
-  brew 'del/cloud15/quartermaster@2'
-  brew 'fluxcd/tap/flux'
+  brew 'flux'
   brew 'git-remote-codecommit'
   brew 'kubeconform'
+  brew 'kubectx'
   brew 'kubent'
-  brew 'maven'
   brew 'opa'
+  brew 'ruby'
   brew 'yarn'
 
   cask 'yubico-authenticator'
   cask 'yubico-yubikey-manager'
+
+  if ENV['CLOUD15_INTERNAL_HOMEBREW_TAP_URL']
+    tap 'del/cloud15-internal', ENV['CLOUD15_INTERNAL_HOMEBREW_TAP_URL']
+    brew 'del/cloud15-internal/namespace-creator'    # Internal namespace management
+  end
+  if ENV['CLOUD15_HOMEBREW_TAP_URL']
+    tap 'del/cloud15', ENV['CLOUD15_HOMEBREW_TAP_URL']
+    brew 'del/cloud15/c15-onelogin-client'          # OneLogin SSO client
+    brew 'del/cloud15/quartermaster@2'              # Internal deployment tool
+  end
 end

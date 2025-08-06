@@ -54,7 +54,10 @@
 
 [core]
   autocrlf = input
-  pager = diff-so-fancy | less --tabs=4 -RFX
+  pager = delta
+
+[delta]
+  navigate = true
 
 [diff]
   algorithm = histogram
@@ -75,7 +78,7 @@
   defaultBranch = main
 
 [interactive]
-  diffFilter = diff-so-fancy --patch
+  diffFilter = delta --color-only
 
 [merge]
   conflictstyle = zdiff3
