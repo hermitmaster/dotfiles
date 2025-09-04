@@ -39,30 +39,6 @@ return {
     },
   },
   {
-    "saghen/blink.cmp",
-    dependencies = {
-      "fang2hou/blink-copilot",
-      {
-        -- Disable the default copilot source
-        "giuxtaposition/blink-cmp-copilot",
-        enabled = false,
-      },
-    },
-    opts = {
-      sources = {
-        providers = {
-          copilot = {
-            module = "blink-copilot",
-            opts = {
-              max_completions = 3,
-              max_attempts = 4,
-            },
-          },
-        },
-      },
-    },
-  },
-  {
     -- Add the gci formatter to the formatters list for Go files.
     "stevearc/conform.nvim",
     opts = function(_, opts)
