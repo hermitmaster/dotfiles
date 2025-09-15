@@ -69,4 +69,8 @@ return {
       end
     end,
   },
+  {
+    "Exafunction/codeium.nvim",
+    enabled = os.getenv("USER") == "drausch",
+  },
 }
