@@ -1,20 +1,54 @@
 if (( ! $+commands[brew] )); then
-  autoload -Uz bootstrap && bootstrap
+  echo "Homebrew not found. Run 'make bootstrap' from ~/.config to set up your dotfiles."
 fi
 
-# Aliases
-alias ll="ls -al"
-alias la="ls -abghilmu"
-alias treed="tree -D"
-
+# Load functions and completion
 autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit
 compinit
 
-# Load plugins
-PLUGIN_DIR="$XDG_CONFIG_HOME/zsh/plugins"
-for plugin in "$PLUGIN_DIR"/*.plugin.zsh; do
-  source "$plugin"
-done
+# Tool configurations and aliases
+## bat - better cat
+if (( $+commands[bat] )); then
+  alias cat="bat"
+fi
+
+## eza - better ls (replaces conflicting aliases)
+if (( $+commands[eza] )); then
+  eza_params=('--git' '--icons' '--group-directories-first' '--time-style=long-iso' '--group')
+  alias ls='eza ${eza_params}'
+  alias l='eza --git-ignore ${eza_params}'
+  alias ll='eza --all --header --long ${eza_params}'
+  alias llm='eza --all --header --long --sort=modified ${eza_params}'
+  alias la='eza -lbhHigUmuSa'
+  alias lx='eza -lbhHigUmuSa@'
+  alias lt='eza --tree'
+  alias tree='eza --tree'
+fi
+
+## Python aliases
+if (( $+commands[pip3] )); then
+  alias pip="pip3"
+  alias python="python3"
+fi
+
+## fzf - fuzzy finder
+if [[ -f "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" ]]; then
+  source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
+  source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
+fi
+
+## Powerlevel10k theme
+if [[ -f "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+  source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
+  [[ -f "$XDG_CONFIG_HOME/zsh/.p10k.zsh" ]] && source "$XDG_CONFIG_HOME/zsh/.p10k.zsh"
+fi
+
+## zsh-autosuggestions
+if [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]; then
+  source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  ZSH_AUTOSUGGEST_STRATEGY=(history completion)
+  ZSH_AUTOSUGGEST_USE_ASYNC=1
+fi
 
 # Load external tools
 eval "$(ssh-agent -s)" >/dev/null
@@ -50,3 +84,8 @@ HISTSIZE=$SAVEHIST
 
 precmd_functions+=set_window_title
 preexec_functions+=set_window_title
+
+## zsh-syntax-highlighting (must be loaded last)
+if [[ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
+  source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+fi

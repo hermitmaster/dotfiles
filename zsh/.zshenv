@@ -3,18 +3,28 @@ export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_STATE_HOME="$HOME/.local/state"
 
+export BAT_THEME="ansi"
 export CXXFLAGS="-stdlib=libc++"
-export EDITOR="vim"
+export EDITOR="nvim"
+export GOPATH="$XDG_DATA_HOME/go"
 export HOMEBREW_BUNDLE_INSTALL_CLEANUP=1
 export HOMEBREW_PREFIX="/opt/homebrew"
 export KUBECONFIG="$HOME/.kube/config"
+export MANPAGER="nvim +Man! +'set ch=0'"
 export SAVEHIST="100000"
 
 export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
 
+export NPM_CONFIG_PREFIX="$HOME/.local"
+export NPM_CONFIG_PYTHON=""
+
 typeset -gU fpath path
 path=(
+  $HOME/.codeium/windsurf/bin(N)
+  $HOME/.rd/bin(N)
+  $XDG_DATA_HOME/nvim/mason/bin(N)
+  $GOPATH/bin(N)
   $HOME/.local/bin(N)
   $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin(N)
   $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin(N)

@@ -1,0 +1,4 @@
+# AWS Credentials - Refresh every Sunday at 9:00 AM
+0 9 * * 0 /bin/zsh -c "source ~/.zshrc && refresh_aws_credentials"
+
+# Additional scheduled tasks can be added here
