@@ -9,6 +9,11 @@ CONFIG_DIR := $(HOME)/.config
 HOMEBREW_PREFIX := /opt/homebrew
 ZSH_DIR := $(CONFIG_DIR)/zsh
 
+# Config file mappings (source:target)
+ZSH_CONFIGS := .zshenv .zshrc
+OTHER_CONFIGS := editorconfig/.editorconfig:$(HOME)/.editorconfig \
+                 prettier/.prettierrc:$(HOME)/.prettierrc
+
 # Check if we're on Apple Silicon or Intel Mac
 ARCH := $(shell uname -m)
 ifeq ($(ARCH),arm64)
@@ -54,22 +59,16 @@ homebrew: ## Install Homebrew if not present
 link-configs: ## Create symbolic links for config files
 	@echo "🔗 Linking configuration files..."
 	@mkdir -p $(HOME)/.local/bin $(HOME)/.cache $(HOME)/.local/share $(HOME)/.local/state
-
-	# Link zsh configs
-	@for file in .zshenv .zshrc; do \
-		if [ -f "$(ZSH_DIR)/$$file" ]; then \
-			ln -sf "$(ZSH_DIR)/$$file" "$(HOME)/$$file"; \
-			echo "Linked $$file"; \
-		fi; \
-	done
-
-	# Link other configs
-	@for config in "editorconfig/.editorconfig" "prettier/.prettierrc"; do \
-		if [ -f "$(CONFIG_DIR)/$$config" ]; then \
-			ln -sf "$(CONFIG_DIR)/$$config" "$(HOME)/$$(basename $$config)"; \
-			echo "Linked $$(basename $$config)"; \
-		fi; \
-	done
+	@$(foreach file,$(ZSH_CONFIGS),\
+		test -f "$(ZSH_DIR)/$(file)" && \
+		ln -sf "$(ZSH_DIR)/$(file)" "$(HOME)/$(file)" && \
+		echo "Linked $(file)" || true;)
+	@$(foreach mapping,$(OTHER_CONFIGS),\
+		$(eval src := $(word 1,$(subst :, ,$(mapping)))) \
+		$(eval dst := $(word 2,$(subst :, ,$(mapping)))) \
+		test -f "$(CONFIG_DIR)/$(src)" && \
+		ln -sf "$(CONFIG_DIR)/$(src)" "$(dst)" && \
+		echo "Linked $(notdir $(dst))" || true;)
 	@echo "✅ Configuration files linked"
 
 setup-shell: ## Set zsh as default shell and load functions
