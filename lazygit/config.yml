@@ -1,7 +1,7 @@
 disableStartupPopups: true
 git:
-  paging:
-    useConfig: true
+  pagers:
+    - useConfig: true
 gui:
   nerdFontsVersion: "3"
   showCommandLog: false

@@ -119,6 +119,7 @@ update: ## Update all packages and tools
 	@echo "🔄 Updating packages and tools..."
 	@if [ -x "$(HOMEBREW_PREFIX)/bin/brew" ]; then \
 		$(HOMEBREW_PREFIX)/bin/brew update; \
+		$(HOMEBREW_PREFIX)/bin/brew upgrade; \
 		$(HOMEBREW_PREFIX)/bin/brew bundle install --global; \
 		$(HOMEBREW_PREFIX)/bin/brew cleanup; \
 	else \

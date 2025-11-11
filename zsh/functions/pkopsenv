@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
 
 function pkopsenv {
+  export AWS_PROFILE="kops"
   source $HOME/.pkops/env && pkopsenv "$@"
 }
