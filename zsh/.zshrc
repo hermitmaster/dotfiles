@@ -2,9 +2,13 @@ if (( ! $+commands[brew] )); then
   echo "Homebrew not found. Run 'make bootstrap' from ~/.config to set up your dotfiles."
 fi
 
-# Load functions and completion
+# Load functions and completion (with caching)
 autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit
-compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 # Tool configurations and aliases
 ## bat - better cat

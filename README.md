@@ -1,14 +1,17 @@
 # Dotfiles
 
-A modern, XDG-compliant dotfiles setup for macOS with automated installation and management.
+A modern, XDG-compliant dotfiles setup for macOS with automated installation and
+management.
 
 ## Features
 
 - **XDG Base Directory compliant** - Clean organization under `~/.config/`
 - **Automated setup** - One-command installation on vanilla macOS
 - **Modern tools** - Includes `eza`, `bat`, `fzf`, `neovim`, and more
-- **Zsh configuration** - Powerlevel10k theme, autosuggestions, syntax highlighting
-- **Git integration** - Comprehensive aliases and conditional work/personal configs
+- **Zsh configuration** - Powerlevel10k theme, autosuggestions, syntax
+  highlighting
+- **Git integration** - Comprehensive aliases and conditional work/personal
+  configs
 - **Homebrew management** - Brewfile with all development tools
 - **Cron automation** - Automated AWS credential refresh
 
@@ -33,44 +36,50 @@ If you want to set up basics first and install packages later:
 
 ```bash
 cd ~/.config && make bootstrap
-# Then later: make install-packages
+# Then later: make packages
 ```
 
 ## Available Commands
 
 ### Installation & Setup
+
 - `make install` - Full installation (Homebrew + packages + configs + cron)
 - `make bootstrap` - Minimal setup (Homebrew + basic configs)
 - `make homebrew` - Install Homebrew only
-- `make link-configs` - Create symbolic links for config files
-- `make install-packages` - Install all packages from Brewfile
-- `make setup-cron` - Install cron jobs
+- `make link` - Create symbolic links for config files
+- `make packages` - Install all packages from Brewfile
+- `make cron` - Install cron jobs
 
 ### Maintenance
+
 - `make update` - Update all packages and tools (replaces old `uatt` function)
-- `make setup-nvim` - Update Neovim plugins
+- `make nvim` - Update Neovim plugins
 - `make clean` - Clean up broken symlinks and caches
 
 ### Information & Debugging
+
 - `make info` - Show system and installation status
-- `make dev-check` - Validate configuration files
+- `make check` - Validate configuration files
 - `make help` - Show all available commands
 
 ### Convenience Aliases
 
 After installation, you can use these shortcuts:
+
 - `uatt` - Quick update (alias for `make update`)
 - `dotfiles` - Access dotfiles management (alias for `make -C ~/.config`)
 
 ## What Gets Installed
 
 ### Core Tools
+
 - **Homebrew** - Package manager
 - **Zsh** - Modern shell with plugins
 - **Git** - Version control with aliases
 - **Neovim** - Modern text editor
 
 ### CLI Enhancements
+
 - **eza** - Better `ls` with icons and git integration
 - **bat** - Better `cat` with syntax highlighting
 - **fzf** - Fuzzy finder for files and history
@@ -78,12 +87,14 @@ After installation, you can use these shortcuts:
 - **ripgrep** - Fast text search
 
 ### Development Tools
+
 - **Go, Node.js, Python** - Programming languages
 - **Docker, Kubernetes tools** - Container orchestration
 - **AWS CLI** - Cloud tools
 - **Terraform** - Infrastructure as code
 
 ### Applications
+
 - **Windsurf** - AI-powered IDE
 - **GoLand** - Go IDE
 - **WezTerm** - Modern terminal
@@ -134,21 +145,25 @@ Add new shell functions to `zsh/functions/` directory. They'll be auto-loaded.
 ## Troubleshooting
 
 ### Check Installation Status
+
 ```bash
 make info
 ```
 
 ### Validate Configurations
+
 ```bash
 make dev-check
 ```
 
 ### Clean Up Issues
+
 ```bash
 make clean
 ```
 
 ### Fresh Installation
+
 ```bash
 make uninstall  # Remove dotfiles (keeps Homebrew)
 make install    # Reinstall everything
