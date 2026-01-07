@@ -1,5 +1,0 @@
-#!/usr/bin/env zsh
-
-function pkopsenv {
-  source $HOME/.pkops/env && pkopsenv "$@"
-}

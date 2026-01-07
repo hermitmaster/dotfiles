@@ -1,5 +1,0 @@
-#!/usr/bin/env zsh
-
-function pkopssetup {
-  docker run -v $HOME:/home/xbuild repocache.nonprod.ppops.net/docker/pkops:$PKOPS_VERSION setup --yes
-}

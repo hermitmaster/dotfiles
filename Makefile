@@ -1,180 +1,98 @@
-# Dotfiles Makefile for macOS Setup
-# Works on vanilla macOS installations
+# Dotfiles Makefile for macOS
 
 SHELL := /bin/zsh
 .DEFAULT_GOAL := help
 
 # Directories
-CONFIG_DIR := $(HOME)/.config
-HOMEBREW_PREFIX := /opt/homebrew
-ZSH_DIR := $(CONFIG_DIR)/zsh
+CONFIG   := $(HOME)/.config
+ZSH_DIR  := $(CONFIG)/zsh
+ARCH     := $(shell uname -m)
+HOMEBREW_PREFIX := $(if $(filter arm64,$(ARCH)),/opt/homebrew,/usr/local)
+BREW     := $(HOMEBREW_PREFIX)/bin/brew
 
-# Config file mappings (source:target)
-ZSH_CONFIGS := .zshenv .zshrc
-OTHER_CONFIGS := editorconfig/.editorconfig:$(HOME)/.editorconfig \
-                 prettier/.prettierrc:$(HOME)/.prettierrc
+.PHONY: help install bootstrap check-deps homebrew link setup-shell packages \
+        nvim cron update clean uninstall check info
 
-# Check if we're on Apple Silicon or Intel Mac
-ARCH := $(shell uname -m)
-ifeq ($(ARCH),arm64)
-    HOMEBREW_PREFIX := /opt/homebrew
-else
-    HOMEBREW_PREFIX := /usr/local
-endif
+# =============================================================================
+# Main targets
+# =============================================================================
 
-.PHONY: help install bootstrap homebrew link-configs setup-shell install-packages setup-cron setup-nvim update clean check-deps
+help: ## Show this help
+	@echo "Dotfiles Setup for macOS\n"
+	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
+	@echo "\nQuick start: make install"
 
-help: ## Show this help message
-	@echo "Dotfiles Setup for macOS"
-	@echo "========================"
-	@echo ""
-	@echo "Available targets:"
-	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-15s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
-	@echo ""
-	@echo "Quick start: make install"
+install: check-deps homebrew link setup-shell packages nvim ## Full installation
+	@echo "✅ Done. Restart your terminal or: source ~/.zshenv && source ~/.zshrc"
 
-install: check-deps homebrew link-configs setup-shell install-packages setup-cron setup-nvim ## Full installation (recommended for new setups)
-	@echo "✅ Dotfiles installation complete!"
-	@echo "Please restart your terminal or run: source ~/.zshenv && source ~/.zshrc"
+bootstrap: check-deps homebrew link setup-shell ## Minimal setup (no packages)
+	@echo "✅ Bootstrap complete. Run 'make packages' for tools."
 
-bootstrap: check-deps homebrew link-configs setup-shell ## Minimal bootstrap (Homebrew + basic setup)
-	@echo "✅ Bootstrap complete! Run 'make install-packages' to install all tools."
+# =============================================================================
+# Setup targets
+# =============================================================================
 
-check-deps: ## Check system dependencies
-	@echo "🔍 Checking system dependencies..."
-	@command -v curl >/dev/null 2>&1 || { echo "❌ curl is required but not installed"; exit 1; }
-	@command -v git >/dev/null 2>&1 || { echo "❌ git is required but not installed"; exit 1; }
-	@echo "✅ System dependencies satisfied"
+check-deps: ## Verify curl and git exist
+	@command -v curl >/dev/null || { echo "❌ curl required"; exit 1; }
+	@command -v git  >/dev/null || { echo "❌ git required";  exit 1; }
 
-homebrew: ## Install Homebrew if not present
-	@echo "🍺 Setting up Homebrew..."
-	@if [ ! -x "$(HOMEBREW_PREFIX)/bin/brew" ]; then \
-		echo "Installing Homebrew..."; \
-		/bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"; \
-	else \
-		echo "Homebrew already installed"; \
-	fi
-	@echo "✅ Homebrew setup complete"
+homebrew: ## Install Homebrew if missing
+	@[ -x "$(BREW)" ] || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-link-configs: ## Create symbolic links for config files
-	@echo "🔗 Linking configuration files..."
-	@mkdir -p $(HOME)/.local/bin $(HOME)/.cache $(HOME)/.local/share $(HOME)/.local/state
-	@$(foreach file,$(ZSH_CONFIGS),\
-		test -f "$(ZSH_DIR)/$(file)" && \
-		ln -sf "$(ZSH_DIR)/$(file)" "$(HOME)/$(file)" && \
-		echo "Linked $(file)" || true;)
-	@$(foreach mapping,$(OTHER_CONFIGS),\
-		$(eval src := $(word 1,$(subst :, ,$(mapping)))) \
-		$(eval dst := $(word 2,$(subst :, ,$(mapping)))) \
-		test -f "$(CONFIG_DIR)/$(src)" && \
-		ln -sf "$(CONFIG_DIR)/$(src)" "$(dst)" && \
-		echo "Linked $(notdir $(dst))" || true;)
-	@echo "✅ Configuration files linked"
+link: ## Symlink config files
+	@mkdir -p $(HOME)/.local/{bin,share,state} $(HOME)/.cache
+	@for f in .zshenv .zshrc; do \
+		[ -f "$(ZSH_DIR)/$$f" ] && ln -sf "$(ZSH_DIR)/$$f" "$(HOME)/$$f"; \
+	done
+	@[ -f "$(CONFIG)/editorconfig/.editorconfig" ] && ln -sf "$(CONFIG)/editorconfig/.editorconfig" "$(HOME)/.editorconfig" || true
+	@[ -f "$(CONFIG)/prettier/.prettierrc" ]       && ln -sf "$(CONFIG)/prettier/.prettierrc"       "$(HOME)/.prettierrc"   || true
 
-setup-shell: ## Set zsh as default shell and load functions
-	@echo "🐚 Setting up shell..."
-	@# Set zsh as default shell if not already
+setup-shell: ## Set zsh as default shell
 	@if [ "$$SHELL" != "$(HOMEBREW_PREFIX)/bin/zsh" ] && [ "$$SHELL" != "/bin/zsh" ]; then \
-		echo "Setting zsh as default shell..."; \
-		if ! grep -q "$(HOMEBREW_PREFIX)/bin/zsh" /etc/shells; then \
-			echo "$(HOMEBREW_PREFIX)/bin/zsh" | sudo tee -a /etc/shells; \
-		fi; \
-		chsh -s $(HOMEBREW_PREFIX)/bin/zsh; \
-	fi
-	@echo "✅ Shell setup complete"
-
-install-packages: homebrew ## Install all packages from Brewfile
-	@echo "📦 Installing packages..."
-	@if [ -f "$(CONFIG_DIR)/homebrew/Brewfile" ]; then \
-		$(HOMEBREW_PREFIX)/bin/brew update; \
-		$(HOMEBREW_PREFIX)/bin/brew bundle install --global; \
-	else \
-		echo "❌ Brewfile not found at $(CONFIG_DIR)/homebrew/Brewfile"; \
-		exit 1; \
-	fi
-	@echo "✅ Package installation complete"
-
-setup-nvim: ## Setup and update Neovim plugins
-	@echo "🔧 Setting up Neovim plugins..."
-	@if command -v nvim >/dev/null 2>&1; then \
-		nvim --headless +'Lazy! sync' +qa 2>/dev/null || echo "Neovim plugin sync completed"; \
-	else \
-		echo "⚠️  Neovim not installed, skipping plugin setup"; \
+		grep -q "$(HOMEBREW_PREFIX)/bin/zsh" /etc/shells || echo "$(HOMEBREW_PREFIX)/bin/zsh" | sudo tee -a /etc/shells; \
+		chsh -s "$(HOMEBREW_PREFIX)/bin/zsh"; \
 	fi
 
-setup-cron: ## Install cron jobs
-	@echo "⏰ Setting up cron jobs..."
-	@if [ -f "$(CONFIG_DIR)/cron/crontab" ]; then \
-		if command -v crontab >/dev/null 2>&1; then \
-			crontab "$(CONFIG_DIR)/cron/crontab" && echo "Cron jobs installed successfully"; \
-		else \
-			echo "⚠️  crontab command not found, skipping cron setup"; \
-		fi; \
-	else \
-		echo "⚠️  No crontab file found, skipping"; \
-	fi
-	@echo "✅ Cron setup complete"
+packages: homebrew ## Install from Brewfile
+	@[ -f "$(CONFIG)/homebrew/Brewfile" ] || { echo "❌ Brewfile not found"; exit 1; }
+	@$(BREW) update && $(BREW) bundle install --global
 
-update: ## Update all packages and tools
-	@echo "🔄 Updating packages and tools..."
-	@if [ -x "$(HOMEBREW_PREFIX)/bin/brew" ]; then \
-		$(HOMEBREW_PREFIX)/bin/brew update; \
-		$(HOMEBREW_PREFIX)/bin/brew bundle install --global; \
-		$(HOMEBREW_PREFIX)/bin/brew cleanup; \
-	else \
-		echo "❌ Homebrew not found, run 'make homebrew' first"; \
-		exit 1; \
-	fi
-	@$(MAKE) setup-nvim
-	@echo "✅ Update complete"
+nvim: ## Sync Neovim plugins
+	@command -v nvim >/dev/null && nvim --headless +'Lazy! sync' +qa 2>/dev/null || true
 
-clean: ## Clean up broken symlinks and caches
-	@echo "🧹 Cleaning up..."
-	@# Remove broken symlinks in home directory
+# =============================================================================
+# Maintenance
+# =============================================================================
+
+update: ## Update Homebrew packages and Neovim plugins
+	@[ -x "$(BREW)" ] || { echo "❌ Homebrew not found"; exit 1; }
+	@$(BREW) update && $(BREW) upgrade && $(BREW) bundle install --global && $(BREW) cleanup
+	@$(MAKE) -s nvim
+
+clean: ## Remove broken symlinks and caches
 	@find $(HOME) -maxdepth 1 -type l ! -exec test -e {} \; -delete 2>/dev/null || true
-	@# Clean Homebrew caches
-	@if command -v brew >/dev/null 2>&1; then \
-		brew cleanup; \
-	fi
-	@echo "✅ Cleanup complete"
+	@command -v brew >/dev/null && brew cleanup || true
 
-uninstall: ## Remove dotfiles (keeps Homebrew and packages)
-	@echo "🗑️  Removing dotfiles..."
+uninstall: ## Remove dotfile symlinks
 	@rm -f $(HOME)/.zshenv $(HOME)/.zshrc $(HOME)/.editorconfig $(HOME)/.prettierrc
-	@echo "⚠️  Dotfiles removed. Homebrew and packages remain installed."
-	@echo "   To completely remove everything, also run: /bin/bash -c \"\$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/uninstall.sh)\""
+	@echo "Dotfiles removed. Homebrew remains. To remove: brew uninstall --force"
 
-# Development targets
-dev-check: ## Check configuration files for issues
-	@echo "🔍 Checking configuration files..."
-	@# Check zsh syntax
-	@if [ -f "$(HOME)/.zshrc" ]; then \
-		zsh -n "$(HOME)/.zshrc" && echo "✅ .zshrc syntax OK" || echo "❌ .zshrc syntax error"; \
-	fi
-	@if [ -f "$(HOME)/.zshenv" ]; then \
-		zsh -n "$(HOME)/.zshenv" && echo "✅ .zshenv syntax OK" || echo "❌ .zshenv syntax error"; \
-	fi
-	@# Check for required directories
-	@for dir in "$(HOME)/.local/bin" "$(HOME)/.cache" "$(HOME)/.local/share" "$(HOME)/.local/state"; do \
-		if [ -d "$$dir" ]; then \
-			echo "✅ $$dir exists"; \
-		else \
-			echo "❌ $$dir missing"; \
-		fi; \
+# =============================================================================
+# Info / Debug
+# =============================================================================
+
+check: ## Validate zsh config syntax
+	@[ -f "$(HOME)/.zshrc" ]  && zsh -n "$(HOME)/.zshrc"  && echo "✅ .zshrc OK"  || true
+	@[ -f "$(HOME)/.zshenv" ] && zsh -n "$(HOME)/.zshenv" && echo "✅ .zshenv OK" || true
+	@for d in $(HOME)/.local/bin $(HOME)/.cache $(HOME)/.local/share $(HOME)/.local/state; do \
+		[ -d "$$d" ] && echo "✅ $$d" || echo "❌ $$d missing"; \
 	done
 
-info: ## Show system and setup information
-	@echo "System Information:"
-	@echo "=================="
-	@echo "OS: $$(sw_vers -productName) $$(sw_vers -productVersion)"
-	@echo "Architecture: $(ARCH)"
-	@echo "Shell: $$SHELL"
-	@echo "Homebrew prefix: $(HOMEBREW_PREFIX)"
-	@echo "Config directory: $(CONFIG_DIR)"
-	@echo ""
-	@echo "Installation Status:"
-	@echo "==================="
-	@if [ -x "$(HOMEBREW_PREFIX)/bin/brew" ]; then echo "✅ Homebrew installed"; else echo "❌ Homebrew not installed"; fi
-	@if [ -L "$(HOME)/.zshrc" ]; then echo "✅ .zshrc linked"; else echo "❌ .zshrc not linked"; fi
-	@if [ -L "$(HOME)/.zshenv" ]; then echo "✅ .zshenv linked"; else echo "❌ .zshenv not linked"; fi
-	@if crontab -l >/dev/null 2>&1; then echo "✅ Cron jobs installed"; else echo "❌ No cron jobs"; fi
+info: ## Show system info
+	@printf "OS: %s %s\nArch: %s\nShell: %s\nBrew: %s\nConfig: %s\n" \
+		"$$(sw_vers -productName)" "$$(sw_vers -productVersion)" \
+		"$(ARCH)" "$$SHELL" "$(HOMEBREW_PREFIX)" "$(CONFIG)"
+	@echo "---"
+	@[ -x "$(BREW)" ]           && echo "✅ Homebrew"  || echo "❌ Homebrew"
+	@[ -L "$(HOME)/.zshrc" ]    && echo "✅ .zshrc"    || echo "❌ .zshrc"
+	@[ -L "$(HOME)/.zshenv" ]   && echo "✅ .zshenv"   || echo "❌ .zshenv"

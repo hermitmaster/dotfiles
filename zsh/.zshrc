@@ -2,9 +2,13 @@ if (( ! $+commands[brew] )); then
   echo "Homebrew not found. Run 'make bootstrap' from ~/.config to set up your dotfiles."
 fi
 
-# Load functions and completion
+# Load functions and completion (with caching)
 autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit
-compinit
+if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
+  compinit
+else
+  compinit -C
+fi
 
 # Tool configurations and aliases
 ## bat - better cat
@@ -35,12 +39,6 @@ fi
 if [[ -f "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" ]]; then
   source "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh"
   source "$HOMEBREW_PREFIX/opt/fzf/shell/key-bindings.zsh"
-fi
-
-## Powerlevel10k theme
-if [[ -f "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
-  source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
-  [[ -f "$XDG_CONFIG_HOME/zsh/.p10k.zsh" ]] && source "$XDG_CONFIG_HOME/zsh/.p10k.zsh"
 fi
 
 ## zsh-autosuggestions
@@ -82,10 +80,28 @@ setopt auto_menu
 
 HISTSIZE=$SAVEHIST
 
-precmd_functions+=set_window_title
-preexec_functions+=set_window_title
+## Pure prompt
+autoload -Uz promptinit
+promptinit
+
+zstyle :prompt:pure:execution_time color 8
+zstyle :prompt:pure:git:action color 1
+zstyle :prompt:pure:git:branch color 2
+zstyle :prompt:pure:git:dirty color 5
+zstyle :prompt:pure:host color 8
+zstyle :prompt:pure:prompt:success color 2
+zstyle :prompt:pure:prompt:continuation color 8
+zstyle :prompt:pure:user color 8
+zstyle :prompt:pure:virtualenv color 8
+
+prompt pure
+prompt_newline='%666v'
+PROMPT=" $PROMPT"
 
 ## zsh-syntax-highlighting (must be loaded last)
 if [[ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
   source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
+
+precmd_functions+=set_window_title
+preexec_functions+=set_window_title
