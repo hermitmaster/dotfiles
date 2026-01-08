@@ -1,11 +1,11 @@
-# Global gitignore file managed by Cascade
-
 # General
 .DS_Store
 *.log
 *.tmp
 *.bak
 *.swp
+
+.aws-sso
 
 # GitHub CLI
 # Stores authentication data for GitHub CLI
