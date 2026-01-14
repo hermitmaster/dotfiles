@@ -14,6 +14,8 @@ fi
 ## bat - better cat
 if (( $+commands[bat] )); then
   alias cat="bat"
+
+  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 fi
 
 ## eza - better ls (replaces conflicting aliases)
