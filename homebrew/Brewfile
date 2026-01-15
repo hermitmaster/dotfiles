@@ -36,9 +36,6 @@ brew 'gomodifytags'
 brew 'gotests'
 brew 'grpcurl'
 brew 'hashicorp/tap/terraform'
-brew 'httpie'
-brew 'hyperfine'
-brew 'iftop'
 brew 'jq'
 brew 'k9s'
 brew 'kubectx'
@@ -79,6 +76,7 @@ brew 'zsh-autosuggestions'
 brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
 
+cask 'goland'
 cask 'keymapp'
 cask 'rancher'
 cask 'rectangle'
@@ -87,10 +85,7 @@ cask 'wezterm'
 mas 'AdGuard for Safari', id: 1_440_147_259
 
 if ENV['USER'] == 'hermitmaster'
-  cask 'goland'
   cask 'openemu', args: { 'no-quarantine': true }
-  cask 'pcsx2', args: { 'no-quarantine': true }
-  cask 'steam'
 else
   tap 'del/cloud15', "ssh://git@hq-stash.corp.proofpoint.com:7999/del/homebrew-cloud15.git"
 
