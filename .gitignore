@@ -19,6 +19,9 @@ github-copilot/
 # Helm configuration and cache
 helm/
 
+# mlflow
+mlflow/telemetry.json
+
 # npm
 # Configuration files for npm
 configstore/

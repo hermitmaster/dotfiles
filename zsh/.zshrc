@@ -15,7 +15,7 @@ fi
 if (( $+commands[bat] )); then
   alias cat="bat"
 
-  export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+  export BAT_THEME="ansi"
 fi
 
 ## eza - better ls (replaces conflicting aliases)
@@ -29,6 +29,17 @@ if (( $+commands[eza] )); then
   alias lx='eza -lbhHigUmuSa@'
   alias lt='eza --tree'
   alias tree='eza --tree'
+fi
+
+# nvim
+if (( $+commands[nvim] )); then
+  alias v="nvim"
+  alias vi="nvim"
+  alias vim="nvim"
+
+  export EDITOR="nvim"
+  export MANPAGER="nvim +Man! +'set ch=0'"
+  export VISUAL="nvim"
 fi
 
 ## Python aliases
