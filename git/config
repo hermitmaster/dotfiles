@@ -68,7 +68,6 @@
   parallel = 0
 
 [index]
-  # https://github.com/romkatv/powerlevel10k/issues/2232
 	skipHash = false
 
 [init]

@@ -8,9 +8,6 @@ jgit/
 # lua
 .luarc.json
 
-# podman
-containers/
-
 # vscode
 .vscode/
 *.code-workspace

@@ -1,10 +1,7 @@
-export BAT_THEME="ansi"
 export CXXFLAGS="-stdlib=libc++"
-export EDITOR="nvim"
 export HOMEBREW_BUNDLE_INSTALL_CLEANUP=1
 export HOMEBREW_PREFIX="/opt/homebrew"
 export KUBECONFIG="$HOME/.kube/config"
-export MANPAGER="nvim +Man! +'set ch=0'"
 export NPM_CONFIG_PREFIX="$HOME/.local"
 export NPM_CONFIG_PYTHON=""
 export SAVEHIST="100000"
