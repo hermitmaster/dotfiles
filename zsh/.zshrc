@@ -65,6 +65,8 @@ fi
 eval "$(ssh-agent -s)" >/dev/null
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(direnv hook zsh)"
+eval "$(pyenv init -)"
+eval "$(pyenv virtualenv-init -)"
 
 # Shell options
 ## History
