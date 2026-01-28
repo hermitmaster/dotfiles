@@ -80,6 +80,8 @@ brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
 
 cask 'chatgpt'
+cask 'font-hack-nerd-font'
+cask 'font-jetbrains-mono-nerd-font'
 cask 'goland'
 cask 'keymapp'
 cask 'rancher'
