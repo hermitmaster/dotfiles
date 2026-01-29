@@ -32,3 +32,4 @@ configstore/
 # Snyk
 # Snyk configuration and data
 snyk/
+aictl/state.yaml

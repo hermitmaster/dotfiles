@@ -58,7 +58,6 @@ brew 'poetry'
 brew 'prettier'
 brew 'pre-commit'
 brew 'pure'
-brew 'pyenv-virtualenv'
 brew 'pytest'
 brew 'python'
 brew 'ripgrep'
@@ -89,6 +88,8 @@ cask 'rectangle'
 cask 'wezterm'
 cask 'windsurf'
 cask 'yubico-authenticator'
+
+go "github.com/hermitmaster/aictl/cmd/aictl"
 
 mas 'AdGuard for Safari', id: 1_440_147_259
 

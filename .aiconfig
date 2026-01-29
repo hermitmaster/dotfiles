@@ -1,0 +1,34 @@
+# .aiconfig
+# Declarative manifest for aictl resources
+
+taps:
+  - name: pfpt-aictl-registry
+    url: git@proofpoint.github.com:drausch_pfpt/pfpt-aictl-registry.git
+
+# Tools installed on this system
+tools:
+  - windsurf
+
+# Resources to install from the default registry
+install:
+  # Workflows
+  - name: default/bug-fix-workflow
+  - name: default/code-review-workflow
+  - name: default/feature-development-workflow
+  - name: default/plan-implementation
+  - name: default/refactoring-workflow
+  - name: pfpt-aictl-registry/jira-context
+
+  # Skills
+  - name: default/api-design-expert
+  - name: default/code-review-assistant
+  - name: default/database-optimizer
+  - name: default/documentation-writer
+  - name: default/kubernetes-performance-triage
+  - name: default/performance-profiler
+  - name: default/refactoring-guide
+  - name: default/security-auditor
+  - name: default/test-strategy-architect
+
+# Default scope (local for project-specific, global for system-wide)
+scope: global

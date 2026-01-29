@@ -1,19 +1,3 @@
-# PATH needs to be specified here, as path_helper will reorder it if it's set
-# in .zshenv
-path=(
-  $HOME/.codeium/windsurf/bin(N)
-  $HOME/.rd/bin(N)
-  $XDG_DATA_HOME/nvim/mason/bin(N)
-  $GOPATH/bin(N)
-  $HOME/.local/bin(N)
-  $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin(N)
-  $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin(N)
-  $HOMEBREW_PREFIX/opt/ruby/bin(N)
-  $HOMEBREW_PREFIX/bin(N)
-  $HOMEBREW_PREFIX/sbin(N)
-  $path
-)
-
 if (( ! $+commands[brew] )); then
   echo "Homebrew not found. Run 'make bootstrap' from ~/.config to set up your dotfiles."
 fi
@@ -47,7 +31,7 @@ if (( $+commands[eza] )); then
   alias tree='eza --tree'
 fi
 
-# nvim
+## nvim
 if (( $+commands[nvim] )); then
   alias v="nvim"
   alias vi="nvim"
@@ -58,8 +42,9 @@ if (( $+commands[nvim] )); then
   export VISUAL="nvim"
 fi
 
-## Python aliases (pyenv handles python/python3, just alias pip)
+## python
 alias pip="pip3"
+alias python="python3"
 
 ## fzf - fuzzy finder
 if [[ -f "$HOMEBREW_PREFIX/opt/fzf/shell/completion.zsh" ]]; then
@@ -78,8 +63,6 @@ fi
 eval "$(ssh-agent -s)" >/dev/null
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(direnv hook zsh)"
-eval "$(pyenv init -)"
-eval "$(pyenv virtualenv-init -)"
 
 # Shell options
 ## History

@@ -11,15 +11,6 @@ export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
 export GOPATH="$XDG_DATA_HOME/go"
+export GOBIN="$GOPATH/bin"
 export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 export HOMEBREW_REPOSITORY="$HOMEBREW_PREFIX"
-
-
-typeset -gU fpath path
-
-fpath=(
-  $XDG_CONFIG_HOME/zsh/functions(N)
-  $HOMEBREW_PREFIX/share/zsh/site-functions(N)
-  $HOMEBREW_PREFIX/share/zsh-completions(N)
-  $fpath
-)

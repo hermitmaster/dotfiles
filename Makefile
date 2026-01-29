@@ -41,7 +41,7 @@ homebrew: ## Install Homebrew if missing
 
 link: ## Symlink config files
 	@mkdir -p $(HOME)/.local/{bin,share,state} $(HOME)/.cache
-	@for f in .zshenv .zshrc; do \
+	@for f in .zshenv .zshrc .zprofile; do \
 		[ -f "$(ZSH_DIR)/$$f" ] && ln -sf "$(ZSH_DIR)/$$f" "$(HOME)/$$f"; \
 	done
 	@[ -f "$(CONFIG)/editorconfig/.editorconfig" ] && ln -sf "$(CONFIG)/editorconfig/.editorconfig" "$(HOME)/.editorconfig" || true
