@@ -1,7 +1,7 @@
 disableStartupPopups: true
 git:
   pagers:
-    - pager: diff-so-fancy
+    - pager: delta --dark --paging=never
 gui:
   nerdFontsVersion: "3"
   showCommandLog: false

@@ -59,10 +59,9 @@ if [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]
   ZSH_AUTOSUGGEST_USE_ASYNC=1
 fi
 
-# Load external tools
-eval "$(ssh-agent -s)" >/dev/null
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(direnv hook zsh)"
+eval "$(starship init zsh)"
 
 # Shell options
 ## History
@@ -90,24 +89,6 @@ setopt auto_list
 setopt auto_menu
 
 HISTSIZE=$SAVEHIST
-
-## Pure prompt
-autoload -Uz promptinit
-promptinit
-
-zstyle :prompt:pure:execution_time color 8
-zstyle :prompt:pure:git:action color 1
-zstyle :prompt:pure:git:branch color 2
-zstyle :prompt:pure:git:dirty color 5
-zstyle :prompt:pure:host color 8
-zstyle :prompt:pure:prompt:success color 2
-zstyle :prompt:pure:prompt:continuation color 8
-zstyle :prompt:pure:user color 8
-zstyle :prompt:pure:virtualenv color 8
-
-prompt pure
-prompt_newline='%666v'
-PROMPT=" $PROMPT"
 
 ## zsh-syntax-highlighting (must be loaded last)
 if [[ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
