@@ -73,14 +73,12 @@ brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
 
 cask 'chatgpt'
-cask 'codex'
+cask 'claude-code'
 cask 'font-jetbrains-mono-nerd-font'
 cask 'keymapp'
 cask 'rancher'
 cask 'rectangle'
 cask 'wezterm'
-
-go "github.com/hermitmaster/aictl/cmd/aictl"
 
 mas 'AdGuard for Safari', id: 1_440_147_259
 
