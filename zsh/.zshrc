@@ -61,7 +61,10 @@ fi
 
 eval "$(zoxide init zsh --cmd cd)"
 eval "$(direnv hook zsh)"
-eval "$(starship init zsh)"
+if [[ -f "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
+  source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
+  [[ -f "$XDG_CONFIG_HOME/zsh/.p10k.zsh" ]] && source "$XDG_CONFIG_HOME/zsh/.p10k.zsh"
+fi
 
 # Shell options
 ## History
