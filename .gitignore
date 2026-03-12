@@ -1,35 +1,26 @@
-# General
+# System files
 .DS_Store
+
+# Temporary files
 *.log
 *.tmp
 *.bak
 *.swp
 
-aws-sso
-
-# GitHub CLI
-# Stores authentication data for GitHub CLI
+# Authentication & Secrets
+aws-sso/
 gh/hosts.yml
 
-# GitHub Copilot
-# Caches and logs for GitHub Copilot
+# Tool Caches & State
 github-copilot/
-
-# Helm
-# Helm configuration and cache
 helm/
-
-# mlflow
-mlflow/telemetry.json
-
-# npm
-# Configuration files for npm
+snyk/
+containers/
 configstore/
-
-# Ruby LSP
 .ruby-lsp/
 
-# Snyk
-# Snyk configuration and data
-snyk/
-aictl/state.yaml
+# Editor & IDE
+nvim/lazy-lock.json
+
+# Development Tools
+mlflow/telemetry.json
