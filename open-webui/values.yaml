@@ -1,0 +1,25 @@
+ollama:
+  enabled: false
+
+ollamaUrls:
+  - http://host.rancher-desktop.internal:11434
+
+ingress:
+  enabled: true
+  ingressClassName: traefik
+  host: open-webui.local
+  hosts:
+    - open-webui.local
+
+persistence:
+  enabled: true
+  storageClass: local-path
+  size: 2Gi
+
+resources:
+  requests:
+    cpu: "250m"
+    memory: "512Mi"
+  limits:
+    cpu: "1000m"
+    memory: "1Gi"
