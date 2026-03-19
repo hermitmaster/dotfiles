@@ -7,10 +7,8 @@ ollamaUrls:
 ingress:
   enabled: true
   class: traefik
-  host: "hermitbook.local"
   hosts:
-    - host: "hermitbook.local"
-      paths:
+    - paths:
         - path: /
           pathType: Prefix
 
