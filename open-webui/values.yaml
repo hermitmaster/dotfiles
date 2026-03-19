@@ -6,10 +6,13 @@ ollamaUrls:
 
 ingress:
   enabled: true
-  ingressClassName: traefik
-  host: open-webui.local
+  class: traefik
+  host: "hermitbook.local"
   hosts:
-    - open-webui.local
+    - host: "hermitbook.local"
+      paths:
+        - path: /
+          pathType: Prefix
 
 persistence:
   enabled: true
@@ -23,3 +26,6 @@ resources:
   limits:
     cpu: "1000m"
     memory: "1Gi"
+
+service:
+  type: ClusterIP
