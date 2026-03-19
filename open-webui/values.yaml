@@ -7,10 +7,14 @@ ollamaUrls:
 ingress:
   enabled: true
   class: traefik
+  annotations:
+    cert-manager.io/cluster-issuer: local-ca-issuer
   hosts:
     - paths:
         - path: /
           pathType: Prefix
+  tls:
+    - secretName: open-webui-tls
 
 persistence:
   enabled: true
