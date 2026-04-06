@@ -100,3 +100,6 @@ fi
 
 precmd_functions+=set_window_title
 preexec_functions+=set_window_title
+
+# Added by Antigravity
+export PATH="/Users/hermitmaster/.antigravity/antigravity/bin:$PATH"
