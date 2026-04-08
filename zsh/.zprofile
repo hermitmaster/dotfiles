@@ -7,7 +7,6 @@ path=(
   $HOME/.rd/bin(N)
   $XDG_DATA_HOME/nvim/mason/bin(N)
   $GOBIN(N)
-  $HOME/.lmstudio/bin(N)
   $HOME/.local/bin(N)
   $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin(N)
   $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin(N)

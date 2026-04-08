@@ -1,3 +1,4 @@
+export CLAUDE_CODE_DISABLE_EXPERIMENTAL_BETAS=1
 export CXXFLAGS="-stdlib=libc++"
 export HOMEBREW_BUNDLE_INSTALL_CLEANUP=1
 export HOMEBREW_PREFIX="/opt/homebrew"
