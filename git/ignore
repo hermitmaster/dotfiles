@@ -17,3 +17,5 @@ jgit/
 .zsh_history
 .zsh_sessions
 *.zwc
+
+**/.claude/settings.local.json

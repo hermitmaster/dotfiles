@@ -4,4 +4,9 @@ load_dotenv = true
 strict_env = true
 
 [whitelist]
-exact = ["~/work/.envrc", "~/work/.envrc.private"]
+exact = [
+  "~/.envrc",
+  "~/.envrc.private",
+  "~/work/.envrc",
+  "~/work/.envrc.private",
+]
