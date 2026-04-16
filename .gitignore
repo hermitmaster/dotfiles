@@ -12,6 +12,7 @@ aws-sso/
 gh/hosts.yml
 
 # Tool Caches & State
+devin/
 github-copilot/
 helm/
 snyk/
