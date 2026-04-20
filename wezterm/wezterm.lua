@@ -34,6 +34,15 @@ end
 -- Add other static keybindings
 for _, k in ipairs({
   { key = "/", mods = "CTRL", action = wezterm.action.SplitPane({ direction = "Down", size = { Percent = 20 } }) },
+  {
+    key = "\\",
+    mods = "CTRL",
+    action = wezterm.action.SplitPane({
+      direction = "Right",
+      command = { args = { "/bin/zsh", "-lic", 'eval "$(direnv export zsh)" && exec claude' } },
+      size = { Percent = 30 },
+    }),
+  },
   { key = "{", mods = "SUPER", action = wezterm.action.ActivateTabRelative(-1) },
   { key = "}", mods = "SUPER", action = wezterm.action.ActivateTabRelative(1) },
 }) do

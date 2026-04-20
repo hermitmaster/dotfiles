@@ -42,6 +42,7 @@ brew 'kubectx'
 brew 'Azure/kubelogin/kubelogin'
 brew 'lazygit'
 brew 'luajit'
+brew 'marp-cli'
 brew 'mas'
 brew 'neovim'
 brew 'nmap'
@@ -70,7 +71,8 @@ brew 'zsh-autosuggestions'
 brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
 
-cask 'claude-code'
+cask 'chatgpt'
+cask 'claude-code@latest'
 cask 'font-jetbrains-mono-nerd-font'
 cask 'keymapp'
 cask 'rancher'
@@ -81,13 +83,11 @@ cask 'wezterm'
 mas 'AdGuard for Safari', id: 1_440_147_259
 
 if ENV['USER'] == 'hermitmaster'
-  cask 'antigravity'
   cask 'openemu', args: { 'no-quarantine': true }
 else
   tap 'del/cloud15', "ssh://git@hq-stash.corp.proofpoint.com:7999/del/homebrew-cloud15.git"
   brew 'del/cloud15/c15-onelogin-client'
 
-  cask 'chatgpt'
   cask 'windsurf'
   cask 'yubico-authenticator'
 end

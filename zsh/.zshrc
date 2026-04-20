@@ -59,8 +59,6 @@ if [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]
   ZSH_AUTOSUGGEST_USE_ASYNC=1
 fi
 
-eval "$(zoxide init zsh --cmd cd)"
-eval "$(direnv hook zsh)"
 if [[ -f "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme" ]]; then
   source "$HOMEBREW_PREFIX/share/powerlevel10k/powerlevel10k.zsh-theme"
   [[ -f "$XDG_CONFIG_HOME/zsh/.p10k.zsh" ]] && source "$XDG_CONFIG_HOME/zsh/.p10k.zsh"
@@ -93,6 +91,9 @@ setopt auto_menu
 
 HISTSIZE=$SAVEHIST
 
+eval "$(direnv hook zsh)"
+eval "$(zoxide init zsh --cmd cd)"
+
 ## zsh-syntax-highlighting (must be loaded last)
 if [[ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
   source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
@@ -101,5 +102,3 @@ fi
 precmd_functions+=set_window_title
 preexec_functions+=set_window_title
 
-# Added by Antigravity
-export PATH="/Users/hermitmaster/.antigravity/antigravity/bin:$PATH"

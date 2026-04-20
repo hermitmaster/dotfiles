@@ -6,6 +6,7 @@ export KUBECONFIG="$HOME/.kube/config"
 export NPM_CONFIG_PREFIX="$HOME/.local"
 export NPM_CONFIG_PYTHON=""
 export SAVEHIST="100000"
+export _ZO_DOCTOR=0
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
