@@ -4,9 +4,9 @@
 
 - Engineer: Dennis Rausch, ML Platform / Infrastructure at Proofpoint
 - Primary cloud: AWS (60+ SSO profiles, EKS clusters), Azure secondary, no GCP
-- IaC stack: Terraform + Terragrunt (AWS), CDK8s + Kustomize + Helm (Kubernetes)
-- Languages: Go (services, operators), Python (ML, scripts), TypeScript (CDK8s),
-  Lua (Neovim)
+- IaC stack: Terraform + Terragrunt (AWS), CDK8s + Helm (Kubernetes; Kustomize
+  acceptable as chart input via the kubebuilder helm plugin)
+- Languages: Go (services, operators), Python (ML, scripts), Lua (Neovim)
 
 ## Terraform Conventions
 
@@ -26,9 +26,14 @@
 
 ## Kubernetes Conventions
 
-- EKS clusters accessed via aws-sso-cli + kubeconfig
-- Manifests generated via CDK8s (TypeScript) or Kustomize, rarely raw YAML
-- Helm used only for third-party charts; in-house services use Kustomize
+- EKS clusters accessed via aws-sso + kubeconfig
+- Manifests generated via CDK8s (TypeScript) or Helm charts, rarely raw YAML
+- Helm is the default packaging/distribution format for both third-party and
+  in-house services. For kubebuilder operators, use the `helm/v2-alpha` plugin
+  to generate `dist/chart/` from the Kustomize sources under `config/`.
+- Kustomize is acceptable as a chart input (via the kubebuilder plugin) or for
+  simple single-environment manifests, but not as a deployment mechanism for
+  in-house services.
 - Namespace naming: {team}-{service}-{env}
 - Always include resource requests/limits, PDBs, and anti-affinity for
   production
@@ -37,7 +42,7 @@
 
 ## AWS Conventions
 
-- Authentication: aws-sso CLI
+- Authentication: `aws-sso` CLI
 - Always verify active profile with `aws sts get-caller-identity` before any AWS
   operation
 - Cross-account access via assume-role, configured in Terragrunt
@@ -65,6 +70,7 @@
 
 - Branch naming: {type}/{ticket}-{short-description} (e.g.,
   feat/PLAT-1234-add-eks-addon)
-- Commit messages: conventional commits (feat:, fix:, chore:, docs:)
+- Commit messages: conventional commits (feat:, fix:, chore:, docs:); must
+  always contain ticket id.
 - Always run pre-commit hooks before committing
 - Infrastructure changes require plan output in PR description
