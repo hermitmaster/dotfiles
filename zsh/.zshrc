@@ -75,7 +75,7 @@ if [[ -f "$HOMEBREW_PREFIX/share/zsh/site-functions/prompt_pure_setup" ]]; then
   zstyle :prompt:pure:virtualenv color 8
 
   prompt pure
-  prompt_newline='%666v'
+  prompt_newline=' '
   PROMPT=" $PROMPT"
 fi
 
