@@ -1,7 +1,5 @@
 [alias]
   aa = add -A
-  au = add --update
-  av = add --verbose
   b = branch
   ba = branch --all
   bd = branch --delete
@@ -13,7 +11,6 @@
   cm = commit -m
   co = checkout
   cob = checkout -b
-  com = checkout master
   d = diff
   ds = diff --staged
   fap = fetch --all --prune
@@ -25,7 +22,6 @@
   ls = log --stat --paginate
   p = push
   pf = push --force
-  rb = rebase
   st = status
 
 [branch]
@@ -52,10 +48,6 @@
 [fetch]
   parallel = 0
 
-[index]
-  # https://github.com/romkatv/powerlevel10k/issues/2232
-	skipHash = false
-
 [init]
   defaultBranch = main
 
@@ -75,9 +67,6 @@
 
 [rebase]
   autostash = true
-
-[rerere]
-  enabled = true
 
 [user]
   email = hermitmaster@icloud.com

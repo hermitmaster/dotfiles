@@ -3,7 +3,6 @@
 typeset -gU fpath path
 
 path=(
-  $HOME/.codeium/windsurf/bin(N)
   $HOME/.rd/bin(N)
   $XDG_DATA_HOME/nvim/mason/bin(N)
   $GOBIN(N)

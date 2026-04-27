@@ -13,6 +13,7 @@ gh/hosts.yml
 
 # Tool Caches & State
 devin/
+gcloud/
 github-copilot/
 helm/
 snyk/
