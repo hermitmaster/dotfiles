@@ -9,7 +9,7 @@ ARCH     := $(shell uname -m)
 HOMEBREW_PREFIX := $(if $(filter arm64,$(ARCH)),/opt/homebrew,/usr/local)
 BREW     := $(HOMEBREW_PREFIX)/bin/brew
 
-SYMLINKS := .zshenv .zshrc .zprofile .editorconfig .prettierrc
+SYMLINKS := .zshenv .zshrc .zprofile
 
 # =============================================================================
 # Primary
@@ -61,8 +61,6 @@ link:
 	@for f in .zshenv .zshrc .zprofile; do \
 		[ -f "$(ZSH_DIR)/$$f" ] && ln -sf "$(ZSH_DIR)/$$f" "$(HOME)/$$f"; \
 	done
-	@[ -f "$(CONFIG)/editorconfig/.editorconfig" ] && ln -sf "$(CONFIG)/editorconfig/.editorconfig" "$(HOME)/.editorconfig" || true
-	@[ -f "$(CONFIG)/prettier/.prettierrc" ]       && ln -sf "$(CONFIG)/prettier/.prettierrc"       "$(HOME)/.prettierrc"   || true
 
 nvim:
 	@command -v nvim >/dev/null && nvim --headless +'Lazy! sync' +qa 2>/dev/null || true

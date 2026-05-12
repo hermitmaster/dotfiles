@@ -3,8 +3,8 @@
 ## Identity & Context
 
 - Engineer: Dennis Rausch, ML Platform / Infrastructure at Proofpoint
-- Primary cloud: AWS (60+ SSO profiles, EKS clusters), Azure secondary, no GCP
-- IaC stack: Terraform + Terragrunt (AWS), CDK8s + Helm (Kubernetes; Kustomize
+- Primary cloud: AWS (60+ SSO profiles, EKS clusters), Azure and GCP secondary
+- IaC stack: Terraform + Terragrunt (AWS), Helm (Kubernetes; Kustomize
   acceptable as chart input via the kubebuilder helm plugin)
 - Languages: Go (services, operators), Python (ML, scripts), Lua (Neovim)
 
@@ -27,13 +27,10 @@
 ## Kubernetes Conventions
 
 - EKS clusters accessed via aws-sso + kubeconfig
-- Manifests generated via CDK8s (TypeScript) or Helm charts, rarely raw YAML
+- Helm charts, rarely raw YAML
 - Helm is the default packaging/distribution format for both third-party and
   in-house services. For kubebuilder operators, use the `helm/v2-alpha` plugin
   to generate `dist/chart/` from the Kustomize sources under `config/`.
-- Kustomize is acceptable as a chart input (via the kubebuilder plugin) or for
-  simple single-environment manifests, but not as a deployment mechanism for
-  in-house services.
 - Namespace naming: {team}-{service}-{env}
 - Always include resource requests/limits, PDBs, and anti-affinity for
   production
@@ -62,15 +59,32 @@
 - Prefer composable Terraform modules over monolithic configurations
 - For Go: follow standard project layout, use interfaces for testability
 - For Python: use uv for dependency management, type hints mandatory
-- For TypeScript CDK8s: strict mode, explicit typing for constructs
 - Tests: every Terraform module gets a `tests/` directory with at least plan
   validation
 
 ## Git Workflow
 
 - Branch naming: {type}/{ticket}-{short-description} (e.g.,
-  feat/PLAT-1234-add-eks-addon)
+  feat/FORGE-1234-add-eks-addon)
 - Commit messages: conventional commits (feat:, fix:, chore:, docs:); must
   always contain ticket id.
 - Always run pre-commit hooks before committing
 - Infrastructure changes require plan output in PR description
+
+## <!--# BEGIN SNYK GLOBAL RULE -->
+
+alwaysApply: true always_on: true trigger: always_on applyTo: "\*\*"
+description: Snyk Security At Inception
+
+---
+
+# Project security best practices
+
+- Always run snyk_code_scan tool for new first party code that is generated in a
+  Snyk-supported language.
+- If any security issues are found based on newly introduced or modified code or
+  dependencies, attempt to fix the issues using the results context from Snyk.
+- Rescan the code after fixing the issues to ensure that the issues were fixed
+  and that there are no newly introduced issues.
+- Repeat this process until no new issues are found.
+<!--# END SNYK GLOBAL RULE -->
