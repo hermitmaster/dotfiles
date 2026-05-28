@@ -87,6 +87,11 @@ cask 'wezterm'
 cask 'yubico-authenticator'
 
 mas 'AdGuard for Safari', id: 1_440_147_259
+mas 'Keynote',             id: 409_183_694
+mas 'Numbers',             id: 409_203_825
+mas 'OneLogin for Safari', id: 1_475_824_389
+mas 'Pages',               id: 409_201_541
+mas 'Xcode',               id: 497_799_835
 
 if ENV['USER'] == 'hermitmaster'
   cask 'openemu', args: { 'no-quarantine': true }
