@@ -79,7 +79,7 @@ brew 'zsh-autosuggestions'
 brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
 
-cask 'claude-code@latest'
+# claude-code pinned to 2.1.121 (bug in later versions); managed manually in ~/.local/bin/claude
 cask 'keymapp'
 cask 'rancher'
 cask 'rectangle'
