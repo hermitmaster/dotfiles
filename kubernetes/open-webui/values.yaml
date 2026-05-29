@@ -29,6 +29,12 @@ openaiBaseApiUrls:
 openaiApiKeysExistingSecret: open-webui-openrouter
 openaiApiKeysExistingSecretKey: api-keys
 
+extraEnvVars:
+- name: TASK_MODEL
+  value: ""
+- name: TASK_MODEL_EXTERNAL
+  value: ""
+
 persistence:
   enabled: true
   size: 2Gi
