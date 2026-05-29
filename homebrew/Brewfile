@@ -3,17 +3,14 @@
 tap 'fluxcd/tap'
 tap 'hashicorp/tap'
 tap 'homebrew/services'
-tap 'Azure/kubelogin'
 
 brew 'awscli'
 brew 'aws-sso-cli'
-brew 'azure-cli'
 brew 'bat'
 brew 'bottom'
 brew 'busted'
 brew 'cmctl'
 brew 'conftest'
-brew 'copier'
 brew 'coreutils'
 brew 'curl'
 brew 'd2'
@@ -43,7 +40,6 @@ brew 'kube-linter'
 brew 'kubebuilder'
 brew 'kubeconform'
 brew 'kubectx'
-brew 'Azure/kubelogin/kubelogin'
 brew 'kubeseal'
 brew 'kustomize'
 brew 'lazygit'
@@ -62,7 +58,6 @@ brew 'pytest'
 brew 'python'
 brew 'ripgrep'
 brew 'skaffold'
-brew 'snyk-cli'
 brew 'terraform-docs'
 brew 'terragrunt'
 brew 'tf-summarize'
@@ -85,15 +80,22 @@ cask 'keymapp'
 cask 'rancher'
 cask 'rectangle'
 cask 'wezterm'
-cask 'yubico-authenticator'
 
 mas 'AdGuard for Safari', id: 1_440_147_259
 mas 'Keynote',             id: 409_183_694
 mas 'Numbers',             id: 409_203_825
 mas 'OneLogin for Safari', id: 1_475_824_389
 mas 'Pages',               id: 409_201_541
-mas 'Xcode',               id: 497_799_835
 
 if ENV['USER'] == 'hermitmaster'
   cask 'openemu', args: { 'no-quarantine': true }
+else
+  tap 'Azure/kubelogin'
+
+  brew 'azure-cli'
+  brew 'Azure/kubelogin/kubelogin'
+  brew 'copier'
+  brew 'snyk-cli'
+
+  cask 'yubico-authenticator'
 end
