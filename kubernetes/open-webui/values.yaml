@@ -17,13 +17,12 @@ ingress:
 ollama:
   enabled: false
 
+pipelines:
+  enabled: false
+
 ollamaUrls:
 - http://host.rancher-desktop.internal:11434
 
-# OpenRouter as an OpenAI-compatible provider.
-# The chart prepends the Pipelines URL when pipelines are enabled, so
-# OPENAI_API_BASE_URLS becomes: <pipelines>;https://openrouter.ai/api/v1
-# The secret api-keys value must match that order: <pipelines-key>;<openrouter-key>
 openaiBaseApiUrls:
 - https://openrouter.ai/api/v1
 
