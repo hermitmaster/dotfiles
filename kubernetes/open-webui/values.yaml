@@ -1,0 +1,47 @@
+ingress:
+  annotations:
+    cert-manager.io/cluster-issuer: local-ca-issuer
+  class: traefik
+  enabled: true
+  host: hermitbook.local
+  hosts:
+  - host: hermitbook.local
+    paths:
+    - path: /
+      pathType: Prefix
+  tls:
+  - hosts:
+    - hermitbook.local
+    secretName: open-webui-tls
+
+ollama:
+  enabled: false
+
+ollamaUrls:
+- http://host.rancher-desktop.internal:11434
+
+# OpenRouter as an OpenAI-compatible provider.
+# The chart prepends the Pipelines URL when pipelines are enabled, so
+# OPENAI_API_BASE_URLS becomes: <pipelines>;https://openrouter.ai/api/v1
+# The secret api-keys value must match that order: <pipelines-key>;<openrouter-key>
+openaiBaseApiUrls:
+- https://openrouter.ai/api/v1
+
+openaiApiKeysExistingSecret: open-webui-openrouter
+openaiApiKeysExistingSecretKey: api-keys
+
+persistence:
+  enabled: true
+  size: 2Gi
+  storageClass: local-path
+
+resources:
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+service:
+  type: ClusterIP
