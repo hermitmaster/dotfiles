@@ -88,6 +88,8 @@ mas 'OneLogin for Safari', id: 1_475_824_389
 mas 'Pages',               id: 409_201_541
 
 if ENV['USER'] == 'hermitmaster'
+  brew 'opencode'
+
   cask 'openemu', args: { 'no-quarantine': true }
 else
   tap 'Azure/kubelogin'
