@@ -73,14 +73,17 @@ nvim:
 claude:
 	@[ -f "$(CONFIG)/CLAUDE.md" ] && ln -sf "$(CONFIG)/CLAUDE.md" "$(HOME)/.claude/CLAUDE.md" || true
 
-claude-code: ## Install pinned claude-code binary
+claude-code: ## Install pinned claude-code binary (immutable to block self-updates)
 	@if [ -x "$(CLAUDE_CODE_BIN)" ] && "$(CLAUDE_CODE_BIN)" --version 2>/dev/null | grep -q "$(CLAUDE_CODE_VERSION)"; then \
 		echo "✅ claude-code $(CLAUDE_CODE_VERSION) already installed"; \
 	else \
 		echo "Installing claude-code $(CLAUDE_CODE_VERSION)..."; \
 		mkdir -p "$(dir $(CLAUDE_CODE_BIN))"; \
+		chflags nouchg "$(CLAUDE_CODE_BIN)" 2>/dev/null || true; \
+		[ -L "$(CLAUDE_CODE_BIN)" ] && rm -f "$(CLAUDE_CODE_BIN)" || true; \
 		curl -fsSL "$(CLAUDE_CODE_URL)" -o "$(CLAUDE_CODE_BIN)" && chmod +x "$(CLAUDE_CODE_BIN)" \
-			&& echo "✅ claude-code $(CLAUDE_CODE_VERSION) installed to $(CLAUDE_CODE_BIN)"; \
+			&& chflags uchg "$(CLAUDE_CODE_BIN)" \
+			&& echo "✅ claude-code $(CLAUDE_CODE_VERSION) installed to $(CLAUDE_CODE_BIN) (immutable)"; \
 	fi
 
 # =============================================================================
