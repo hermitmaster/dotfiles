@@ -77,6 +77,7 @@ brew 'zsh-syntax-highlighting'
 
 cask 'claude-code@latest'
 cask 'keymapp'
+cask 'obsidian'
 cask 'rancher'
 cask 'rectangle'
 cask 'wezterm'

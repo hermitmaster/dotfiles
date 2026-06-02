@@ -8,6 +8,7 @@
 *.swp
 
 # Authentication & Secrets
+alice/
 aws-sso/
 gh/hosts.yml
 
