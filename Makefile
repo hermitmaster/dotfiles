@@ -27,7 +27,7 @@ help: ## Show this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo "\nQuick start: make install"
 
-install: check-deps homebrew link setup-shell packages nvim claude claude-code ## Full installation
+install: check-deps homebrew link setup-shell packages nvim claude ## Full installation
 	@echo "✅ Done. Restart your terminal or: source ~/.zshenv && source ~/.zshrc"
 
 bootstrap: check-deps homebrew link setup-shell ## Minimal setup (no packages)
@@ -36,13 +36,13 @@ bootstrap: check-deps homebrew link setup-shell ## Minimal setup (no packages)
 update: ## Update Homebrew packages and Neovim plugins
 	@[ -x "$(BREW)" ] || { echo "❌ Homebrew not found"; exit 1; }
 	@$(BREW) update && $(BREW) upgrade && $(BREW) bundle install --global --force-cleanup
-	@$(MAKE) -s nvim claude-code
+	@$(MAKE) -s nvim
 
 # =============================================================================
 # Setup
 # =============================================================================
 
-.PHONY: check-deps homebrew setup-shell packages link nvim claude claude-code
+.PHONY: check-deps homebrew setup-shell packages link nvim claude
 
 check-deps:
 	@command -v curl >/dev/null || { echo "❌ curl required"; exit 1; }
@@ -72,19 +72,6 @@ nvim:
 
 claude:
 	@[ -f "$(CONFIG)/CLAUDE.md" ] && ln -sf "$(CONFIG)/CLAUDE.md" "$(HOME)/.claude/CLAUDE.md" || true
-
-claude-code: ## Install pinned claude-code binary (immutable to block self-updates)
-	@if [ -x "$(CLAUDE_CODE_BIN)" ] && "$(CLAUDE_CODE_BIN)" --version 2>/dev/null | grep -q "$(CLAUDE_CODE_VERSION)"; then \
-		echo "✅ claude-code $(CLAUDE_CODE_VERSION) already installed"; \
-	else \
-		echo "Installing claude-code $(CLAUDE_CODE_VERSION)..."; \
-		mkdir -p "$(dir $(CLAUDE_CODE_BIN))"; \
-		chflags nouchg "$(CLAUDE_CODE_BIN)" 2>/dev/null || true; \
-		[ -L "$(CLAUDE_CODE_BIN)" ] && rm -f "$(CLAUDE_CODE_BIN)" || true; \
-		curl -fsSL "$(CLAUDE_CODE_URL)" -o "$(CLAUDE_CODE_BIN)" && chmod +x "$(CLAUDE_CODE_BIN)" \
-			&& chflags uchg "$(CLAUDE_CODE_BIN)" \
-			&& echo "✅ claude-code $(CLAUDE_CODE_VERSION) installed to $(CLAUDE_CODE_BIN) (immutable)"; \
-	fi
 
 # =============================================================================
 # Maintenance

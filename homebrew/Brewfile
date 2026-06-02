@@ -75,7 +75,7 @@ brew 'zsh-autosuggestions'
 brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
 
-# claude-code pinned to 2.1.121 (bug in later versions); managed manually in ~/.local/bin/claude
+cask 'claude-code@latest'
 cask 'keymapp'
 cask 'rancher'
 cask 'rectangle'
