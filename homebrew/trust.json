@@ -1,0 +1,8 @@
+{
+  "trustedtaps": [
+    "azure/kubelogin",
+    "fluxcd/tap",
+    "hashicorp/tap",
+    "terraform-linters/tap"
+  ]
+}
