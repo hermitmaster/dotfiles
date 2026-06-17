@@ -13,6 +13,7 @@ aws-sso/
 gh/hosts.yml
 
 # Tool Caches & State
+homebrew/trust.json.lock
 devin/
 gcloud/
 github-copilot/
