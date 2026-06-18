@@ -4,5 +4,8 @@
     "fluxcd/tap",
     "hashicorp/tap",
     "terraform-linters/tap"
+  ],
+  "trustedcasks": [
+    "terraform-linters/tap/tflint"
   ]
 }
