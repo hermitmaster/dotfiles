@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-tap 'fluxcd/tap'
-tap 'hashicorp/tap'
+tap 'fluxcd/tap', trusted: true
+tap 'hashicorp/tap', trusted: true
 tap 'homebrew/services'
-tap 'terraform-linters/tap'
+tap 'terraform-linters/tap', trusted: true
 
 brew 'argocd'
 brew 'awscli'
@@ -109,7 +109,7 @@ cask 'keymapp'
 cask 'obsidian'
 cask 'rancher'
 cask 'rectangle'
-cask 'terraform-linters/tap/tflint'
+cask 'terraform-linters/tap/tflint', trusted: true
 cask 'wezterm'
 
 mas 'AdGuard for Safari', id: 1_440_147_259
@@ -124,7 +124,7 @@ if ENV['USER'] == 'hermitmaster'
 
   cask 'openemu', args: { 'no-quarantine': true }
 else
-  tap 'Azure/kubelogin'
+  tap 'Azure/kubelogin', trusted: true
 
   brew 'azure-cli'
   brew 'Azure/kubelogin/kubelogin'
