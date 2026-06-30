@@ -9,6 +9,7 @@ path=(
   $HOME/.local/bin(N)
   $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin(N)
   $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin(N)
+  $HOMEBREW_PREFIX/opt/openjdk@21/bin(N)
   $HOMEBREW_PREFIX/opt/ruby/bin(N)
   $HOMEBREW_PREFIX/bin(N)
   $HOMEBREW_PREFIX/sbin(N)
