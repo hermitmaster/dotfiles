@@ -9,11 +9,6 @@ ARCH     := $(shell uname -m)
 HOMEBREW_PREFIX := $(if $(filter arm64,$(ARCH)),/opt/homebrew,/usr/local)
 BREW     := $(HOMEBREW_PREFIX)/bin/brew
 
-CLAUDE_CODE_VERSION := 2.1.121
-CLAUDE_CODE_BIN     := $(HOME)/.local/bin/claude
-CLAUDE_CODE_ARCH    := $(if $(filter arm64,$(ARCH)),arm64,x64)
-CLAUDE_CODE_URL     := https://downloads.claude.ai/claude-code-releases/$(CLAUDE_CODE_VERSION)/darwin-$(CLAUDE_CODE_ARCH)/claude
-
 SYMLINKS := .zshenv .zshrc .zprofile
 
 # =============================================================================
@@ -27,7 +22,7 @@ help: ## Show this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo "\nQuick start: make install"
 
-install: check-deps homebrew link setup-shell packages nvim claude ## Full installation
+install: check-deps homebrew link setup-shell packages nvim ## Full installation
 	@echo "✅ Done. Restart your terminal or: source ~/.zshenv && source ~/.zshrc"
 
 bootstrap: check-deps homebrew link setup-shell ## Minimal setup (no packages)
@@ -42,7 +37,7 @@ update: ## Update Homebrew packages and Neovim plugins
 # Setup
 # =============================================================================
 
-.PHONY: check-deps homebrew setup-shell packages link nvim claude
+.PHONY: check-deps homebrew setup-shell packages link nvim
 
 check-deps:
 	@command -v curl >/dev/null || { echo "❌ curl required"; exit 1; }
@@ -70,9 +65,6 @@ link:
 nvim:
 	@command -v nvim >/dev/null && nvim --headless +'Lazy! sync' +qa 2>/dev/null || true
 
-claude:
-	@[ -f "$(CONFIG)/CLAUDE.md" ] && ln -sf "$(CONFIG)/CLAUDE.md" "$(HOME)/.claude/CLAUDE.md" || true
-
 # =============================================================================
 # Maintenance
 # =============================================================================
@@ -84,7 +76,7 @@ clean: ## Remove broken symlinks and caches
 	@command -v brew >/dev/null && brew cleanup || true
 
 uninstall: ## Remove dotfile symlinks
-	@rm -f $(addprefix $(HOME)/,$(SYMLINKS)) $(HOME)/.claude/CLAUDE.md
+	@rm -f $(addprefix $(HOME)/,$(SYMLINKS))
 	@echo "Dotfiles removed. Homebrew remains."
 
 info: ## Show system info and validate config
