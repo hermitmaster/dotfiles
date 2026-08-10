@@ -142,10 +142,6 @@ identity is layered via `includeIf "gitdir:~/work/"` → `~/work/.gitconfig`.
 
 ## Known drift
 
-- **`README.md` is stale.** It documents `make cron`, `make check`, `make dev-check`,
-  and the `uatt`/`dotfiles` aliases — none of which exist in the current Makefile — and
-  a `cron/crontab` that isn't in the repo. Trust the Makefile over the README; consider
-  fixing the README when you touch adjacent docs.
 - **`~/.claude/CLAUDE.md` is hand-maintained and untracked.** The Makefile used to
   symlink repo-root `CLAUDE.md` over it; that target was removed because the global file
   had diverged. Global infra conventions live there, not here.

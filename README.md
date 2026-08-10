@@ -5,15 +5,14 @@ management.
 
 ## Features
 
-- **XDG Base Directory compliant** - Clean organization under `~/.config/`
+- **XDG Base Directory compliant** - This repo _is_ `~/.config`; editing a file
+  here edits the live config for the running tool
 - **Automated setup** - One-command installation on vanilla macOS
 - **Modern tools** - Includes `eza`, `bat`, `fzf`, `neovim`, and more
-- **Zsh configuration** - Powerlevel10k theme, autosuggestions, syntax
-  highlighting
+- **Zsh configuration** - Pure prompt, autosuggestions, syntax highlighting
 - **Git integration** - Comprehensive aliases and conditional work/personal
   configs
-- **Homebrew management** - Brewfile with all development tools
-- **Cron automation** - Automated AWS credential refresh
+- **Homebrew management** - Brewfile as the single source of truth for packages
 
 ## Quick Start
 
@@ -26,8 +25,8 @@ git clone git@github.com:hermitmaster/dotfiles.git ~/.config
 # Full installation (recommended)
 cd ~/.config && make install
 
-# Restart your terminal or source the configs
-source ~/.zshenv && source ~/.zshrc
+# Start a fresh login shell to pick up the new config
+exec zsh -l
 ```
 
 ### Minimal Bootstrap
@@ -43,31 +42,27 @@ cd ~/.config && make bootstrap
 
 ### Installation & Setup
 
-- `make install` - Full installation (Homebrew + packages + configs + cron)
-- `make bootstrap` - Minimal setup (Homebrew + basic configs)
+- `make install` - Full installation: check-deps, homebrew, link, setup-shell,
+  packages, nvim
+- `make bootstrap` - Minimal setup, no packages: check-deps, homebrew, link,
+  setup-shell
 - `make homebrew` - Install Homebrew only
-- `make link` - Create symbolic links for config files
-- `make packages` - Install all packages from Brewfile
-- `make cron` - Install cron jobs
+- `make link` - Symlink the three zsh dotfiles into `$HOME` and create the XDG
+  directories
+- `make setup-shell` - Make Homebrew zsh the login shell
+- `make packages` - Install all packages from `homebrew/Brewfile`
 
 ### Maintenance
 
-- `make update` - Update all packages and tools (replaces old `uatt` function)
+- `make update` - Update Homebrew packages and Neovim plugins
 - `make nvim` - Update Neovim plugins
-- `make clean` - Clean up broken symlinks and caches
+- `make clean` - Remove broken `$HOME` symlinks and run `brew cleanup`
+- `make uninstall` - Remove the dotfile symlinks (Homebrew remains)
 
 ### Information & Debugging
 
-- `make info` - Show system and installation status
-- `make check` - Validate configuration files
+- `make info` - Show system info and validate symlinks, XDG dirs, and zsh syntax
 - `make help` - Show all available commands
-
-### Convenience Aliases
-
-After installation, you can use these shortcuts:
-
-- `uatt` - Quick update (alias for `make update`)
-- `dotfiles` - Access dotfiles management (alias for `make -C ~/.config`)
 
 ## What Gets Installed
 
@@ -89,37 +84,58 @@ After installation, you can use these shortcuts:
 ### Development Tools
 
 - **Go, Node.js, Python** - Programming languages
-- **Docker, Kubernetes tools** - Container orchestration
-- **AWS CLI** - Cloud tools
-- **Terraform** - Infrastructure as code
+- **Kubernetes tools** - `k9s`, `kubectx`, `kustomize`, `argocd`, `eksctl`,
+  `kubeconform`, `kube-linter`, `kubebuilder`, `kubeseal` (`kubectl` and `helm`
+  come from Rancher Desktop)
+- **AWS CLI, aws-sso-cli** - Cloud tools
+- **Terraform, Terragrunt** - Infrastructure as code
+- **LSP servers, formatters, linters** - Neovim's tooling, installed by Homebrew
+  rather than Mason (see `nvim/lua/plugins/mason.lua`)
 
 ### Applications
 
-- **Windsurf** - AI-powered IDE
-- **GoLand** - Go IDE
 - **WezTerm** - Modern terminal
+- **Rancher Desktop** - Containers
+- **Obsidian** - Notes
 - **Rectangle** - Window management
+- **Claude Code** - AI coding agent
 
 ## Configuration Structure
 
-```
+```text
 ~/.config/
 ├── Makefile              # Installation and management
-├── README.md            # This file
-├── cron/
-│   └── crontab          # Scheduled tasks
+├── README.md             # This file
+├── CLAUDE.md             # Guidance for Claude Code in this repo
 ├── git/
-│   ├── config           # Git configuration
-│   └── ignore           # Global gitignore
+│   ├── config            # Git configuration
+│   └── ignore            # Global gitignore
 ├── homebrew/
-│   └── Brewfile         # Package definitions
+│   └── Brewfile          # Package definitions
+├── nvim/                 # Neovim (LazyVim overlay)
+├── tmux/
+├── wezterm/
+├── k9s/
+├── lazygit/
 └── zsh/
-    ├── .zshenv          # Environment variables
-    ├── .zshrc           # Shell configuration
-    └── functions/       # Custom shell functions
+    ├── .zshenv           # Environment variables (every shell)
+    ├── .zprofile         # PATH and fpath (login shells)
+    ├── .zshrc            # Interactive shell configuration
+    └── functions/        # Custom shell functions
 ```
 
+The three zsh dotfiles are the only files symlinked out of this repo; everything
+else is read in place from `~/.config`. The split is load-order-critical -
+`.zshenv` sets environment variables, `.zprofile` sets PATH after macOS
+`path_helper` has run, and `.zshrc` handles interactive setup.
+
 ## Customization
+
+### Machine-Local Overrides
+
+`~/.zshenv.local` is sourced at the end of `.zshenv`, if present. Put
+machine-specific secrets and overrides there - it lives outside this repo on
+purpose.
 
 ### Environment-Specific Git Config
 
@@ -135,8 +151,14 @@ Create `~/work/.gitconfig` for work-specific settings.
 ### Adding New Tools
 
 1. Add packages to `homebrew/Brewfile`
-2. Add configuration to `.zshrc` if needed
+2. Add configuration to `.zshrc` if needed, guarded by
+   `(( $+commands[foo] ))` so the config stays sourceable before
+   `make packages` has run
 3. Run `make update` to install
+
+`make update` passes `--force-cleanup` to `brew bundle install`, so **anything
+not in the Brewfile gets uninstalled**. Add tools to the Brewfile rather than
+`brew install`-ing them.
 
 ### Custom Functions
 
@@ -152,9 +174,23 @@ make info
 
 ### Validate Configurations
 
+`make info` syntax-checks `.zshrc` and `.zshenv` and verifies every symlink and
+XDG directory. To check a single file:
+
 ```bash
-make dev-check
+zsh -n zsh/.zshrc
 ```
+
+### Changes Not Taking Effect
+
+Shell config changes need a **new shell**, not just a `source`:
+
+```bash
+exec zsh -l
+```
+
+`.zprofile` only runs for login shells, so `source ~/.zprofile` re-prepends PATH
+entries instead of reproducing a clean login environment.
 
 ### Clean Up Issues
 
