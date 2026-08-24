@@ -32,12 +32,13 @@ update: ## Update Homebrew packages and Neovim plugins
 	@[ -x "$(BREW)" ] || { echo "❌ Homebrew not found"; exit 1; }
 	@$(BREW) update && $(BREW) upgrade && $(BREW) bundle install --global --force-cleanup
 	@$(MAKE) -s nvim
+	@$(MAKE) -s completions
 
 # =============================================================================
 # Setup
 # =============================================================================
 
-.PHONY: check-deps homebrew setup-shell packages link nvim
+.PHONY: check-deps homebrew setup-shell packages link nvim completions
 
 check-deps:
 	@command -v curl >/dev/null || { echo "❌ curl required"; exit 1; }
@@ -57,13 +58,19 @@ packages: homebrew
 	@$(BREW) update && $(BREW) bundle install --global
 
 link:
-	@mkdir -p $(HOME)/.local/{bin,share,state} $(HOME)/.local/state/zsh $(HOME)/.cache $(HOME)/.claude
+	@mkdir -p $(HOME)/.local/{bin,share,state} $(HOME)/.local/state/zsh $(HOME)/.cache $(HOME)/.cache/zsh/completions $(HOME)/.claude
 	@for f in .zshenv .zshrc .zprofile; do \
 		[ -f "$(ZSH_DIR)/$$f" ] && ln -sf "$(ZSH_DIR)/$$f" "$(HOME)/$$f"; \
 	done
 
 nvim:
 	@command -v nvim >/dev/null && nvim --headless +'Lazy! sync' +qa 2>/dev/null || true
+
+# Regenerate cached zsh completions for upgraded tools by running one login
+# shell, so the next interactive shell does not pay the cost. The generation
+# logic itself lives in zsh/.zshrc; this just triggers it.
+completions: ## Regenerate cached zsh completions
+	@zsh -lic true >/dev/null 2>&1 || true
 
 # =============================================================================
 # Maintenance

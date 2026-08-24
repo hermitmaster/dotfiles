@@ -18,6 +18,7 @@ path=(
 
 fpath=(
   $XDG_CONFIG_HOME/zsh/functions(N)
+  $XDG_CACHE_HOME/zsh/completions(N)
   $HOMEBREW_PREFIX/share/zsh/site-functions(N)
   $HOMEBREW_PREFIX/share/zsh-completions(N)
   $fpath

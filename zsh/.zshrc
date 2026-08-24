@@ -5,6 +5,28 @@ fi
 # Load functions and completion (with caching)
 autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit
 
+# Completions Homebrew does not ship as _<tool> files. Generated into the cache
+# dir and refreshed only when the tool's binary is newer than the cached file,
+# so the subprocess cost is paid on upgrade rather than on every shell. This
+# must run before compinit. fpath is typeset -U (.zprofile), so the prepend is
+# idempotent even though .zprofile already lists the directory.
+zcompgen="$XDG_CACHE_HOME/zsh/completions"
+[[ -d "$zcompgen" ]] || mkdir -p "$zcompgen"
+fpath=("$zcompgen" $fpath)
+zcompgen_added=0
+for _tool in kubectl helm docker kubebuilder k3d kind flux skaffold conftest \
+             cmctl golangci-lint infracost; do
+  (( $+commands[$_tool] )) || continue
+  if [[ ! -s "$zcompgen/_$_tool" || $commands[$_tool] -nt "$zcompgen/_$_tool" ]]; then
+    if $_tool completion zsh >| "$zcompgen/_$_tool" 2>/dev/null; then
+      zcompgen_added=1
+    else
+      rm -f "$zcompgen/_$_tool"
+    fi
+  fi
+done
+unset _tool zcompgen
+
 # Rebuild the dump at most once a day; -C then skips the (slow) security scan.
 # The freshness test MUST be an array glob: zsh does not perform filename
 # generation on [[ ]] operands, so the previous `[[ -n ...(#qN.mh+24) ]]` was
@@ -13,7 +35,7 @@ autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit
 zcompdump="$XDG_CACHE_HOME/zsh/zcompdump"
 [[ -d "${zcompdump:h}" ]] || mkdir -p "${zcompdump:h}"
 zcompdump_fresh=( ${zcompdump}(N.mh-24) )
-if (( $#zcompdump_fresh )); then
+if (( $#zcompdump_fresh && ! zcompgen_added )); then
   compinit -C -d "$zcompdump"
 else
   compinit -d "$zcompdump"
@@ -22,7 +44,36 @@ else
   # Stamp it explicitly to restart the 24h clock.
   touch "$zcompdump"
 fi
-unset zcompdump zcompdump_fresh
+unset zcompdump zcompdump_fresh zcompgen_added
+
+# terraform and terragrunt expose a bash-style completion handler over the
+# COMP_LINE protocol rather than a zsh function, so they need bashcompinit --
+# which must be loaded after compinit.
+if (( $+commands[terraform] || $+commands[terragrunt] )); then
+  autoload -Uz bashcompinit && bashcompinit
+  (( $+commands[terraform] ))  && complete -o nospace -C "$commands[terraform]" terraform
+  (( $+commands[terragrunt] )) && complete -o nospace -C "$commands[terragrunt]" terragrunt
+fi
+
+# Completion behaviour
+zmodload zsh/complist
+zstyle ':completion:*' menu select
+zstyle ':completion:*' verbose yes
+# Progressive relaxation: exact, then case-insensitive, then substring -- which
+# is what makes long prefixed names (AWS SSO profiles, k8s resources) usable.
+zstyle ':completion:*' matcher-list '' 'm:{a-zA-Z}={A-Za-z}' 'r:|[._-]=* r:|=*'
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*:descriptions' format '%F{blue}-- %d --%f'
+zstyle ':completion:*:warnings'     format '%F{red}-- no matches --%f'
+# Scoped to the completion menu so it does not affect eza, which reads LS_COLORS.
+zstyle ':completion:*' list-colors 'di=1;34' 'ln=1;36' 'ex=1;32' ${(s.:.)LS_COLORS}
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' squeeze-slashes true
+# Cache the expensive completers (aws, kubectl resource lookups, ...)
+zstyle ':completion:*' use-cache on
+zstyle ':completion:*' cache-path "$XDG_CACHE_HOME/zsh/zcompcache"
+zstyle ':completion:*:*:kill:*:processes' command 'ps -u $USER -o pid,%cpu,comm -w'
+zstyle ':completion:*:*:*:*:processes' menu yes select
 
 # Keymap must be explicit. zsh picks viins automatically when $EDITOR/$VISUAL
 # matches *vi* -- and "nvim" matches -- so this shell was silently in vi mode
