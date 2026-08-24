@@ -80,11 +80,11 @@ inline (`trusted: true`) rather than in `homebrew/trust.json`, which is gitignor
 
 Claude Code is installed via `cask 'claude-code@latest'`.
 
-Neovim's tooling is in here too: LSP servers, formatters, linters, and the Go debug
-adapter are Brewfile formulas rather than Mason packages, so `make update` keeps them
-current with everything else. See `nvim/lua/plugins/mason.lua` for the Neovim half of
-that split. Note `tflint` is a **cask** (`terraform-linters/tap/tflint`) — there is no
-`tflint` formula, and `brew 'tflint'` fails the whole `brew bundle install`.
+Neovim's tooling is deliberately *not* in here: LSP servers, formatters, linters, and
+the Go debug adapter are Mason's job, so they update on Mason's schedule rather than
+with `make update`. Note `tflint` is a **cask** (`terraform-linters/tap/tflint`) —
+there is no `tflint` formula, and `brew 'tflint'` fails the whole `brew bundle
+install`.
 
 ### Vim-aware pane navigation is split across two files
 
@@ -109,20 +109,18 @@ points, and `options.lua` is currently comments only) and `lua/plugins/` (specs 
 over LazyVim's). `lazy-lock.json` is gitignored, so plugin versions are deliberately
 not pinned across machines; `checker.enabled = true` polls for updates.
 
-Mason stays enabled but is nearly idle. `lua/plugins/mason.lua` filters every
-Homebrew-provided tool out of `mason.nvim`'s `ensure_installed`, and sets `mason = false`
-on the matching LSP servers so LazyVim enables them from PATH via `vim.lsp.enable()`
-instead of through `mason-lspconfig` — whose `automatic_enable` only starts servers it
-installed itself, which is why that flag is load-bearing and not just cosmetic. Both
-prunes must be `opts` **functions**: `mason.nvim` declares
-`opts_extend = { "ensure_installed" }`, so an `opts` table would append to the list
-rather than replace it. All Mason has left to install is `marksman`, skipped because its
-formula depends on a full `dotnet@9` runtime.
+Mason owns Neovim's tooling end to end — LSP servers, formatters, linters, and the Go
+debug adapter all come from whatever LazyVim and its enabled extras put in
+`ensure_installed`. There is no `lua/plugins/mason.lua`; the repo does not override any
+of it. This was briefly inverted (Brewfile formulas plus a prune spec) and reverted,
+so tools like `gopls`, `stylua`, and `shellcheck` are intentionally absent from the
+Brewfile — adding one back there does **not** hand the tool to Homebrew on its own.
 
-The gotcha: `$XDG_DATA_HOME/nvim/mason/bin` precedes `$HOMEBREW_PREFIX/bin` in
+The reason: `$XDG_DATA_HOME/nvim/mason/bin` precedes `$HOMEBREW_PREFIX/bin` in
 `.zprofile`, so anything Mason has on disk **shadows the brew copy of the same tool**.
-Adding a formula is therefore not enough — `:MasonUninstall` the old package too, or
-nothing changes.
+Going the other way means `:MasonUninstall` plus a `mason = false` on the matching
+lspconfig server (`mason-lspconfig`'s `automatic_enable` only starts servers it
+installed itself), which is exactly the complexity this revert removed.
 
 ### Gitignore encodes a secrets/state boundary
 

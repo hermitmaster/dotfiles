@@ -88,8 +88,7 @@ cd ~/.config && make bootstrap
   `kubebuilder`, `kubeseal` (`kubectl` and `helm` come from Rancher Desktop)
 - **AWS CLI, aws-sso-cli** - Cloud tools
 - **Terraform, Terragrunt** - Infrastructure as code
-- **LSP servers, formatters, linters** - Neovim's tooling, installed by Homebrew
-  rather than Mason (see `nvim/lua/plugins/mason.lua`)
+- **LSP servers, formatters, linters** - not here; Neovim installs its own via Mason
 
 ### Applications
 
