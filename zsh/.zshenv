@@ -1,4 +1,3 @@
-export CXXFLAGS="-stdlib=libc++"
 export HOMEBREW_BUNDLE_INSTALL_CLEANUP=1
 export KUBECONFIG="$HOME/.kube/config"
 export NPM_CONFIG_PREFIX="$HOME/.local"

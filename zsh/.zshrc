@@ -101,7 +101,7 @@ fi
 
 ## eza - better ls (replaces conflicting aliases)
 if (( $+commands[eza] )); then
-  eza_params=('--git' '--icons' '--group-directories-first' '--time-style=long-iso' '--group')
+  typeset -ga eza_params=('--git' '--icons' '--group-directories-first' '--time-style=long-iso' '--group')
   alias ls='eza ${eza_params}'
   alias l='eza --git-ignore ${eza_params}'
   alias ll='eza --all --header --long ${eza_params}'
@@ -185,7 +185,9 @@ SAVEHIST=100000
 
 # Shell options
 ## History
-setopt append_history
+# append_history is on by default, and the manual says inc_append_history
+# should be OFF when share_history is set -- share_history already appends
+# incrementally as well as importing. Neither is listed here for that reason.
 setopt extended_history
 setopt hist_expire_dups_first
 setopt hist_find_no_dups
@@ -194,7 +196,6 @@ setopt hist_ignore_space
 setopt hist_reduce_blanks
 setopt hist_save_no_dups
 setopt hist_verify
-setopt inc_append_history
 setopt share_history
 ## Completion
 setopt always_to_end
