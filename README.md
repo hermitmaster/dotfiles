@@ -84,9 +84,8 @@ cd ~/.config && make bootstrap
 ### Development Tools
 
 - **Go, Node.js, Python** - Programming languages
-- **Kubernetes tools** - `k9s`, `kubectx`, `kustomize`, `argocd`, `eksctl`,
-  `kubeconform`, `kube-linter`, `kubebuilder`, `kubeseal` (`kubectl` and `helm`
-  come from Rancher Desktop)
+- **Kubernetes tools** - `k9s`, `kubectx`, `kustomize`, `argocd`, `kubeconform`,
+  `kubebuilder`, `kubeseal` (`kubectl` and `helm` come from Rancher Desktop)
 - **AWS CLI, aws-sso-cli** - Cloud tools
 - **Terraform, Terragrunt** - Infrastructure as code
 - **LSP servers, formatters, linters** - Neovim's tooling, installed by Homebrew

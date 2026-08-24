@@ -33,7 +33,7 @@ anything under `zsh/`.
 
 To check a single shell file without the rest: `zsh -n zsh/.zshrc`.
 
-Neovim's Lua is testable with `busted` (in the Brewfile), but no test files exist yet.
+There are no Neovim Lua tests, and no Lua test runner in the Brewfile.
 
 ### Verifying a change
 
