@@ -86,18 +86,20 @@ current with everything else. See `nvim/lua/plugins/mason.lua` for the Neovim ha
 that split. Note `tflint` is a **cask** (`terraform-linters/tap/tflint`) — there is no
 `tflint` formula, and `brew 'tflint'` fails the whole `brew bundle install`.
 
-### Vim-aware pane navigation is duplicated in three places
+### Vim-aware pane navigation is split across two files
 
 `Ctrl-h/j/k/l` moves between panes, but passes through to Neovim when the focused pane
-is running vim. The same contract is implemented independently in:
+is running vim. The two halves of that contract live in:
 
 - `wezterm/wezterm.lua` — `isVim()` checks `pane:get_foreground_process_name()`
-- `tmux/tmux.conf` — `$is_vim` shell-outs to `ps -o state= -o comm=`
 - `nvim/lua/plugins/overrides.lua` — `numToStr/Navigator.nvim` handles the vim side
 
-`Ctrl-/` (split down 20%) and `Ctrl-\` (split right 30%, launching `claude`) are
-likewise bound in both WezTerm and tmux. **Change one, change all three** — a keybinding
-added to only WezTerm silently does nothing under tmux.
+`Ctrl-/` (split down 20%) and `Ctrl-\` (split right 30%, launching `claude`) are bound
+in WezTerm only. **Change one, change both** — the terminal and the Neovim side have to
+agree or a keystroke is swallowed by whichever one is not expecting it.
+
+tmux used to be a third implementation of the same contract; it was removed, so WezTerm
+is now the only multiplexer.
 
 ### Neovim is a thin LazyVim overlay
 

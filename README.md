@@ -112,7 +112,6 @@ cd ~/.config && make bootstrap
 ├── homebrew/
 │   └── Brewfile          # Package definitions
 ├── nvim/                 # Neovim (LazyVim overlay)
-├── tmux/
 ├── wezterm/
 ├── k9s/
 ├── lazygit/
