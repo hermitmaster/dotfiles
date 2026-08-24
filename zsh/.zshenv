@@ -1,7 +1,6 @@
 export HOMEBREW_BUNDLE_INSTALL_CLEANUP=1
 export KUBECONFIG="$HOME/.kube/config"
 export NPM_CONFIG_PREFIX="$HOME/.local"
-export NPM_CONFIG_PYTHON=""
 export _ZO_DOCTOR=0
 export XDG_CACHE_HOME="$HOME/.cache"
 export XDG_CONFIG_HOME="$HOME/.config"
