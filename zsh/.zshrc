@@ -10,6 +10,12 @@ else
   compinit -C
 fi
 
+# Keymap must be explicit. zsh picks viins automatically when $EDITOR/$VISUAL
+# matches *vi* -- and "nvim" matches -- so this shell was silently in vi mode
+# as a side effect of the editor aliases below. Pin it. Use `bindkey -e` for
+# emacs keybindings instead.
+bindkey -v
+
 # Tool configurations and aliases
 ## bat - better cat
 if (( $+commands[bat] )); then
@@ -79,6 +85,14 @@ if [[ -f "$HOMEBREW_PREFIX/share/zsh/site-functions/prompt_pure_setup" ]]; then
   PROMPT=" $PROMPT"
 fi
 
+# History
+# These MUST be set here, not in .zshenv: macOS /etc/zshrc runs in between and
+# hardcodes HISTFILE/HISTSIZE/SAVEHIST, silently overriding anything earlier.
+HISTFILE="$XDG_STATE_HOME/zsh/history"
+[[ -d "${HISTFILE:h}" ]] || mkdir -p "${HISTFILE:h}"
+HISTSIZE=200000
+SAVEHIST=100000
+
 # Shell options
 ## History
 setopt append_history
@@ -104,16 +118,23 @@ setopt pushd_silent
 setopt auto_list
 setopt auto_menu
 
-HISTSIZE=$SAVEHIST
+## direnv - per-directory environments
+if (( $+commands[direnv] )); then
+  eval "$(direnv hook zsh)"
+fi
 
-eval "$(direnv hook zsh)"
-eval "$(zoxide init zsh --cmd cd)"
+## zoxide - smarter cd
+if (( $+commands[zoxide] )); then
+  eval "$(zoxide init zsh --cmd cd)"
+fi
 
 ## zsh-syntax-highlighting (must be loaded last)
 if [[ -f "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]]; then
   source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
-precmd_functions+=set_window_title
-preexec_functions+=set_window_title
+# Registered by filtering-then-appending rather than a bare += so that
+# re-sourcing .zshrc does not run the hook twice per prompt.
+precmd_functions=(${precmd_functions:#set_window_title} set_window_title)
+preexec_functions=(${preexec_functions:#set_window_title} set_window_title)
 

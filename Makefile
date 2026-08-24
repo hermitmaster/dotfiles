@@ -57,7 +57,7 @@ packages: homebrew
 	@$(BREW) update && $(BREW) bundle install --global
 
 link:
-	@mkdir -p $(HOME)/.local/{bin,share,state} $(HOME)/.cache $(HOME)/.claude
+	@mkdir -p $(HOME)/.local/{bin,share,state} $(HOME)/.local/state/zsh $(HOME)/.cache $(HOME)/.claude
 	@for f in .zshenv .zshrc .zprofile; do \
 		[ -f "$(ZSH_DIR)/$$f" ] && ln -sf "$(ZSH_DIR)/$$f" "$(HOME)/$$f"; \
 	done
