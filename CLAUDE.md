@@ -11,7 +11,7 @@ running tool. There is no build step and no "deploy": consequences are immediate
 The only exception is the three zsh dotfiles, which must live at `$HOME` and are
 symlinked out of `zsh/` by `make link`.
 
-macOS-only (Apple Silicon and Intel), zsh-only.
+macOS-only (Apple Silicon; Intel is not supported), zsh-only.
 
 ## Commands
 

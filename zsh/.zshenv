@@ -7,17 +7,12 @@ export XDG_CONFIG_HOME="$HOME/.config"
 export XDG_DATA_HOME="$HOME/.local/share"
 export XDG_STATE_HOME="$HOME/.local/state"
 
-# Apple Silicon and Intel install Homebrew to different prefixes. Deriving this
-# matters: every PATH entry, fpath entry, and plugin `source` downstream is
-# built from it, and they all fail *silently* (via (N) globs and file tests)
-# when it points at a prefix that does not exist.
-if [[ -x /opt/homebrew/bin/brew ]]; then
-  export HOMEBREW_PREFIX="/opt/homebrew"
-  export HOMEBREW_REPOSITORY="/opt/homebrew"
-else
-  export HOMEBREW_PREFIX="/usr/local"
-  export HOMEBREW_REPOSITORY="/usr/local/Homebrew"
-fi
+# Apple Silicon only, so the Homebrew prefix is fixed at /opt/homebrew. Every
+# PATH entry, fpath entry, and plugin `source` downstream is built from it, and
+# they all fail *silently* (via (N) globs and file tests) if it ever points at a
+# prefix that does not exist.
+export HOMEBREW_PREFIX="/opt/homebrew"
+export HOMEBREW_REPOSITORY="/opt/homebrew"
 export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 
 export GOPATH="$XDG_DATA_HOME/go"

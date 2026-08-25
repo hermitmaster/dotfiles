@@ -204,7 +204,7 @@ make install    # Reinstall everything
 
 ## Requirements
 
-- macOS (tested on Apple Silicon and Intel)
+- macOS on Apple Silicon (Intel is not supported)
 - `curl` and `git` (pre-installed on macOS)
 - Internet connection for downloading packages
 

@@ -5,8 +5,7 @@ SHELL := /bin/zsh
 
 CONFIG   := $(HOME)/.config
 ZSH_DIR  := $(CONFIG)/zsh
-ARCH     := $(shell uname -m)
-HOMEBREW_PREFIX := $(if $(filter arm64,$(ARCH)),/opt/homebrew,/usr/local)
+HOMEBREW_PREFIX := /opt/homebrew
 BREW     := $(HOMEBREW_PREFIX)/bin/brew
 
 SYMLINKS := .zshenv .zshrc .zprofile
@@ -89,7 +88,7 @@ uninstall: ## Remove dotfile symlinks
 info: ## Show system info and validate config
 	@printf "OS: %s %s\nArch: %s\nShell: %s\nBrew: %s\nConfig: %s\n" \
 		"$$(sw_vers -productName)" "$$(sw_vers -productVersion)" \
-		"$(ARCH)" "$$SHELL" "$(HOMEBREW_PREFIX)" "$(CONFIG)"
+		"$$(uname -m)" "$$SHELL" "$(HOMEBREW_PREFIX)" "$(CONFIG)"
 	@echo "---"
 	@[ -x "$(BREW)" ]         && echo "✅ Homebrew"  || echo "❌ Homebrew"
 	@for f in $(SYMLINKS); do \
