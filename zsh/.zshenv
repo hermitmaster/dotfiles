@@ -23,6 +23,8 @@ export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 export GOPATH="$XDG_DATA_HOME/go"
 export GOBIN="$GOPATH/bin"
 export JAVA_HOME="$HOMEBREW_PREFIX/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
+export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
+export STARSHIP_CACHE="$XDG_CACHE_HOME/starship"
 
 export CLAUDE_AUTO_BACKGROUND_TASKS=1
 export CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1
