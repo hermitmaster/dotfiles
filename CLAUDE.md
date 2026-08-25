@@ -66,6 +66,23 @@ Preserve that pattern when adding tools.
 `$HOME/.zshenv.local` is sourced at the end of `.zshenv` for machine-local secrets and
 overrides — it is intentionally outside this repo.
 
+### The prompt is starship, at a non-default path
+
+`starship/starship.toml` is a replica of the Pure prompt that `.zshrc` used to build
+out of `zstyle` calls, down to the ANSI palette indexes and the one-line layout that
+Pure needed `prompt_newline=' '` plus `PROMPT=" $PROMPT"` to produce.
+
+**It is only found there because `.zshenv` exports `STARSHIP_CONFIG`.** starship's own
+default is `$XDG_CONFIG_HOME/starship.toml` — the repo root — so the config goes
+inert, silently falling back to starship's stock preset, if that export is ever
+dropped. The nested path exists to match every other tool's directory.
+
+Two Pure behaviours did not survive and are not recoverable through config: starship
+renders synchronously and never background-fetches, so the git segment can lag on a
+large repo and `⇡`/`⇣` only move after a manual fetch. Inside `starship.toml`, the
+zero-width spaces in `[git_status]` are load-bearing — they let one conditional group
+emit exactly one `*`; replacing them with `''` kills the dirty marker.
+
 ### Brewfile is the single source of truth for packages
 
 `homebrew/Brewfile` is consumed via `brew bundle install --global`, and
@@ -74,17 +91,21 @@ Brewfile gets uninstalled** on `make update`. Adding a tool means adding it here
 `brew install`-ing it.
 
 The file branches on `ENV['USER'] == 'hermitmaster'` (personal) vs else (work): work
-machines get `azure-cli`, `kubelogin`, `copier`, `snyk-cli`, `yubico-authenticator`;
-the personal machine gets `openemu` and Homebrew-core `opencode`. Tap trust is declared
-inline (`trusted: true`) rather than in `homebrew/trust.json`, which is gitignored.
+machines get `azure-cli`, `kubelogin`, `snyk-cli`, `yubico-authenticator`; the personal
+machine gets `openemu` and Homebrew-core `opencode`. Tap trust is declared inline
+(`trusted: true`) rather than in `homebrew/trust.json`, which is gitignored.
 
 Claude Code is installed via `cask 'claude-code@latest'`.
 
 Neovim's tooling is deliberately *not* in here: LSP servers, formatters, linters, and
 the Go debug adapter are Mason's job, so they update on Mason's schedule rather than
-with `make update`. Note `tflint` is a **cask** (`terraform-linters/tap/tflint`) —
-there is no `tflint` formula, and `brew 'tflint'` fails the whole `brew bundle
-install`.
+with `make update`.
+
+`tflint` used to be the one exception, pinned as a **cask**
+(`terraform-linters/tap/tflint`) because no `tflint` formula exists — and `brew
+'tflint'` fails the whole `brew bundle install`. It was dropped: the enabled
+`lazyvim.plugins.extras.lang.terraform` extra means Mason installs it, so the cask was
+only shadowed. If you ever put it back, it is a `cask`, never a `brew`.
 
 ### Vim-aware pane navigation is split across two files
 
@@ -113,8 +134,9 @@ Mason owns Neovim's tooling end to end — LSP servers, formatters, linters, and
 debug adapter all come from whatever LazyVim and its enabled extras put in
 `ensure_installed`. There is no `lua/plugins/mason.lua`; the repo does not override any
 of it. This was briefly inverted (Brewfile formulas plus a prune spec) and reverted,
-so tools like `gopls`, `stylua`, and `shellcheck` are intentionally absent from the
-Brewfile — adding one back there does **not** hand the tool to Homebrew on its own.
+so tools like `gopls`, `stylua`, `shellcheck`, and `tflint` are intentionally absent
+from the Brewfile — adding one back there does **not** hand the tool to Homebrew on
+its own.
 
 The reason: `$XDG_DATA_HOME/nvim/mason/bin` precedes `$HOMEBREW_PREFIX/bin` in
 `.zprofile`, so anything Mason has on disk **shadows the brew copy of the same tool**.
