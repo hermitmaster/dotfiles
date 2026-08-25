@@ -12,8 +12,6 @@ export XDG_STATE_HOME="$HOME/.local/state"
 # they all fail *silently* (via (N) globs and file tests) if it ever points at a
 # prefix that does not exist.
 export HOMEBREW_PREFIX="/opt/homebrew"
-export HOMEBREW_REPOSITORY="/opt/homebrew"
-export HOMEBREW_CELLAR="$HOMEBREW_PREFIX/Cellar"
 
 export GOPATH="$XDG_DATA_HOME/go"
 export GOBIN="$GOPATH/bin"

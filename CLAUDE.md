@@ -50,7 +50,7 @@ macOS `path_helper` runs from `/etc/zprofile` and **reorders PATH** if PATH is s
 earlier. This dictates the split:
 
 - **`.zshenv`** — env vars only, every shell. Sets `XDG_*` first, then vars that
-  interpolate them (`GOPATH`, `JAVA_HOME`, `HOMEBREW_CELLAR`). Never set PATH here.
+  interpolate them (`GOPATH`, `JAVA_HOME`, `STARSHIP_CONFIG`). Never set PATH here.
 - **`.zprofile`** — PATH and fpath only, login shells, after `path_helper`. Uses
   `typeset -gU` for dedup and the `(N)` glob qualifier so missing dirs vanish silently.
 - **`.zshrc`** — interactive only: aliases, completion, prompt, `setopt`, hooks.
