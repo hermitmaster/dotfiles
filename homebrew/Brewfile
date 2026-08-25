@@ -77,7 +77,6 @@ cask 'keymapp'
 cask 'obsidian'
 cask 'rancher'
 cask 'rectangle'
-cask 'terraform-linters/tap/tflint', trusted: true
 cask 'wezterm'
 
 mas 'AdGuard for Safari', id: 1_440_147_259
@@ -94,7 +93,6 @@ else
 
   brew 'azure-cli'
   brew 'Azure/kubelogin/kubelogin'
-  brew 'copier'
   brew 'snyk-cli'
 
   cask 'yubico-authenticator'
