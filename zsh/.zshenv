@@ -14,7 +14,5 @@ export XDG_STATE_HOME="$HOME/.local/state"
 export GOPATH="$XDG_DATA_HOME/go"
 export GOBIN="$GOPATH/bin"
 export JAVA_HOME="$HOMEBREW_PREFIX/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
-export STARSHIP_CONFIG="$XDG_CONFIG_HOME/starship/starship.toml"
-export STARSHIP_CACHE="$XDG_CACHE_HOME/starship"
 
 [[ -f "$HOME/.zshenv.local" ]] && source "$HOME/.zshenv.local"

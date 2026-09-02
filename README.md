@@ -9,7 +9,7 @@ management.
   here edits the live config for the running tool
 - **Automated setup** - One-command installation on vanilla macOS
 - **Modern tools** - Includes `eza`, `bat`, `fzf`, `neovim`, and more
-- **Zsh configuration** - starship prompt, autosuggestions, syntax highlighting
+- **Zsh configuration** - Pure prompt, autosuggestions, syntax highlighting
 - **Git integration** - Comprehensive aliases and conditional work/personal
   configs
 - **Homebrew management** - Brewfile as the single source of truth for packages

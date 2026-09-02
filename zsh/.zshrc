@@ -155,17 +155,24 @@ if [[ -f "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]]
   ZSH_AUTOSUGGEST_USE_ASYNC=1
 fi
 
-## starship prompt
-# Replaces Pure. starship/starship.toml replicates the zstyle colors and the
-# single-line layout that used to live here; it is only found there because
-# .zshenv points $STARSHIP_CONFIG at it -- starship's own default is
-# $XDG_CONFIG_HOME/starship.toml, i.e. the repo root.
-#
-# Unlike Pure, starship renders synchronously and never fetches, so the git
-# segment can lag on a huge repo and the up/down arrows only move after you
-# fetch yourself.
-if (( $+commands[starship] )); then
-  eval "$(starship init zsh)"
+## Pure prompt
+if [[ -f "$HOMEBREW_PREFIX/share/zsh/site-functions/prompt_pure_setup" ]]; then
+  autoload -Uz promptinit
+  promptinit
+
+  zstyle :prompt:pure:execution_time color 8
+  zstyle :prompt:pure:git:action color 1
+  zstyle :prompt:pure:git:branch color 2
+  zstyle :prompt:pure:git:dirty color 5
+  zstyle :prompt:pure:host color 8
+  zstyle :prompt:pure:prompt:success color 2
+  zstyle :prompt:pure:prompt:continuation color 8
+  zstyle :prompt:pure:user color 8
+  zstyle :prompt:pure:virtualenv color 8
+
+  prompt pure
+  prompt_newline=' '
+  PROMPT=" $PROMPT"
 fi
 
 # History

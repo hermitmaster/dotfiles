@@ -50,7 +50,7 @@ macOS `path_helper` runs from `/etc/zprofile` and **reorders PATH** if PATH is s
 earlier. This dictates the split:
 
 - **`.zshenv`** — env vars only, every shell. Sets `XDG_*` first, then vars that
-  interpolate them (`GOPATH`, `JAVA_HOME`, `STARSHIP_CONFIG`). Never set PATH here.
+  interpolate them (`GOPATH`, `GOBIN`, `JAVA_HOME`). Never set PATH here.
 - **`.zprofile`** — PATH and fpath only, login shells, after `path_helper`. Uses
   `typeset -gU` for dedup and the `(N)` glob qualifier so missing dirs vanish silently.
 - **`.zshrc`** — interactive only: aliases, completion, prompt, `setopt`, hooks.
@@ -66,22 +66,20 @@ Preserve that pattern when adding tools.
 `$HOME/.zshenv.local` is sourced at the end of `.zshenv` for machine-local secrets and
 overrides — it is intentionally outside this repo.
 
-### The prompt is starship, at a non-default path
+### The prompt is Pure, tweaked to one line
 
-`starship/starship.toml` is a replica of the Pure prompt that `.zshrc` used to build
-out of `zstyle` calls, down to the ANSI palette indexes and the one-line layout that
-Pure needed `prompt_newline=' '` plus `PROMPT=" $PROMPT"` to produce.
+`.zshrc` builds the prompt out of `zstyle :prompt:pure:*` calls against the `pure`
+formula's `prompt_pure_setup`, then applies two local tweaks that are easy to lose:
+`prompt_newline=' '` folds the prompt symbol onto the preprompt line instead of giving
+it its own, and `PROMPT=" $PROMPT"` adds the single leading space. Drop either and the
+layout reverts to stock Pure's two-line form.
 
-**It is only found there because `.zshenv` exports `STARSHIP_CONFIG`.** starship's own
-default is `$XDG_CONFIG_HOME/starship.toml` — the repo root — so the config goes
-inert, silently falling back to starship's stock preset, if that export is ever
-dropped. The nested path exists to match every other tool's directory.
+The colors are ANSI palette indexes (`8` bright black, `2` green, `5` magenta, `1`
+red), so they track the terminal theme rather than pinning hex values.
 
-Two Pure behaviours did not survive and are not recoverable through config: starship
-renders synchronously and never background-fetches, so the git segment can lag on a
-large repo and `⇡`/`⇣` only move after a manual fetch. Inside `starship.toml`, the
-zero-width spaces in `[git_status]` are load-bearing — they let one conditional group
-emit exactly one `*`; replacing them with `''` kills the dirty marker.
+Like every other integration in `.zshrc`, the block is guarded — it tests for
+`$HOMEBREW_PREFIX/share/zsh/site-functions/prompt_pure_setup` and silently does
+nothing on a machine where `make packages` hasn't run.
 
 ### Brewfile is the single source of truth for packages
 
