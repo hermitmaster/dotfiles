@@ -153,9 +153,9 @@ Create `~/work/.gitconfig` for work-specific settings.
    `make packages` has run
 3. Run `make update` to install
 
-`make update` passes `--force-cleanup` to `brew bundle install`, so **anything
-not in the Brewfile gets uninstalled**. Add tools to the Brewfile rather than
-`brew install`-ing them.
+`make update` runs `brew bundle cleanup --global --force` after installing, so
+**anything not in the Brewfile gets uninstalled**. Add tools to the Brewfile
+rather than `brew install`-ing them.
 
 ### Custom Functions
 

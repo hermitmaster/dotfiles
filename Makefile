@@ -29,7 +29,8 @@ bootstrap: check-deps homebrew link setup-shell ## Minimal setup (no packages)
 
 update: ## Update Homebrew packages and Neovim plugins
 	@[ -x "$(BREW)" ] || { echo "❌ Homebrew not found"; exit 1; }
-	@$(BREW) update && $(BREW) upgrade && $(BREW) bundle install --global --force-cleanup
+	@$(BREW) update && $(BREW) upgrade && $(BREW) bundle install --global
+	@$(BREW) bundle cleanup --global --force
 	@$(MAKE) -s nvim
 	@$(MAKE) -s completions
 

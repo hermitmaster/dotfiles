@@ -18,7 +18,7 @@ macOS-only (Apple Silicon; Intel is not supported), zsh-only.
 ```bash
 make install     # Full setup: check-deps homebrew link setup-shell packages nvim
 make bootstrap   # Minimal: check-deps homebrew link setup-shell (no packages)
-make update      # brew update && upgrade && bundle install --global --force-cleanup, then nvim
+make update      # brew update && upgrade && bundle install --global, bundle cleanup, then nvim
 make link        # Symlink .zshenv/.zshrc/.zprofile → $HOME; mkdir XDG dirs
 make packages    # brew bundle install --global from homebrew/Brewfile
 make nvim        # nvim --headless +'Lazy! sync' +qa
@@ -85,10 +85,16 @@ emit exactly one `*`; replacing them with `''` kills the dirty marker.
 
 ### Brewfile is the single source of truth for packages
 
-`homebrew/Brewfile` is consumed via `brew bundle install --global`, and
-`HOMEBREW_BUNDLE_INSTALL_CLEANUP=1` (set in `.zshenv`) means **anything not in the
-Brewfile gets uninstalled** on `make update`. Adding a tool means adding it here, not
-`brew install`-ing it.
+`homebrew/Brewfile` is consumed via `brew bundle install --global`, and `make update`
+follows it with `brew bundle cleanup --global --force`, so **anything not in the
+Brewfile gets uninstalled**. Adding a tool means adding it here, not `brew install`-ing
+it.
+
+Cleanup is an explicit `make update` step, not an ambient setting: it used to ride on a
+`HOMEBREW_BUNDLE_INSTALL_CLEANUP=1` export in `.zshenv`, which Homebrew deprecated in
+favour of the standalone subcommand. Because that export reached every shell, it also
+made a bare `brew bundle install` (and `make packages`) uninstall things as a side
+effect — cleanup now happens only where it is written down.
 
 The file branches on `ENV['USER'] == 'hermitmaster'` (personal) vs else (work): work
 machines get `azure-cli`, `kubelogin`, `snyk-cli`, `yubico-authenticator`; the personal
