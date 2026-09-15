@@ -14,7 +14,7 @@ zcompgen="$XDG_CACHE_HOME/zsh/completions"
 [[ -d "$zcompgen" ]] || mkdir -p "$zcompgen"
 fpath=("$zcompgen" $fpath)
 zcompgen_added=0
-for _tool in kubectl helm docker kubebuilder k3d kind skaffold conftest \
+for _tool in kubectl helm docker kubebuilder k3d skaffold conftest \
              cmctl golangci-lint infracost; do
   (( $+commands[$_tool] )) || continue
   if [[ ! -s "$zcompgen/_$_tool" || $commands[$_tool] -nt "$zcompgen/_$_tool" ]]; then
