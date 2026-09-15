@@ -73,7 +73,7 @@ cask 'rancher'
 cask 'rectangle'
 cask 'wezterm'
 
-mas 'AdGuard for Safari', id: 1_440_147_259
+mas 'AdGuard for Safari',  id: 1_440_147_259
 mas 'Keynote',             id: 409_183_694
 mas 'Numbers',             id: 409_203_825
 mas 'OneLogin for Safari', id: 1_475_824_389
