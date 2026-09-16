@@ -25,6 +25,12 @@ snyk/
 containers/
 configstore/
 .ruby-lsp/
+# Only present if a plugin ever needs @opencode-ai/plugin; the config itself
+# is tracked.
+opencode/node_modules/
+opencode/package.json
+opencode/package-lock.json
+opencode/bun.lock
 
 # Editor & IDE
 nvim/lazy-lock.json

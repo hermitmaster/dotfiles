@@ -1,0 +1,30 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "anthropic": {
+      // ANTHROPIC_BASE_URL is the LiteLLM proxy root; the AI SDK appends /messages
+      // to this value, so the /v1 has to be spelled out here. The proxy accepts the
+      // token as x-api-key, which is the header the SDK builds from apiKey.
+      "options": {
+        "baseURL": "{env:ANTHROPIC_BASE_URL}/v1",
+        "apiKey": "{env:ANTHROPIC_AUTH_TOKEN}"
+      },
+      // models.dev advertises more Claude models than the proxy serves; anything
+      // outside this set 400s. Re-check against /v1/models when the proxy adds one.
+      "whitelist": [
+        "claude-opus-5",
+        "claude-opus-4-8",
+        "claude-opus-4-7",
+        "claude-opus-4-6",
+        "claude-opus-4-5",
+        "claude-sonnet-5",
+        "claude-sonnet-4-6",
+        "claude-sonnet-4-5",
+        "claude-haiku-4-5",
+        "claude-haiku-4-5-20251001"
+      ]
+    }
+  },
+  "model": "anthropic/claude-opus-5",
+  "small_model": "anthropic/claude-haiku-4-5"
+}
