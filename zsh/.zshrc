@@ -3,7 +3,7 @@ if (( ! $+commands[brew] )); then
 fi
 
 # Load functions and completion (with caching)
-autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(:t) compinit
+autoload -Uz $XDG_CONFIG_HOME/zsh/functions/*(N:t) compinit
 
 # Completions Homebrew does not ship as _<tool> files. Generated into the cache
 # dir and refreshed only when the tool's binary is newer than the cached file,
@@ -15,7 +15,7 @@ zcompgen="$XDG_CACHE_HOME/zsh/completions"
 fpath=("$zcompgen" $fpath)
 zcompgen_added=0
 for _tool in kubectl helm docker kubebuilder k3d skaffold conftest \
-             cmctl golangci-lint infracost; do
+             cmctl golangci-lint; do
   (( $+commands[$_tool] )) || continue
   if [[ ! -s "$zcompgen/_$_tool" || $commands[$_tool] -nt "$zcompgen/_$_tool" ]]; then
     if $_tool completion zsh >| "$zcompgen/_$_tool" 2>/dev/null; then

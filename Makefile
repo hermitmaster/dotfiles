@@ -10,6 +10,17 @@ BREW     := $(HOMEBREW_PREFIX)/bin/brew
 
 SYMLINKS := .zshenv .zshrc .zprofile
 
+# Created by `link` and verified by `info`; keep the two in step by listing
+# them once. .claude is not XDG, but link owns it, so info should check it.
+MANAGED_DIRS := \
+	$(HOME)/.local/bin \
+	$(HOME)/.local/share \
+	$(HOME)/.local/state \
+	$(HOME)/.local/state/zsh \
+	$(HOME)/.cache \
+	$(HOME)/.cache/zsh/completions \
+	$(HOME)/.claude
+
 # =============================================================================
 # Primary
 # =============================================================================
@@ -52,8 +63,8 @@ packages: homebrew
 	@$(BREW) update && $(BREW) bundle install --global
 
 link:
-	@mkdir -p $(HOME)/.local/{bin,share,state} $(HOME)/.local/state/zsh $(HOME)/.cache $(HOME)/.cache/zsh/completions $(HOME)/.claude
-	@for f in .zshenv .zshrc .zprofile; do \
+	@mkdir -p $(MANAGED_DIRS)
+	@for f in $(SYMLINKS); do \
 		[ -f "$(ZSH_DIR)/$$f" ] && ln -sf "$(ZSH_DIR)/$$f" "$(HOME)/$$f"; \
 	done
 
@@ -89,8 +100,9 @@ info: ## Show system info and validate config
 	@for f in $(SYMLINKS); do \
 		[ -L "$(HOME)/$$f" ]   && echo "✅ $$f"       || echo "❌ $$f"; \
 	done
-	@for d in $(HOME)/.local/bin $(HOME)/.cache $(HOME)/.local/share $(HOME)/.local/state; do \
+	@for d in $(MANAGED_DIRS); do \
 		[ -d "$$d" ]           && echo "✅ $$d"        || echo "❌ $$d missing"; \
 	done
-	@[ -f "$(HOME)/.zshrc" ]  && zsh -n "$(HOME)/.zshrc"  && echo "✅ .zshrc syntax OK"  || true
-	@[ -f "$(HOME)/.zshenv" ] && zsh -n "$(HOME)/.zshenv" && echo "✅ .zshenv syntax OK" || true
+	@for f in $(SYMLINKS); do \
+		[ -f "$(HOME)/$$f" ]   && zsh -n "$(HOME)/$$f" && echo "✅ $$f syntax OK" || true; \
+	done
