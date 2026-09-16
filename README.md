@@ -51,8 +51,10 @@ cd ~/.config && make bootstrap
 
 ### Maintenance
 
-- `make update` - Update Homebrew packages and Neovim plugins
+- `make update` - Update Homebrew packages and Neovim plugins, then regenerate
+  zsh completions
 - `make nvim` - Update Neovim plugins
+- `make completions` - Regenerate the cached zsh completions
 - `make clean` - Remove broken `$HOME` symlinks and run `brew cleanup`
 - `make uninstall` - Remove the dotfile symlinks (Homebrew remains)
 
@@ -76,6 +78,7 @@ cd ~/.config && make bootstrap
 - **eza** - Better `ls` with icons and git integration
 - **bat** - Better `cat` with syntax highlighting
 - **fzf** - Fuzzy finder for files and history
+- **fd** - Fast file finder; also what `fzf` walks with
 - **zoxide** - Smart directory jumping
 - **ripgrep** - Fast text search
 
@@ -83,9 +86,11 @@ cd ~/.config && make bootstrap
 
 - **Go, Node.js, Python** - Programming languages
 - **Kubernetes tools** - `k9s`, `kubectx`, `kustomize`, `argocd`, `kubeconform`,
-  `kubebuilder`, `kubeseal` (`kubectl` and `helm` come from Rancher Desktop)
-- **AWS CLI, aws-sso-cli** - Cloud tools
+  `kubebuilder`, `kubeseal`, `stern` (`kubectl` and `helm` come from Rancher
+  Desktop)
+- **AWS CLI, aws-sso-cli, session-manager-plugin** - Cloud tools
 - **Terraform, Terragrunt** - Infrastructure as code
+- **trivy** - Security scanning for IaC and images
 - **LSP servers, formatters, linters** - not here; Neovim installs its own via Mason
 
 ### Applications
@@ -109,7 +114,12 @@ cd ~/.config && make bootstrap
 ├── homebrew/
 │   └── Brewfile          # Package definitions
 ├── nvim/                 # Neovim (LazyVim overlay)
+├── starship/
+│   └── starship.toml     # Prompt; found via $STARSHIP_CONFIG, not the default path
+├── opencode/             # opencode agent config
 ├── wezterm/
+├── dlv/
+├── gh/
 ├── k9s/
 ├── lazygit/
 └── zsh/

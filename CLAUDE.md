@@ -18,22 +18,31 @@ macOS-only (Apple Silicon; Intel is not supported), zsh-only.
 ```bash
 make install     # Full setup: check-deps homebrew link packages nvim
 make bootstrap   # Minimal: check-deps homebrew link (no packages)
-make update      # brew update && upgrade && bundle install --global, bundle cleanup, then nvim
-make link        # Symlink .zshenv/.zshrc/.zprofile → $HOME; mkdir XDG dirs
+make update      # brew update && upgrade && bundle install --global, bundle cleanup,
+                 # then nvim, then completions
+make link        # Symlink .zshenv/.zshrc/.zprofile → $HOME; mkdir MANAGED_DIRS
 make packages    # brew bundle install --global from homebrew/Brewfile
 make nvim        # nvim --headless +'Lazy! sync' +qa
-make info        # System info + validate symlinks, XDG dirs, zsh -n syntax check
+make completions # Regenerate cached zsh completions via one login shell
+make info        # System info + validate symlinks, managed dirs, zsh -n syntax check
 make clean       # Delete broken $HOME symlinks (maxdepth 1) + brew cleanup
 make uninstall   # Remove the dotfile symlinks; Homebrew remains
 ```
 
-`make info` is the closest thing to a test suite — it `zsh -n` syntax-checks `.zshrc`
-and `.zshenv` and verifies every symlink and XDG directory. Run it after touching
-anything under `zsh/`.
+`make info` is the closest thing to a test suite — it `zsh -n` syntax-checks all three
+of `.zshenv`, `.zshrc` and `.zprofile`, and verifies every symlink and managed
+directory. Run it after touching anything under `zsh/`.
+
+`link` and `info` both read the `MANAGED_DIRS` variable, so the set of directories
+created and the set verified cannot drift apart. It covers the XDG dirs plus
+`$HOME/.cache/zsh/completions` and `$HOME/.claude`.
 
 To check a single shell file without the rest: `zsh -n zsh/.zshrc`.
 
 There are no Neovim Lua tests, and no Lua test runner in the Brewfile.
+
+`.pre-commit-config.yaml` runs the same `zsh -n` check, plus gitleaks, StyLua, and a
+`ruby -c` parse of the Brewfile, before a commit rather than after an install.
 
 ### Verifying a change
 
@@ -90,6 +99,12 @@ follows it with `brew bundle cleanup --global --force`, so **anything not in the
 Brewfile gets uninstalled**. Adding a tool means adding it here, not `brew install`-ing
 it.
 
+`--global` finds that path only because `.zshenv` exports `XDG_CONFIG_HOME`: Homebrew
+resolves the global Brewfile as `$HOMEBREW_BUNDLE_FILE_GLOBAL`, then
+`$XDG_CONFIG_HOME/homebrew/Brewfile`, then `~/.Brewfile`. Neither of the other two
+exists here, so dropping that export would silently retarget every bundle command at a
+`~/.Brewfile` that is not there — the same failure mode as `STARSHIP_CONFIG`.
+
 Cleanup is an explicit `make update` step, not an ambient setting: it used to ride on a
 `HOMEBREW_BUNDLE_INSTALL_CLEANUP=1` export in `.zshenv`, which Homebrew deprecated in
 favour of the standalone subcommand. Because that export reached every shell, it also
@@ -98,8 +113,14 @@ effect — cleanup now happens only where it is written down.
 
 The file branches on `ENV['USER'] == 'hermitmaster'` (personal) vs else (work): work
 machines get `azure-cli`, `kubelogin`, `snyk-cli`, `yubico-authenticator`; the personal
-machine gets `openemu` and Homebrew-core `opencode`. Tap trust is declared inline
-(`trusted: true`) rather than in `homebrew/trust.json`, which is gitignored.
+machine gets `openemu`. Tap trust is declared inline (`trusted: true`) rather than in
+`homebrew/trust.json`, which is gitignored.
+
+opencode is installed unconditionally from `anomalyco/tap`, on both personal and work
+machines — not from the personal branch, and not from homebrew-core.
+
+`ollama` carries `restart_service: :changed` because it runs as a service; the Brewfile
+declares that rather than leaving it to a manual `brew services start`.
 
 Claude Code is installed via `cask 'claude-code@latest'`.
 
@@ -157,6 +178,11 @@ excludes credentials (`alice/`, `aws-sso/`, `gh/hosts.yml`) and tool caches (`ar
 `helm/`, `snyk/`, `containers/`, `configstore/`, `homebrew/trust.json`). Before adding a
 new tool's directory, decide which side of that line it falls on — several ignored dirs
 (`gcloud/`, `devin/`, `github-copilot/`) are listed but not currently present.
+
+`opencode/` is the worked example: `opencode.jsonc` and `tui.json` are tracked
+configuration, while `node_modules/` and the npm manifests that would appear if a
+plugin ever needed `@opencode-ai/plugin` are ignored. `opencode.jsonc` reaches the
+LiteLLM proxy through `{env:...}` interpolation, so no credential is in the file.
 
 ## Conventions
 
