@@ -3,5 +3,5 @@
   // Matches WezTerm's "Tokyo Night Moon" and LazyVim's tokyonight (style = "moon").
   // The built-in theme's accents are Moon, but its background is Night's #1a1b26
   // rather than Moon's #222436 — accepted rather than vendoring a custom theme.
-  "theme": "tokyonight"
+  "theme": "system"
 }
