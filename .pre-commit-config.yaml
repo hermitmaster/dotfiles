@@ -1,0 +1,41 @@
+# This repo IS ~/.config, so a bad commit edits the live config for the running
+# tool. `make info` validates an already-installed tree; these hooks catch the
+# same class of breakage before it lands.
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-merge-conflict
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-added-large-files
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
+
+  - repo: https://github.com/JohnnyMorganz/StyLua
+    rev: v2.5.2
+    hooks:
+      - id: stylua-github
+
+  - repo: local
+    hooks:
+      # The three zsh dotfiles are symlinked into $HOME, so a syntax error here
+      # breaks every new shell. This is the check `make info` runs, moved earlier.
+      - id: zsh-syntax
+        name: zsh -n on shell config
+        entry: zsh -n
+        language: system
+        files: ^zsh/\.(zshenv|zshrc|zprofile)$
+
+      # A cask declared as `brew` fails the whole `brew bundle install`, which is
+      # how tflint was lost. Parse-check the Brewfile as the Ruby it is.
+      - id: brewfile-syntax
+        name: ruby -c on the Brewfile
+        entry: ruby -c
+        language: system
+        files: ^homebrew/Brewfile$
+        pass_filenames: true

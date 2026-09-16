@@ -221,4 +221,3 @@ fi
 # re-sourcing .zshrc does not run the hook twice per prompt.
 precmd_functions=(${precmd_functions:#set_window_title} set_window_title)
 preexec_functions=(${preexec_functions:#set_window_title} set_window_title)
-
