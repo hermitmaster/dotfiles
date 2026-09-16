@@ -16,8 +16,8 @@ macOS-only (Apple Silicon; Intel is not supported), zsh-only.
 ## Commands
 
 ```bash
-make install     # Full setup: check-deps homebrew link setup-shell packages nvim
-make bootstrap   # Minimal: check-deps homebrew link setup-shell (no packages)
+make install     # Full setup: check-deps homebrew link packages nvim
+make bootstrap   # Minimal: check-deps homebrew link (no packages)
 make update      # brew update && upgrade && bundle install --global, bundle cleanup, then nvim
 make link        # Symlink .zshenv/.zshrc/.zprofile → $HOME; mkdir XDG dirs
 make packages    # brew bundle install --global from homebrew/Brewfile

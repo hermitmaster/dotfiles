@@ -42,14 +42,11 @@ cd ~/.config && make bootstrap
 
 ### Installation & Setup
 
-- `make install` - Full installation: check-deps, homebrew, link, setup-shell,
-  packages, nvim
-- `make bootstrap` - Minimal setup, no packages: check-deps, homebrew, link,
-  setup-shell
+- `make install` - Full installation: check-deps, homebrew, link, packages, nvim
+- `make bootstrap` - Minimal setup, no packages: check-deps, homebrew, link
 - `make homebrew` - Install Homebrew only
 - `make link` - Symlink the three zsh dotfiles into `$HOME` and create the XDG
   directories
-- `make setup-shell` - Make Homebrew zsh the login shell
 - `make packages` - Install all packages from `homebrew/Brewfile`
 
 ### Maintenance
@@ -69,7 +66,8 @@ cd ~/.config && make bootstrap
 ### Core Tools
 
 - **Homebrew** - Package manager
-- **Zsh** - Modern shell with plugins
+- **Zsh** - macOS's own zsh, with Homebrew plugins (autosuggestions, completions,
+  syntax highlighting)
 - **Git** - Version control with aliases
 - **Neovim** - Modern text editor
 

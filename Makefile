@@ -21,10 +21,10 @@ help: ## Show this help
 	@awk 'BEGIN {FS = ":.*?## "} /^[a-zA-Z_-]+:.*?## / {printf "  \033[36m%-12s\033[0m %s\n", $$1, $$2}' $(MAKEFILE_LIST)
 	@echo "\nQuick start: make install"
 
-install: check-deps homebrew link setup-shell packages nvim ## Full installation
+install: check-deps homebrew link packages nvim ## Full installation
 	@echo "✅ Done. Restart your terminal or: source ~/.zshenv && source ~/.zshrc"
 
-bootstrap: check-deps homebrew link setup-shell ## Minimal setup (no packages)
+bootstrap: check-deps homebrew link ## Minimal setup (no packages)
 	@echo "✅ Bootstrap complete. Run 'make packages' for tools."
 
 update: ## Update Homebrew packages and Neovim plugins
@@ -38,7 +38,7 @@ update: ## Update Homebrew packages and Neovim plugins
 # Setup
 # =============================================================================
 
-.PHONY: check-deps homebrew setup-shell packages link nvim completions
+.PHONY: check-deps homebrew packages link nvim completions
 
 check-deps:
 	@command -v curl >/dev/null || { echo "❌ curl required"; exit 1; }
@@ -46,12 +46,6 @@ check-deps:
 
 homebrew:
 	@[ -x "$(BREW)" ] || /bin/bash -c "$$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
-setup-shell:
-	@if [ "$$SHELL" != "$(HOMEBREW_PREFIX)/bin/zsh" ] && [ "$$SHELL" != "/bin/zsh" ]; then \
-		grep -q "$(HOMEBREW_PREFIX)/bin/zsh" /etc/shells || echo "$(HOMEBREW_PREFIX)/bin/zsh" | sudo tee -a /etc/shells; \
-		chsh -s "$(HOMEBREW_PREFIX)/bin/zsh"; \
-	fi
 
 packages: homebrew
 	@[ -f "$(CONFIG)/homebrew/Brewfile" ] || { echo "❌ Brewfile not found"; exit 1; }
