@@ -90,7 +90,6 @@ cd ~/.config && make bootstrap
   Desktop)
 - **AWS CLI, aws-sso-cli, session-manager-plugin** - Cloud tools
 - **Terraform, Terragrunt** - Infrastructure as code
-- **trivy** - Security scanning for IaC and images
 - **LSP servers, formatters, linters** - not here; Neovim installs its own via Mason
 
 ### Applications
