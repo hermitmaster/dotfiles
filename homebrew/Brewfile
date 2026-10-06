@@ -81,6 +81,7 @@ mas 'Pages',               id: 409_201_541
 mas 'Xcode',               id: 497_799_835
 
 if ENV['USER'] == 'hermitmaster'
+  cask 'google-gemini'
   cask 'openemu', args: { 'no-quarantine': true }
 else
   tap 'Azure/kubelogin', trusted: true
