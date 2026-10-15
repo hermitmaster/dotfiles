@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 tap 'anomalyco/tap', trusted: true
+tap 'Azure/kubelogin', trusted: true
 tap 'hashicorp/tap', trusted: true
 
-brew 'anomalyco/tap/opencode'
+brew 'anomalyco/tap/opencode-v2'
 brew 'argocd'
 brew 'awscli'
 brew 'aws-sso-cli'
@@ -28,11 +29,10 @@ brew 'hashicorp/tap/terraform'
 brew 'jq'
 brew 'k3d'
 brew 'k9s'
-brew 'kubebuilder'
 brew 'kubeconform'
 brew 'kubectx'
-brew 'kubeseal'
 brew 'kustomize'
+brew 'kyverno'
 brew 'lazygit'
 brew 'mas'
 brew 'neovim'
@@ -40,9 +40,11 @@ brew 'nmap'
 brew 'node'
 brew 'ollama', restart_service: :changed
 brew 'openjdk@21'
+brew 'pi-coding-agent'
 brew 'pre-commit'
 brew 'python'
 brew 'ripgrep'
+brew 'sd'
 brew 'skaffold'
 brew 'starship'
 brew 'stern'
@@ -78,17 +80,16 @@ mas 'Keynote',             id: 409_183_694
 mas 'Numbers',             id: 409_203_825
 mas 'OneLogin for Safari', id: 1_475_824_389
 mas 'Pages',               id: 409_201_541
-mas 'Xcode',               id: 497_799_835
 
 if ENV['USER'] == 'hermitmaster'
   cask 'google-gemini'
   cask 'openemu', args: { 'no-quarantine': true }
 else
-  tap 'Azure/kubelogin', trusted: true
-
   brew 'azure-cli'
   brew 'Azure/kubelogin/kubelogin'
   brew 'snyk-cli'
 
   cask 'yubico-authenticator'
+
+  mas 'Xcode',               id: 497_799_835
 end
