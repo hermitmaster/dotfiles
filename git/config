@@ -68,12 +68,21 @@
 [rebase]
   autostash = true
 
+[safe]
+	directory = ~/work/*
+
 [user]
   email = hermitmaster@icloud.com
   name = Dennis Rausch
 
 [includeIf "gitdir:~/work/"]
-  path = ~/work/.gitconfig
+  path = ~/.gitconfig-work
+[includeIf "hasconfig:remote.*.url:https://github.com/PFPT-*/**"]
+  path = ~/.gitconfig-work
+[includeIf "hasconfig:remote.*.url:https://github.com/drausch_pfpt/**"]
+  path = ~/.gitconfig-work
+[includeIf "hasconfig:remote.*.url:https://proofpoint.github.com/**"]
+  path = ~/.gitconfig-work
 
 [credential "https://github.com"]
 	helper =
