@@ -12,6 +12,7 @@ alice/
 aws-sso/
 gh/hosts.yml
 jcronq-agents/
+opencode/service.json
 
 # Tool Caches & State
 argocd/
