@@ -113,12 +113,12 @@ made a bare `brew bundle install` (and `make packages`) uninstall things as a si
 effect — cleanup now happens only where it is written down.
 
 The file branches on `ENV['USER'] == 'hermitmaster'` (personal) vs else (work): work
-machines get `azure-cli`, `kubelogin`, `snyk-cli`, `yubico-authenticator`; the personal
-machine gets `openemu`. Tap trust is declared inline (`trusted: true`) rather than in
-`homebrew/trust.json`, which is gitignored.
+machines get `azure-cli`, `kubelogin`, `snyk-cli`, `yubico-authenticator`, and Xcode; the
+personal machine gets `ollama`, `google-gemini`, and `openemu`. Tap trust is declared
+inline (`trusted: true`) rather than in `homebrew/trust.json`, which is gitignored.
 
-opencode is installed unconditionally from `anomalyco/tap`, on both personal and work
-machines — not from the personal branch, and not from homebrew-core.
+opencode is installed unconditionally from homebrew-core, on both personal and work
+machines.
 
 `ollama` carries `restart_service: :changed` because it runs as a service; the Brewfile
 declares that rather than leaving it to a manual `brew services start`.
