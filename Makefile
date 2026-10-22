@@ -18,6 +18,7 @@ MANAGED_DIRS := \
 	$(HOME)/.local/state \
 	$(HOME)/.local/state/zsh \
 	$(HOME)/.cache \
+	$(HOME)/.cache/terraform/plugin-cache \
 	$(HOME)/.cache/zsh/completions \
 	$(HOME)/.claude
 

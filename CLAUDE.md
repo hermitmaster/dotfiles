@@ -35,7 +35,8 @@ directory. Run it after touching anything under `zsh/`.
 
 `link` and `info` both read the `MANAGED_DIRS` variable, so the set of directories
 created and the set verified cannot drift apart. It covers the XDG dirs plus
-`$HOME/.cache/zsh/completions` and `$HOME/.claude`.
+`$HOME/.cache/zsh/completions`, `$HOME/.cache/terraform/plugin-cache` (Terraform
+won't create `TF_PLUGIN_CACHE_DIR` itself), and `$HOME/.claude`.
 
 To check a single shell file without the rest: `zsh -n zsh/.zshrc`.
 
