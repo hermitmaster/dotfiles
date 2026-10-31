@@ -1,14 +1,11 @@
 # frozen_string_literal: true
 
-tap 'Azure/kubelogin', trusted: true
 tap 'hashicorp/tap', trusted: true
 
-brew 'argocd'
 brew 'awscli'
 brew 'aws-sso-cli'
 brew 'bat'
 brew 'bottom'
-brew 'cmctl'
 brew 'conftest'
 brew 'coreutils'
 brew 'direnv'
@@ -27,12 +24,10 @@ brew 'gotests'
 brew 'grpcurl'
 brew 'hashicorp/tap/terraform'
 brew 'jq'
-brew 'k3d'
 brew 'k9s'
 brew 'kubeconform'
 brew 'kubectx'
 brew 'kustomize'
-brew 'kyverno'
 brew 'lazygit'
 brew 'mas'
 brew 'neovim'
@@ -43,8 +38,6 @@ brew 'pure'
 brew 'python'
 brew 'ripgrep'
 brew 'sd'
-brew 'skaffold'
-brew 'stern'
 brew 'terraform-docs'
 brew 'terragrunt'
 brew 'tf-summarize'
@@ -61,12 +54,11 @@ brew 'zsh-autosuggestions'
 brew 'zsh-completions'
 brew 'zsh-syntax-highlighting'
 
+cask 'claude'
 cask 'claude-code@latest'
-cask 'keymapp'
 cask 'obsidian'
 cask 'rancher'
 cask 'rectangle'
-cask 'session-manager-plugin'
 cask 'wezterm'
 
 mas 'AdGuard for Safari',  id: 1_440_147_259
@@ -79,13 +71,23 @@ if ENV['USER'] == 'hermitmaster'
   brew 'ollama', restart_service: :changed
 
   cask 'google-gemini'
-  cask 'openemu', args: { 'no-quarantine': true }
+  cask 'keymapp'
+  cask 'retroarch-metal'
 else
+  tap 'Azure/kubelogin', trusted: true
+  
+  brew 'argocd'
   brew 'azure-cli'
+  brew 'cmctl'
   brew 'Azure/kubelogin/kubelogin'
+  brew 'k3d'
+  brew 'kyverno'
   brew 'openjdk@21'
+  brew 'skaffold'
   brew 'snyk-cli'
+  brew 'stern'
 
+  cask 'session-manager-plugin'
   cask 'yubico-authenticator'
 
   mas 'Xcode',               id: 497_799_835
