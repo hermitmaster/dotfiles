@@ -57,6 +57,7 @@ brew 'zsh-syntax-highlighting'
 
 cask 'claude'
 cask 'claude-code@latest'
+cask 'cmux'
 cask 'obsidian'
 cask 'rancher'
 cask 'rectangle'
@@ -69,14 +70,12 @@ mas 'OneLogin for Safari', id: 1_475_824_389
 mas 'Pages',               id: 409_201_541
 
 if ENV['USER'] == 'hermitmaster'
-  brew 'ollama', restart_service: :changed
-
   cask 'google-gemini'
   cask 'keymapp'
   cask 'retroarch-metal'
 else
   tap 'Azure/kubelogin', trusted: true
-  
+
   brew 'argocd'
   brew 'azure-cli'
   brew 'cmctl'
@@ -91,5 +90,5 @@ else
   cask 'session-manager-plugin'
   cask 'yubico-authenticator'
 
-  mas 'Xcode',               id: 497_799_835
+  mas 'Xcode', id: 497_799_835
 end
