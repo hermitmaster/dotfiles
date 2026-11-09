@@ -38,3 +38,6 @@ nvim/lazy-lock.json
 
 # Development Tools
 mlflow/telemetry.json
+
+# cmux runtime lock
+cmux/*.lock
