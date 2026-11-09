@@ -1,0 +1,5 @@
+# Mirrors wezterm/wezterm.lua so cmux (libghostty) matches it.
+theme = TokyoNight Moon
+font-size = 13
+window-padding-x = 0
+window-padding-y = 0
