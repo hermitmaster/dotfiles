@@ -70,6 +70,8 @@ mas 'OneLogin for Safari', id: 1_475_824_389
 mas 'Pages',               id: 409_201_541
 
 if ENV['USER'] == 'hermitmaster'
+  brew 'ollama', restart_service: :changed
+
   cask 'google-gemini'
   cask 'keymapp'
   cask 'retroarch-metal'
