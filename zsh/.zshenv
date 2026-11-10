@@ -15,4 +15,6 @@ export GOBIN="$GOPATH/bin"
 export JAVA_HOME="$HOMEBREW_PREFIX/opt/openjdk@21/libexec/openjdk.jdk/Contents/Home"
 export TF_PLUGIN_CACHE_DIR="$XDG_CACHE_HOME/terraform/plugin-cache"
 
+source "$XDG_CONFIG_HOME/zsh/path.zsh"
+
 [[ -f "$HOME/.zshenv.local" ]] && source "$HOME/.zshenv.local"
