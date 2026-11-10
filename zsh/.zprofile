@@ -7,6 +7,7 @@ path=(
   $XDG_DATA_HOME/nvim/mason/bin(N)
   $GOBIN(N)
   $HOME/.local/bin(N)
+  $HOME/projects/alice/bin(N)
   $HOMEBREW_PREFIX/opt/coreutils/libexec/gnubin(N)
   $HOMEBREW_PREFIX/opt/findutils/libexec/gnubin(N)
   $HOMEBREW_PREFIX/opt/openjdk@21/bin(N)
