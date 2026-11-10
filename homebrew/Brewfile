@@ -79,7 +79,6 @@ else
   tap 'Azure/kubelogin', trusted: true
 
   brew 'argocd'
-  brew 'azure-cli'
   brew 'cmctl'
   brew 'Azure/kubelogin/kubelogin'
   brew 'k3d'
@@ -89,6 +88,7 @@ else
   brew 'snyk-cli'
   brew 'stern'
 
+  cask 'azure-cli'
   cask 'session-manager-plugin'
   cask 'yubico-authenticator'
 
